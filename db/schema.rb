@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_27_065402) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_27_121419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -82,6 +82,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_27_065402) do
     t.index ["user_id"], name: "index_document_requests_on_user_id"
   end
 
+  create_table "household_members", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "middle_name"
+    t.string "last_name", null: false
+    t.string "suffix"
+    t.date "birth_date", null: false
+    t.string "birth_place", null: false
+    t.integer "sex", null: false
+    t.integer "civil_status", null: false
+    t.string "citizenship"
+    t.string "occupation"
+    t.bigint "household_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["household_id"], name: "index_household_members_on_household_id"
+  end
+
+  create_table "households", force: :cascade do |t|
+    t.string "house_number", limit: 100, null: false
+    t.string "street", limit: 100, null: false
+    t.string "purok", limit: 10, null: false
+    t.date "date_accomplished", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.string "first_name", null: false
     t.string "middle_name"
@@ -120,6 +146,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_27_065402) do
   add_foreign_key "addresses", "users", on_delete: :cascade
   add_foreign_key "barangay_concerns", "users", on_delete: :cascade
   add_foreign_key "document_requests", "users", on_delete: :cascade
+  add_foreign_key "household_members", "households", on_delete: :cascade
   add_foreign_key "profiles", "users", on_delete: :cascade
   add_foreign_key "staffs", "users", on_delete: :cascade
 end
