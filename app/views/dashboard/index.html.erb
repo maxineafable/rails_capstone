@@ -1,80 +1,95 @@
-<div>
-  <h1>Resident Dashboard</h1>
-  <p>Welcome back, <%= current_user.profile.first_name %>!</p>
+<div class="space-y-8">
+  <header>
+    <h1 class="text-2xl font-bold">Resident Dashboard</h1>
+    <p class="text-gray-600">
+      Welcome back, <%= current_user.profile.first_name %>!
+    </p>
+  </header>
 
-  <div>
-    <%= link_to "Request Document", select_document_type_path %>
-    <%= link_to "Report Concern", new_barangay_concern_path %>
+  <div class="flex gap-4">
+    <%= link_to "Request Document", select_document_type_path, class: "text-blue-600 hover:underline" %>
+    <%= link_to "Report Concern", new_barangay_concern_path, class: "text-blue-600 hover:underline" %>
   </div>
 
   <section>
-    <h2>My Document Requests History</h2>
+    <h2 class="mb-4 text-xl font-semibold">My Document Requests History</h2>
 
     <% if @document_requests.any? %>
-      <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead>
-          <tr style="background-color: #f2f2f2;">
-            <th>Document Type</th>
-            <th>Purpose</th>
-            <th>Date Requested</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @document_requests.each do |request| %>
-            <tr>
-              <td><%= request.document_type.humanize %></td>
-              <td><%= request.purpose %></td>
-              <td><%= request.created_at.strftime("%B %d, %Y at %I:%M %p") %></td>
-              <td>
-                <!-- Dynamic styling placeholders for capstone status color visual testing -->
-                <span class="status-badge <%= request.status %>">
-                  <strong><%= request.status.humanize %></strong>
-                </span>
-              </td>
-              <td>
-                <%= link_to "View Details", root_path %>
-              </td>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+          <thead>
+            <tr class="border-b bg-gray-100">
+              <th class="p-3">Document Type</th>
+              <th class="p-3">Purpose</th>
+              <th class="p-3">Date Requested</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Action</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            <% @document_requests.each do |request| %>
+              <tr class="border-b">
+                <td class="p-3"><%= request.document_type.humanize %></td>
+                <td class="p-3"><%= request.purpose %></td>
+                <td class="p-3">
+                  <%= request.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                </td>
+                <td class="p-3 font-medium">
+                  <%= request.status.humanize %>
+                </td>
+                <td class="p-3">
+                  <%= link_to "View Details", root_path, class: "text-blue-600 hover:underline" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     <% else %>
-      <p>You haven't submitted any document requests yet.</p>
+      <p class="text-gray-600">You haven't submitted any document requests yet.</p>
     <% end %>
   </section>
 
   <section>
-    <h2>My Reported Concerns</h2>
-    <%= link_to "🚨 File a Concern/Complaint", new_barangay_concern_path %>
-    <br><br>
+    <h2 class="mb-4 text-xl font-semibold">My Reported Concerns</h2>
 
     <% if @barangay_concerns.any? %>
-      <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead>
-          <tr style="background-color: #f2f2f2;">
-            <th>Category</th>
-            <th>Reason Summary</th>
-            <th>Date Filed</th>
-            <th>Status</th>
-            <th>Date Resolved</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @barangay_concerns.each do |concern| %>
-            <tr>
-              <td><%= concern.category.humanize %></td>
-              <td><%= truncate(concern.reason, length: 50) %></td>
-              <td><%= concern.created_at.strftime("%B %d, %Y") %></td>
-              <td><strong><%= concern.status.humanize %></strong></td>
-              <td><%= concern.resolved_at ? concern.resolved_at.strftime("%B %d, %Y") : "—" %></td>
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+          <thead>
+            <tr class="border-b bg-gray-100">
+              <th class="p-3">Category</th>
+              <th class="p-3">Reason Summary</th>
+              <th class="p-3">Date Filed</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Date Resolved</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            <% @barangay_concerns.each do |concern| %>
+              <tr class="border-b">
+                <td class="p-3"><%= concern.category.humanize %></td>
+                <td class="p-3"><%= truncate(concern.reason, length: 50) %></td>
+                <td class="p-3">
+                  <%= concern.created_at.strftime("%B %d, %Y") %>
+                </td>
+                <td class="p-3 font-medium">
+                  <%= concern.status.humanize %>
+                </td>
+                <td class="p-3">
+                  <%= concern.resolved_at ? concern.resolved_at.strftime("%B %d, %Y") : "—" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     <% else %>
-      <p>You haven't reported any public concerns or issues yet.</p>
+      <p class="mt-4 text-gray-600">
+        You haven't reported any public concerns or issues yet.
+      </p>
     <% end %>
   </section>
 </div>
