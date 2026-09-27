@@ -1,0 +1,44 @@
+<%= form_with model: barangay_concern, local: true do |f| %>
+  <% if barangay_concern.errors.any? %>
+    <div style="color: red; margin-bottom: 20px;">
+      <h4>Please fix the errors below:</h4>
+      <ul>
+        <% concern.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :category, "Report Category" %>
+    <%= f.select :category, BarangayConcern.categories.keys.map { |c| [c.humanize, c] }, { include_blank: "Select a Category" }, { required: true } %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= f.label :reason, "Details / Reason of Report" %>
+    <%= f.text_area :reason, required: true, rows: 5, placeholder: "Describe the issue or incident clearly..." %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= f.label :resident_remarks, "Additional Remarks (Optional)" %>
+    <%= f.text_area :resident_remarks, rows: 3 %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= f.label :evidence_image, "Upload Photo / Evidence (Optional)" %>
+    <%= f.file_field :evidence_image, accept: 'image/*' %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= f.submit "Submit Report" %>
+  </div>
+<% end %>

@@ -1,0 +1,38 @@
+<%= form_with model: document_request, local: true do |f| %>
+  <div>
+    <%= f.label :document_type %>
+    <%= f.select :document_type, DocumentRequest.document_types.keys.map { |d| [d.humanize, d] } %>
+  </div>
+
+  <%# Dynamic Input Placeholders (Toggle these via vanilla JS depending on type) %>
+  <div>
+    <%= f.label :years_of_residency %>
+    <%= f.number_field :years_of_residency %>
+  </div>
+
+  <div>
+    <%= f.label :purpose %>
+    <%= f.text_area :purpose, required: true %>
+  </div>
+
+  <br><hr><br>
+  <h3>Verification Details</h3>
+
+  <div>
+    <%= f.label :valid_id_type, "Select Presented Identification Card" %>
+    <%= f.select :valid_id_type, DocumentRequest.valid_id_types.keys.map { |i| [i.humanize, i] }, { include_blank: "Choose ID type" }, { required: true } %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= f.label :valid_id_image, "Upload Clear Photo of Selected ID" %>
+    <%= f.file_field :valid_id_image, accept: 'image/*', required: true %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= f.submit "Submit Request" %>
+  </div>
+<% end %>

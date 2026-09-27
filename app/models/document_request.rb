@@ -1,0 +1,17 @@
+class DocumentRequest < ApplicationRecord
+  belongs_to :resident, class_name: "User", foreign_key: "user_id"
+
+  has_one_attached :valid_id_image
+
+  enum :document_type, { certificate_of_residency: 0, certificate_of_income: 1, barangay_clearance: 2 }
+  enum :status, { pending: 0, processing: 1, rejected: 2, ready_to_pickup: 3 }, default: :pending
+  enum :valid_id_type, { national_id: 0, drivers_license: 1, passport: 2, philhealth: 3 }
+
+  store_accessor :custom_fields, :years_of_residency, :monthly_income, :job
+
+  validates :document_type, :status, :purpose, :valid_id_type, presence: true
+  validates :valid_id_image, presence: true
+
+  validates :years_of_residency, presence: true, numericality: { only_integer: true, greater_than: 0 }, if: :certificate_of_residency?
+  validates :monthly_income, :job, presence: true, if: :certificate_of_income?
+end

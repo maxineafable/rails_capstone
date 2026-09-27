@@ -1,0 +1,52 @@
+<h2>Requesting: <%= @document_type.humanize %></h2>
+
+<%= form_with model: @document_request, url: document_requests_path, local: true do |f| %>
+
+  <%# Hidden field ensures the type is posted back exactly as defined by the URL %>
+  <%= f.hidden_field :document_type, value: @document_type %>
+
+  <div>
+    <%= f.label :purpose, "Purpose of Request" %>
+    <%= f.text_area :purpose, required: true %>
+  </div>
+
+  <%# Clean Ruby Conditionals directly handling the custom inputs %>
+  <% if @document_type == 'certificate_of_residency' %>
+    <div>
+      <%= f.label :years_of_residency, "Number of Years in this Barangay" %>
+      <%= f.number_field :years_of_residency, required: true %>
+    </div>
+  <% end %>
+
+  <% if @document_type == 'certificate_of_income' %>
+    <div>
+      <%= f.label :job, "Current Occupation" %>
+      <%= f.text_field :job, required: true %>
+    </div>
+    <div>
+      <%= f.label :monthly_income, "Average Monthly Income" %>
+      <%= f.number_field :monthly_income, required: true %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :resident_remarks, "Additional Remarks (Optional)" %>
+    <%= f.text_area :resident_remarks %>
+  </div>
+
+  <br><hr><br>
+  <h3>Identity Verification</h3>
+
+  <div>
+    <%= f.label :valid_id_type, "Select ID Type Provided" %>
+    <%= f.select :valid_id_type, DocumentRequest.valid_id_types.keys.map { |i| [i.humanize, i] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= f.label :valid_id_image, "Upload clear photo of ID" %>
+    <%= f.file_field :valid_id_image, accept: 'image/*', required: true %>
+  </div>
+
+  <br>
+  <%= f.submit "Submit Request" %>
+<% end %>
