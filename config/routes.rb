@@ -5,13 +5,12 @@ Rails.application.routes.draw do
   resource :profile, only: [:show, :new, :create]
   resource :address, only: [:new, :create]
 
-  resources :document_requests, only: [:create] do
+  get 'document_requests/new', to: 'document_requests#select_type', as: :select_document_type
+  resources :document_requests, only: [:create, :show, :update] do
     collection do
       get ':document_type/new', to: 'document_requests#new', as: :new_type
     end
   end
-
-  get 'document_requests/new', to: 'document_requests#select_type', as: :select_document_type
 
   resources :barangay_concerns
 

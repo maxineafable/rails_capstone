@@ -1,0 +1,92 @@
+<div class="grid grid-cols-3 gap-8">
+    <div class="col-span-2 space-y-6">
+      <div>
+        <h2 class="text-2xl font-bold">Document Request Details</h2>
+      </div>
+
+      <div class="space-y-2">
+        <p>
+          <strong>Resident:</strong>
+          <%= "#{@document_request.resident.profile.first_name} #{@document_request.resident.profile.last_name}" %>
+        </p>
+
+        <p>
+          <strong>Document Type:</strong>
+          <%= @document_request.document_type.humanize %>
+        </p>
+
+
+        <% if @document_request.document_type == 'certificate_of_income' %>
+          <strong>Average Monthly Income:</strong>
+          <p><%= @document_request.monthly_income %></p>
+        <% end %>
+
+        <% if @document_request.document_type == 'certificate_of_income' %>
+            <strong>Job:</strong>
+            <p><%= @document_request.job %></p>
+        <% end %>
+
+        <p>
+          <strong>Purpose:</strong>
+          <%= @document_request.purpose %>
+        </p>
+
+        <p>
+          <strong>Resident Remarks:</strong>
+          <%= @document_request.resident_remarks.presence || "None" %>
+        </p>
+
+        <p>
+          <strong>Current Status:</strong>
+          <span class="font-semibold"><%= @document_request.status.humanize %></span>
+        </p>
+      </div>
+
+      <% if @document_request.valid_id_image.attached? %>
+        <div>
+          <p class="mb-2 font-semibold">
+            Verification ID (<%= @document_request.valid_id_type.humanize %>):
+          </p>
+
+          <%= image_tag @document_request.valid_id_image, class: "block max-w-[400px] border" %>
+        </div>
+      <% end %>
+
+    </div>
+
+
+    <% if current_user.barangay_staff? %>
+      <section class="">
+        <h3 class="mb-4 text-xl font-semibold">Barangay Staff Action Panel</h3>
+
+        <%= form_with model: @document_request, local: true do |f| %>
+          <div class="mb-4">
+            <%= f.label :status, "Update Request Status", class: "mb-1 block font-medium" %>
+            <%= f.select :status, DocumentRequest.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "border p-2" %>
+          </div>
+
+          <div class="mb-4">
+            <%= f.label :staff_remarks, "Staff Remarks / Notes", class: "mb-1 block font-medium" %>
+            <%= f.text_area :staff_remarks, rows: 3, class: "w-full max-w-[500px] border p-2" %>
+          </div>
+
+          <%= f.submit "Update Request", class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+        <% end %>
+
+        <div class="mt-4">
+          <%= link_to "← Back to Admin Console", admin_dashboard_path, class: "text-blue-600 hover:underline" %>
+        </div>
+      </section>
+    <% else %>
+      <section class="border-t pt-6">
+        <p>
+          <strong>Staff Remarks:</strong>
+          <%= @document_request.staff_remarks.presence || "No updates from the staff yet." %>
+        </p>
+
+        <div class="mt-4">
+          <%= link_to "← Back to Dashboard", root_path, class: "text-blue-600 hover:underline" %>
+        </div>
+      </section>
+    <% end %>
+</div>

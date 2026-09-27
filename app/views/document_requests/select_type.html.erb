@@ -1,14 +1,22 @@
-<h2>Select Document to Request</h2>
-<p>Choose the specific certificate or clearance you need from the Barangay:</p>
+<div class="space-y-6">
+  <div>
+    <h2 class="text-2xl font-bold">Select Document to Request</h2>
+    <p class="text-gray-600">
+      Choose the specific certificate or clearance you need from the Barangay.
+    </p>
+  </div>
 
-<ul>
-  <li>
-    <%= link_to "Certificate of Residency", new_type_document_requests_path(document_type: 'certificate_of_residency') %>
-  </li>
-  <li>
-    <%= link_to "Certificate of Income", new_type_document_requests_path(document_type: 'certificate_of_income') %>
-  </li>
-  <li>
-    <%= link_to "Barangay Clearance", new_type_document_requests_path(document_type: 'barangay_clearance') %>
-  </li>
-</ul>
+  <div class="space-y-2">
+    <%= link_to "Certificate of Residency",
+        new_type_document_requests_path(document_type: "certificate_of_residency"),
+        class: "block text-blue-600 hover:underline" %>
+
+    <%= link_to "Certificate of Income",
+        new_type_document_requests_path(document_type: "certificate_of_income"),
+        class: "block text-blue-600 hover:underline" %>
+
+    <%= link_to "Barangay Clearance",
+        new_type_document_requests_path(document_type: "barangay_clearance"),
+        class: "block text-blue-600 hover:underline" %>
+  </div>
+</div>

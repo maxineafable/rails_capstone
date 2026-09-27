@@ -39,7 +39,7 @@
                   <%= request.status.humanize %>
                 </td>
                 <td class="p-3">
-                  <%= link_to "View Details", root_path, class: "text-blue-600 hover:underline" %>
+                  <%= link_to "View Details", document_request_path(request), class: "text-blue-600 hover:underline" %>
                 </td>
               </tr>
             <% end %>
@@ -64,6 +64,7 @@
               <th class="p-3">Date Filed</th>
               <th class="p-3">Status</th>
               <th class="p-3">Date Resolved</th>
+              <th class="p-3">Action</th>
             </tr>
           </thead>
 
@@ -80,6 +81,9 @@
                 </td>
                 <td class="p-3">
                   <%= concern.resolved_at ? concern.resolved_at.strftime("%B %d, %Y") : "—" %>
+                </td>
+                <td class="p-3">
+                    <%= link_to "View Details", barangay_concern_path(concern), class: "text-blue-600 hover:underline" %>
                 </td>
               </tr>
             <% end %>

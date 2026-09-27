@@ -36,7 +36,7 @@
                 <td class="p-3"><%= request.purpose %></td>
                 <td class="p-3 font-medium"><%= request.status.humanize %></td>
                 <td class="p-3">
-                  <%= link_to "Review", root_path, class: "text-blue-600 hover:underline" %>
+                  <%= link_to "Review", document_request_path(request), class: "text-blue-600 hover:underline" %>
                 </td>
               </tr>
             <% end %>
@@ -74,7 +74,7 @@
                 <td class="p-3"><%= truncate(concern.reason, length: 50) %></td>
                 <td class="p-3 font-medium"><%= concern.status.humanize %></td>
                 <td class="p-3">
-                  <%= link_to "Review", root_path, class: "text-blue-600 hover:underline" %>
+                  <%= link_to "Review", barangay_concern_path(concern), class: "text-blue-600 hover:underline" %>
                 </td>
               </tr>
             <% end %>

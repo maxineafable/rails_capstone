@@ -1,7 +1,16 @@
 class DocumentRequestsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authorize_staff!, only: [:update]
 
   def select_type
+  end
+
+  def show
+    if current_user.barangay_staff?
+      @document_request = DocumentRequest.find(params[:id])
+    else
+      @document_request = current_user.document_requests.find(params[:id])
+    end
   end
 
   def new
@@ -25,6 +34,16 @@ class DocumentRequestsController < ApplicationController
     end
   end
 
+  def update
+    @document_request = DocumentRequest.find(params[:id])
+
+    if @document_request.update(admin_update_params)
+      redirect_to @document_request, notice: "Document request status updated successfully."
+    else
+      render :show, status: :unprocessable_entity
+    end
+  end
+
   private
     def document_request_params
       params.require(:document_request).permit(
@@ -38,6 +57,15 @@ class DocumentRequestsController < ApplicationController
         :monthly_income,
         :job
       )
-  end
+    end
 
+    def admin_update_params
+      params.require(:document_request).permit(:status, :staff_remarks)
+    end
+
+    def authorize_staff!
+      unless current_user.barangay_staff?
+        redirect_to root_path, alert: "Unauthorized!"
+      end
+    end
 end

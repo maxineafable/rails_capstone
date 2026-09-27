@@ -1,0 +1,87 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-2xl font-bold">
+      Community Concern Report #<%= @barangay_concern.id %>
+    </h2>
+  </div>
+
+  <div class="space-y-2">
+    <p>
+      <strong>Filed By:</strong>
+      <%= "#{@barangay_concern.resident.profile.first_name} #{@barangay_concern.resident.profile.last_name}" %>
+    </p>
+
+    <p>
+      <strong>Category:</strong>
+      <%= @barangay_concern.category.humanize %>
+    </p>
+
+    <p>
+      <strong>Details / Reason:</strong>
+      <%= @barangay_concern.reason %>
+    </p>
+
+    <p>
+      <strong>Resident Notes:</strong>
+      <%= @barangay_concern.resident_remarks.presence || "None" %>
+    </p>
+
+    <p>
+      <strong>Current Status:</strong>
+      <span class="font-semibold"><%= @barangay_concern.status.humanize %></span>
+    </p>
+
+    <p>
+      <strong>Date Filed:</strong>
+      <%= @barangay_concern.created_at.strftime("%B %d, %Y") %>
+    </p>
+
+    <p>
+      <strong>Date Resolved:</strong>
+      <%= @barangay_concern.resolved_at ? @barangay_concern.resolved_at.strftime("%B %d, %Y at %I:%M %p") : "Ongoing/Unresolved" %>
+    </p>
+  </div>
+
+  <% if @barangay_concern.evidence_image.attached? %>
+    <div>
+      <p class="mb-2 font-semibold">Uploaded Evidence Photo:</p>
+
+      <%= image_tag @barangay_concern.evidence_image, class: "block max-w-[400px] border" %>
+    </div>
+  <% end %>
+
+  <% if current_user.barangay_staff? %>
+    <section class="border-t pt-6">
+      <h3 class="mb-4 text-xl font-semibold">Barangay Staff Action Panel</h3>
+
+      <%= form_with model: @barangay_concern, local: true do |f| %>
+        <div class="mb-4">
+          <%= f.label :status, "Update Case Status", class: "mb-1 block font-medium" %>
+          <%= f.select :status, BarangayConcern.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "border p-2" %>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :staff_remarks, "Staff Resolution Notes / Actions Taken", class: "mb-1 block font-medium" %>
+          <%= f.text_area :staff_remarks, rows: 3, class: "w-full max-w-[500px] border p-2" %>
+        </div>
+
+        <%= f.submit "Update Case Tracking", class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+      <% end %>
+
+      <div class="mt-4">
+        <%= link_to "← Back to Admin Console", admin_dashboard_path, class: "text-blue-600 hover:underline" %>
+      </div>
+    </section>
+  <% else %>
+    <section class="border-t pt-6">
+      <p>
+        <strong>Official Action Summary:</strong>
+        <%= @barangay_concern.staff_remarks.presence || "This issue is currently awaiting official review." %>
+      </p>
+
+      <div class="mt-4">
+        <%= link_to "← Back to Dashboard", root_path, class: "text-blue-600 hover:underline" %>
+      </div>
+    </section>
+  <% end %>
+</div>

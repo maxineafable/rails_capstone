@@ -1,5 +1,14 @@
 class BarangayConcernsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authorize_staff!, only: [:update]
+
+  def show
+    if current_user.barangay_staff?
+      @barangay_concern = BarangayConcern.find(params[:id])
+    else
+      @barangay_concern = current_user.concerns.find(params[:id])
+    end
+  end
 
   def new
     @barangay_concern = current_user.barangay_concerns.build
@@ -16,8 +25,28 @@ class BarangayConcernsController < ApplicationController
     end
   end
 
+  def update
+    @barangay_concern = BarangayConcern.find(params[:id])
+
+    if @barangay_concern.update(admin_barangay_concern_params)
+      redirect_to @barangay_concern, notice: "Concern status updated successfully."
+    else
+      render :show, status: :unprocessable_entity
+    end
+  end
+
   private
     def barangay_concern_params
       params.require(:barangay_concern).permit(:category, :reason, :resident_remarks, :evidence_image)
+    end
+
+    def admin_barangay_concern_params
+      params.require(:barangay_concern).permit(:status, :staff_remarks)
+    end
+
+    def authorize_staff!
+      unless current_user.barangay_staff?
+        redirect_to root_path, alert: "Unauthorized!"
+      end
     end
 end
