@@ -29,6 +29,14 @@
           class: "w-full max-w-[500px] border p-2" %>
     </div>
 
+    <div class="mb-1 block font-medium">
+      <%= f.label :location, "Exact Location / Landmark of Incident" %>
+      <%= f.text_field :location,
+        required: true,
+        placeholder: "e.g., Purok 3, Near Brgy Hall / In front of Sari-Sari store",
+        class: "w-full max-w-[500px] border p-2" %>
+    </div>
+
     <div>
       <%= f.label :resident_remarks, "Additional Remarks (Optional)", class: "mb-1 block font-medium" %>
       <%= f.text_area :resident_remarks,

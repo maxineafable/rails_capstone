@@ -1,0 +1,78 @@
+<div class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold">My Reported Concerns</h1>
+    <p class="text-gray-600">
+      View the concerns and issues you have reported to the Barangay.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-5">
+    <div>
+      <p class="text-sm text-gray-600">Total</p>
+      <p class="text-2xl font-bold"><%= @total_concerns %></p>
+    </div>
+
+    <div>
+      <p class="text-sm text-gray-600">Pending</p>
+      <p class="text-2xl font-bold"><%= @pending_concerns %></p>
+    </div>
+
+    <div>
+      <p class="text-sm text-gray-600">Ongoing</p>
+      <p class="text-2xl font-bold"><%= @ongoing_concerns %></p>
+    </div>
+
+    <div>
+      <p class="text-sm text-gray-600">Resolved</p>
+      <p class="text-2xl font-bold"><%= @resolved_concerns %></p>
+    </div>
+
+    <div>
+      <p class="text-sm text-gray-600">Unactionable</p>
+      <p class="text-2xl font-bold"><%= @unactionable_concerns %></p>
+    </div>
+  </div>
+
+  <%= link_to "Report a Concern", new_barangay_concern_path,
+      class: "text-blue-600 hover:underline" %>
+
+  <% if @barangay_concerns.any? %>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="border-b bg-gray-100">
+            <th class="p-3">Category</th>
+            <th class="p-3">Reason</th>
+            <th class="p-3">Date Filed</th>
+            <th class="p-3">Status</th>
+            <th class="p-3">Date Resolved</th>
+            <th class="p-3">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @barangay_concerns.each do |concern| %>
+            <tr class="border-b">
+              <td class="p-3"><%= concern.category.humanize %></td>
+              <td class="p-3"><%= truncate(concern.reason, length: 50) %></td>
+              <td class="p-3"><%= concern.created_at.strftime("%B %d, %Y") %></td>
+              <td class="p-3 font-medium"><%= concern.status.humanize %></td>
+              <td class="p-3">
+                <%= concern.resolved_at ? concern.resolved_at.strftime("%B %d, %Y") : "—" %>
+              </td>
+              <td class="p-3">
+                <%= link_to "View Details",
+                    barangay_concern_path(concern),
+                    class: "text-blue-600 hover:underline" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-gray-600">
+      You haven't reported any concerns yet.
+    </p>
+  <% end %>
+</div>

@@ -2,11 +2,21 @@ class BarangayConcernsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_staff!, only: [:update]
 
+  def index
+    @barangay_concerns = current_user.barangay_concerns
+
+    @total_concerns = @barangay_concerns.count
+    @pending_concerns = @barangay_concerns.pending.count
+    @ongoing_concerns = @barangay_concerns.ongoing.count
+    @resolved_concerns = @barangay_concerns.resolved.count
+    @unactionable_concerns = @barangay_concerns.unactionable.count
+  end
+
   def show
     if current_user.barangay_staff?
       @barangay_concern = BarangayConcern.find(params[:id])
     else
-      @barangay_concern = current_user.concerns.find(params[:id])
+      @barangay_concern = current_user.barangay_concerns.find(params[:id])
     end
   end
 
@@ -37,7 +47,7 @@ class BarangayConcernsController < ApplicationController
 
   private
     def barangay_concern_params
-      params.require(:barangay_concern).permit(:category, :reason, :resident_remarks, :evidence_image)
+      params.require(:barangay_concern).permit(:category, :reason, :resident_remarks, :evidence_image, :location)
     end
 
     def admin_barangay_concern_params

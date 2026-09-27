@@ -21,7 +21,7 @@
         </div>
       <% end %>
 
-      <% if @document_type == "certificate_of_income" %>
+      <% if @document_type == "certificate_of_income" || @document_type == "certificate_of_low_income" %>
         <div>
           <%= f.label :job, "Current Occupation", class: "mb-1 block font-medium" %>
           <%= f.text_field :job, required: true, class: "w-full max-w-[500px] border p-2" %>

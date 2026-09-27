@@ -12,6 +12,11 @@
     </p>
 
     <p>
+        <strong>Ticket:</strong>
+        <%= @barangay_concern.tracking_number %>
+    </p>
+
+    <p>
       <strong>Category:</strong>
       <%= @barangay_concern.category.humanize %>
     </p>
@@ -19,6 +24,11 @@
     <p>
       <strong>Details / Reason:</strong>
       <%= @barangay_concern.reason %>
+    </p>
+
+    <p>
+        <strong>Location</strong>
+        <%= @barangay_concern.location %>
     </p>
 
     <p>
@@ -38,7 +48,7 @@
 
     <p>
       <strong>Date Resolved:</strong>
-      <%= @barangay_concern.resolved_at ? @barangay_concern.resolved_at.strftime("%B %d, %Y at %I:%M %p") : "Ongoing/Unresolved" %>
+      <%= @barangay_concern.resolved_at ? @barangay_concern.resolved_at.strftime("%B %d, %Y at %I:%M %p") : @barangay_concern.status.humanize %>
     </p>
   </div>
 
