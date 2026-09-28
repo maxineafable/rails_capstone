@@ -18,6 +18,8 @@ class BarangayConcernsController < ApplicationController
     else
       @barangay_concern = current_user.barangay_concerns.find(params[:id])
     end
+
+    # @status_logs = @barangay_concern.status_logs.order(created_at: :asc)
   end
 
   def new

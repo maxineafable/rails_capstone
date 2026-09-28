@@ -29,7 +29,8 @@
             <% @all_document_requests.each do |request| %>
               <tr class="border-b">
                 <td class="p-3">
-                  <%= "#{request.resident.profile.first_name} #{request.resident.profile.last_name}" %>
+                  <%= request.resident.profile.first_name %>
+                  <%= request.resident.profile.last_name %>
                 </td>
                 <td class="p-3"><%= request.resident.address.purok %></td>
                 <td class="p-3"><%= request.document_type.humanize %></td>
@@ -68,7 +69,8 @@
             <% @all_barangay_concerns.each do |concern| %>
               <tr class="border-b">
                 <td class="p-3">
-                  <%= "#{concern.resident.profile.first_name} #{concern.resident.profile.last_name}" %>
+                  <%= concern.resident.profile.first_name %>
+                  <%= concern.resident.profile.last_name %>
                 </td>
                 <td class="p-3"><%= concern.category.humanize %></td>
                 <td class="p-3"><%= truncate(concern.reason, length: 50) %></td>

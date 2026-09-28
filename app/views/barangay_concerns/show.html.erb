@@ -1,98 +1,139 @@
-<div class="space-y-6">
-  <div>
-    <h2 class="text-2xl font-bold">
-      Community Concern Report #<%= @barangay_concern.id %>
-    </h2>
-  </div>
+<div class="grid grid-cols-3 gap-8">
+    <div class="col-span-2 space-y-6">
+        <section>
+          <h3 class="mb-4 text-xl font-semibold">Barangay Concern Log</h3>
 
-  <div class="space-y-2">
-    <p>
-      <strong>Filed By:</strong>
-      <%= @barangay_concern.resident.profile.first_name %>
-      <%= @barangay_concern.resident.profile.last_name %>
-    </p>
+          <div class="border-l-2 pl-4">
+            <% @barangay_concern.status_logs.order(created_at: :asc).each do |log| %>
+              <div class="mb-5">
+                <p class="font-medium">
+                  <%= log.human_status %>
+                </p>
 
-    <p>
-        <strong>Ticket:</strong>
-        <%= @barangay_concern.tracking_number %>
-    </p>
+                <p class="text-sm text-gray-500">
+                  <%= log.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                </p>
 
-    <p>
-      <strong>Category:</strong>
-      <%= @barangay_concern.category.humanize %>
-    </p>
+                <% if log.staff_remarks.present? %>
+                  <p class="mt-1 text-sm text-gray-600">
+                    Staff Update: <%= log.staff_remarks %>
+                  </p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </section>
 
-    <p>
-      <strong>Details / Reason:</strong>
-      <%= @barangay_concern.reason %>
-    </p>
+        <div>
+            <h2 class="text-2xl font-bold">
+            Community Concern Report #<%= @barangay_concern.id %>
+            </h2>
+        </div>
 
-    <p>
-        <strong>Location</strong>
-        <%= @barangay_concern.location %>
-    </p>
+        <div class="space-y-2">
+            <p>
+            <strong>Filed By:</strong>
+            <%= @barangay_concern.resident.profile.first_name %>
+            <%= @barangay_concern.resident.profile.last_name %>
+            </p>
 
-    <p>
-      <strong>Resident Notes:</strong>
-      <%= @barangay_concern.resident_remarks.presence || "None" %>
-    </p>
+            <p>
+                <strong>Ticket:</strong>
+                <%= @barangay_concern.tracking_number %>
+            </p>
 
-    <p>
-      <strong>Current Status:</strong>
-      <span class="font-semibold"><%= @barangay_concern.status.humanize %></span>
-    </p>
+            <p>
+            <strong>Category:</strong>
+            <%= @barangay_concern.category.humanize %>
+            </p>
 
-    <p>
-      <strong>Date Filed:</strong>
-      <%= @barangay_concern.created_at.strftime("%B %d, %Y") %>
-    </p>
+            <p>
+            <strong>Details / Reason:</strong>
+            <%= @barangay_concern.reason %>
+            </p>
 
-    <p>
-      <strong>Date Resolved:</strong>
-      <%= @barangay_concern.resolved_at ? @barangay_concern.resolved_at.strftime("%B %d, %Y at %I:%M %p") : @barangay_concern.status.humanize %>
-    </p>
-  </div>
+            <p>
+                <strong>Location</strong>
+                <%= @barangay_concern.location %>
+            </p>
 
-  <% if @barangay_concern.evidence_image.attached? %>
-    <div>
-      <p class="mb-2 font-semibold">Uploaded Evidence Photo:</p>
+            <p>
+            <strong>Resident Notes:</strong>
+            <%= @barangay_concern.resident_remarks.presence || "None" %>
+            </p>
 
-      <%= image_tag @barangay_concern.evidence_image, class: "block max-w-[400px] border" %>
+            <p>
+            <strong>Current Status:</strong>
+            <span class="font-semibold"><%= @barangay_concern.status_logs.last.human_status %></span>
+            </p>
+
+            <p>
+                <strong>Current Staff Remarks:</strong>
+                <span class="font-semibold"><%= @barangay_concern.status_logs.last.staff_remarks %></span>
+                <%= @barangay_concern.status_logs.last.staff_remarks.presence || "No updates from the staff yet." %>
+            </p>
+
+            <p>
+            <strong>Date Filed:</strong>
+            <%= @barangay_concern.created_at.strftime("%B %d, %Y") %>
+            </p>
+        </div>
+
+        <% if @barangay_concern.evidence_image.attached? %>
+            <div>
+            <p class="mb-2 font-semibold">Uploaded Evidence Photo:</p>
+
+            <%= image_tag @barangay_concern.evidence_image, class: "block max-w-[400px] border" %>
+            </div>
+        <% end %>
     </div>
-  <% end %>
 
-  <% if current_user.barangay_staff? %>
-    <section class="border-t pt-6">
-      <h3 class="mb-4 text-xl font-semibold">Barangay Staff Action Panel</h3>
+    <% if current_user.barangay_staff? %>
+        <section>
+            <h3 class="mb-4 text-xl font-semibold">Barangay Staff Action Panel</h3>
 
-      <%= form_with model: @barangay_concern, local: true do |f| %>
-        <div class="mb-4">
-          <%= f.label :status, "Update Case Status", class: "mb-1 block font-medium" %>
-          <%= f.select :status, BarangayConcern.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "border p-2" %>
-        </div>
+            <%= form_with model: @barangay_concern, local: true do |f| %>
+            <% if @barangay_concern.errors.any? %>
+                <div class="mb-6 text-red-600">
+                    <h3 class="mb-2 font-semibold">
+                    Please fix the following errors:
+                    </h3>
 
-        <div class="mb-4">
-          <%= f.label :staff_remarks, "Staff Resolution Notes / Actions Taken", class: "mb-1 block font-medium" %>
-          <%= f.text_area :staff_remarks, rows: 3, class: "w-full max-w-[500px] border p-2" %>
-        </div>
+                    <ul class="list-disc pl-5">
+                    <% @barangay_concern.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                    </ul>
+                </div>
+            <% end %>
 
-        <%= f.submit "Update Case Tracking", class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
-      <% end %>
+            <div class="mb-4">
+                <%= f.label :status, "Update Case Status", class: "mb-1 block font-medium" %>
+                <%= f.select :status, BarangayConcern.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "border p-2" %>
+            </div>
 
-      <div class="mt-4">
-        <%= link_to "← Back to Admin Console", admin_dashboard_path, class: "text-blue-600 hover:underline" %>
-      </div>
-    </section>
-  <% else %>
-    <section class="border-t pt-6">
-      <p>
-        <strong>Official Action Summary:</strong>
-        <%= @barangay_concern.staff_remarks.presence || "This issue is currently awaiting official review." %>
-      </p>
+            <div class="mb-4">
+                <%= f.label :staff_remarks, "Staff Resolution Notes / Actions Taken", class: "mb-1 block font-medium" %>
+                <%= f.text_area :staff_remarks, rows: 3, class: "w-full max-w-[500px] border p-2" %>
+            </div>
 
-      <div class="mt-4">
-        <%= link_to "← Back to Dashboard", root_path, class: "text-blue-600 hover:underline" %>
-      </div>
-    </section>
-  <% end %>
+            <%= f.submit "Update Case Tracking", class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+            <% end %>
+
+            <div class="mt-4">
+            <%= link_to "← Back to Admin Console", admin_dashboard_path, class: "text-blue-600 hover:underline" %>
+            </div>
+        </section>
+    <% else %>
+        <section class="border-t pt-6">
+            <p>
+            <strong>Official Action Summary:</strong>
+            <%= @barangay_concern.status_logs.last.staff_remarks.presence || "This issue is currently awaiting official review." %>
+            </p>
+
+            <div class="mt-4">
+            <%= link_to "← Back to Dashboard", root_path, class: "text-blue-600 hover:underline" %>
+            </div>
+        </section>
+    <% end %>
 </div>

@@ -41,6 +41,8 @@ class DocumentRequestsController < ApplicationController
     @document_request = DocumentRequest.find(params[:id])
 
     if @document_request.update(admin_update_params)
+      # @document_request.staff_remarks = nil
+
       redirect_to @document_request, notice: "Document request status updated successfully."
     else
       render :show, status: :unprocessable_entity
