@@ -13,6 +13,6 @@ class BarangayConcern < ApplicationRecord
 
   private
     def generate_tracking_number
-      self.tracking_number = "BRGY-#{Time.current.year}-#{SecureRandom.alphanumeric(8).upcase}"
+      self.tracking_number = "BRGY-CON-#{Time.current.year}-#{SecureRandom.alphanumeric(8).upcase}"
     end
 end

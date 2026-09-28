@@ -9,9 +9,17 @@ class DocumentRequest < ApplicationRecord
 
   store_accessor :custom_fields, :years_of_residency, :monthly_income, :job
 
+  validates :tracking_number, presence: true, uniqueness: true
   validates :document_type, :status, :purpose, :valid_id_type, presence: true
   validates :valid_id_image, presence: true
 
   validates :years_of_residency, presence: true, numericality: { only_integer: true, greater_than: 0 }, if: :certificate_of_residency?
   validates :monthly_income, :job, presence: true, if: :certificate_of_income?
+
+  before_validation :generate_tracking_number
+
+  private
+    def generate_tracking_number
+      self.tracking_number = "BRGY-DOC-#{Time.current.year}-#{SecureRandom.alphanumeric(8).upcase}"
+    end
 end

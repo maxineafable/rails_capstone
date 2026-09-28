@@ -5,6 +5,86 @@
     </h2>
   </div>
 
+  <div class="space-y-4">
+    <h3 class="text-xl font-semibold">Resident Information</h3>
+
+    <div>
+      <label class="mb-1 block font-medium">First Name</label>
+      <input
+        type="text"
+        value="<%= @profile.first_name %>"
+        readonly
+        autocomplete="off"
+        class="w-full max-w-[500px] border bg-gray-100 p-2"
+      >
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium">Middle Name</label>
+      <input
+        type="text"
+        value="<%= @profile.middle_name %>"
+        readonly
+        autocomplete="off"
+        class="w-full max-w-[500px] border bg-gray-100 p-2"
+      >
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium">Last Name</label>
+      <input
+        type="text"
+        value="<%= @profile.last_name %>"
+        readonly
+        class="w-full max-w-[500px] border bg-gray-100 p-2"
+      >
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium">Suffix</label>
+      <input
+        type="text"
+        value="<%= @profile.suffix %>"
+        readonly
+        autocomplete="off"
+        class="w-full max-w-[500px] border bg-gray-100 p-2"
+      >
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium">Birth Date</label>
+      <input
+        type="text"
+        value="<%= @profile.birth_date.strftime("%B %d, %Y") %>"
+        readonly
+        autocomplete="off"
+        class="w-full max-w-[500px] border bg-gray-100 p-2"
+      >
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium">Sex</label>
+      <input
+        type="text"
+        value="<%= @profile.sex.humanize %>"
+        readonly
+        autocomplete="off"
+        class="w-full max-w-[500px] border bg-gray-100 p-2"
+      >
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium">Address</label>
+      <input
+        type="text"
+        value="<%= [@address.house_number, @address.street, @address.purok, @address.barangay, @address.city, @address.province].compact_blank.join(", ") %>"
+        readonly
+        autocomplete="off"
+        class="w-full max-w-[500px] border bg-gray-100 p-2"
+      >
+    </div>
+  </div>
+
   <%= form_with model: @document_request, url: document_requests_path, local: true do |f| %>
     <%= f.hidden_field :document_type, value: @document_type %>
 
@@ -45,7 +125,10 @@
       <div class="space-y-4">
         <div>
           <%= f.label :valid_id_type, "Select ID Type Provided", class: "mb-1 block font-medium" %>
-          <%= f.select :valid_id_type, DocumentRequest.valid_id_types.keys.map { |i| [i.humanize, i] }, { include_blank: true }, class: "border p-2" %>
+          <%= f.select :valid_id_type,
+              DocumentRequest.valid_id_types.keys.map { |i| [i.humanize, i] },
+              { include_blank: true },
+              class: "border p-2" %>
         </div>
 
         <div>
@@ -55,6 +138,7 @@
       </div>
     </div>
 
-    <%= f.submit "Submit Request", class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
+    <%= f.submit "Submit Request",
+        class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
   <% end %>
 </div>

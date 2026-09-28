@@ -7,8 +7,11 @@
       <div class="space-y-2">
         <p>
           <strong>Resident:</strong>
-          <%= "#{@document_request.resident.profile.first_name} #{@document_request.resident.profile.last_name}" %>
+          <%= @document_request.resident.profile.first_name %>
+          <%= @document_request.resident.profile.last_name %>
         </p>
+
+        <h2>Document Ticket: <%= @document_request.tracking_number %></h2>
 
         <p>
           <strong>Document Type:</strong>

@@ -17,6 +17,9 @@ class DocumentRequestsController < ApplicationController
     if DocumentRequest.document_types.keys.include?(params[:document_type])
       @document_type = params[:document_type]
       @document_request = current_user.document_requests.build(document_type: @document_type)
+
+      @profile = current_user.profile
+      @address = current_user.address
     else
       redirect_to select_document_type_path, alert: "Invalid document type selected."
     end
