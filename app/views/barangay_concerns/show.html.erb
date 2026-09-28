@@ -54,7 +54,7 @@
 
             <p>
                 <strong>Location</strong>
-                <%= @barangay_concern.location %>
+                <%= @barangay_concern.location_description %>
             </p>
 
             <p>
@@ -85,6 +85,46 @@
 
             <%= image_tag @barangay_concern.evidence_image, class: "block max-w-[400px] border" %>
             </div>
+        <% end %>
+
+        <% if @barangay_concern.latitude.present? && @barangay_concern.longitude.present? %>
+          <div>
+            <h3 class="text-lg font-semibold">Report Location</h3>
+
+            <div id="map" class="h-100 w-full rounded"
+                data-lat="<%= @barangay_concern.latitude %>"
+                data-lng="<%= @barangay_concern.longitude %>"
+            ></div>
+          </div>
+
+          <script>
+            document.addEventListener("turbo:load", function() {
+              const mapDiv = document.querySelector('#map')
+              if (!mapDiv) return
+
+              const latitude = parseFloat(mapDiv.dataset.lat);
+              const longitude = parseFloat(mapDiv.dataset.lng);
+
+              if (!latitude || !longitude) return
+
+              const map = L.map("map").setView(
+                [latitude, longitude],
+                15
+              );
+
+              console.log(map)
+
+              L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  maxZoom: 19,
+                  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              }).addTo(map);
+
+              L.marker([latitude, longitude])
+                .addTo(map)
+                .bindPopup("Reported location")
+                .openPopup();
+            });
+          </script>
         <% end %>
     </div>
 

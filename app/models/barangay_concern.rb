@@ -10,7 +10,8 @@ class BarangayConcern < ApplicationRecord
   attr_accessor :staff_remarks
 
   validates :tracking_number, presence: true, uniqueness: true
-  validates :category, :status, :reason, :location, presence: true
+  validates :category, :status, :reason, :location_description, presence: true
+  validates :latitude, :longitude, numericality: true
 
   validate :sequential_status, on: :update
 

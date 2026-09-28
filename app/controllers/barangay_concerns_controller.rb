@@ -49,7 +49,7 @@ class BarangayConcernsController < ApplicationController
 
   private
     def barangay_concern_params
-      params.require(:barangay_concern).permit(:category, :reason, :resident_remarks, :evidence_image, :location)
+      params.require(:barangay_concern).permit(:category, :reason, :resident_remarks, :evidence_image, :location_description, :latitude, :longitude)
     end
 
     def admin_barangay_concern_params
