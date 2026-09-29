@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => {:registrations => "registrations"}
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  resource :profile, only: [:show, :new, :create]
+  resource :profile, only: [:show, :new, :create, :edit, :update]
   resource :address, only: [:new, :create]
 
   get 'document_requests/new', to: 'document_requests#select_type', as: :select_document_type
