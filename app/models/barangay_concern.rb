@@ -11,12 +11,12 @@ class BarangayConcern < ApplicationRecord
 
   validates :tracking_number, presence: true, uniqueness: true
   validates :category, :status, :reason, :location_description, presence: true
-  validates :latitude, :longitude, numericality: true
 
   validate :sequential_status, on: :update
 
   before_validation :generate_tracking_number, on: :create
   after_save :log_status_change, if: :saved_change_to_status?
+  before_save :resolved_timestamp, if: -> { persisted? && :will_save_change_to_status? }
 
   private
     def generate_tracking_number
@@ -40,6 +40,12 @@ class BarangayConcern < ApplicationRecord
         elsif old_status_value >= 2
           errors.add(:status, "cannot be changed once it is already resolved or unactionable.")
         end
+      end
+    end
+
+    def resolved_timestamp
+      if resolved?
+        self.resolved_at = Time.current
       end
     end
 end

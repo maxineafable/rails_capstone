@@ -1,0 +1,102 @@
+<div class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold">Admin Console: Barangay Concerns Logs</h1>
+
+    <%= link_to "← Back to Main Dashboard",
+        admin_dashboard_path,
+        class: "mt-2 inline-block text-blue-600 hover:underline" %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+    <div class="border p-4">
+      <h4 class="font-medium">Total Filed</h4>
+      <p class="mt-2 text-2xl font-bold">
+        <%= @total_concerns %>
+      </p>
+    </div>
+
+    <div class="border p-4">
+      <h4 class="font-medium">Pending</h4>
+      <p class="mt-2 text-2xl font-bold">
+        <%= @pending_concerns %>
+      </p>
+    </div>
+
+    <div class="border p-4">
+      <h4 class="font-medium">Ongoing</h4>
+      <p class="mt-2 text-2xl font-bold">
+        <%= @ongoing_concerns %>
+      </p>
+    </div>
+
+    <div class="border p-4">
+      <h4 class="font-medium">Resolved</h4>
+      <p class="mt-2 text-2xl font-bold">
+        <%= @resolved_concerns %>
+      </p>
+    </div>
+
+    <div class="border p-4">
+      <h4 class="font-medium">Dismissed</h4>
+      <p class="mt-2 text-2xl font-bold">
+        <%= @unactionable_concerns %>
+      </p>
+    </div>
+
+  </div>
+
+  <section>
+    <h2 class="mb-4 text-xl font-semibold">All Barangay Concerns</h2>
+
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse border">
+        <thead>
+          <tr class="border-b bg-gray-100 text-left">
+            <th class="border p-3">Reporter</th>
+            <th class="border p-3">Category</th>
+            <th class="border p-3">Tracking Number</th>
+            <th class="border p-3">Location Landmark</th>
+            <th class="border p-3">Status</th>
+            <th class="border p-3">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @all_barangay_concerns.each do |concern| %>
+            <tr class="border-b">
+
+              <td class="border p-3">
+                <%= concern.resident.profile.first_name  %>
+                <%= concern.resident.profile.last_name %>
+              </td>
+
+              <td class="border p-3">
+                <%= concern.category.humanize %>
+              </td>
+
+              <td class="border p-3">
+                <%= concern.tracking_number %>
+              </td>
+
+              <td class="border p-3">
+                <%= concern.location_description %>
+              </td>
+
+              <td class="border p-3 font-semibold">
+                <%= concern.status.humanize %>
+              </td>
+
+              <td class="border p-3">
+                <%= link_to "Review/Track",
+                    barangay_concern_path(concern),
+                    class: "text-blue-600 hover:underline" %>
+              </td>
+
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>

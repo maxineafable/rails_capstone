@@ -1,90 +1,206 @@
-<div class="space-y-8">
-  <header>
-    <h1 class="text-2xl font-bold">Barangay Admin Dashboard</h1>
-    <p class="text-gray-600">
-      Logged in as:
-      <%= current_user.profile.first_name %>
-      (<%= current_user.staff.position.humanize %>)
-    </p>
-  </header>
+<div class="flex min-h-screen gap-8">
+  <aside class="w-56 shrink-0 border-r pr-6">
+    <h2 class="mb-4 text-lg font-bold">Admin Console</h2>
 
-  <section>
-    <h2 class="mb-4 text-xl font-semibold">All Incoming Resident Document Requests</h2>
+    <nav class="space-y-1">
+      <%= link_to "Main Dashboard",
+          admin_dashboard_path,
+          class: "block px-3 py-2 hover:bg-gray-100" %>
 
-    <% if @all_document_requests.any? %>
-      <div class="overflow-x-auto">
-        <table class="w-full border-collapse">
-          <thead>
-            <tr class="border-b bg-gray-100 text-left">
-              <th class="p-3">Resident Name</th>
-              <th class="p-3">Purok</th>
-              <th class="p-3">Document Type</th>
-              <th class="p-3">Purpose</th>
-              <th class="p-3">Status</th>
-              <th class="p-3">Action</th>
-            </tr>
-          </thead>
+      <%= link_to "Document Requests",
+          admin_document_requests_path,
+          class: "block px-3 py-2 hover:bg-gray-100" %>
 
-          <tbody>
-            <% @all_document_requests.each do |request| %>
-              <tr class="border-b">
-                <td class="p-3">
-                  <%= request.resident.profile.first_name %>
-                  <%= request.resident.profile.last_name %>
-                </td>
-                <td class="p-3"><%= request.resident.address.purok %></td>
-                <td class="p-3"><%= request.document_type.humanize %></td>
-                <td class="p-3"><%= request.purpose %></td>
-                <td class="p-3 font-medium"><%= request.status.humanize %></td>
-                <td class="p-3">
-                  <%= link_to "Review", document_request_path(request), class: "text-blue-600 hover:underline" %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <%= link_to "Barangay Concerns",
+          admin_barangay_concerns_path,
+          class: "block px-3 py-2 hover:bg-gray-100" %>
+    </nav>
+  </aside>
+
+  <main class="min-w-0 flex-1 space-y-8">
+
+    <header>
+      <h1 class="text-2xl font-bold">Barangay Admin Dashboard</h1>
+
+      <p class="text-gray-600">
+        Logged in as:
+        <%= current_user.profile.first_name %>
+        (<%= current_user.staff.position.humanize %>)
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+
+      <div class="border p-4">
+        <h4 class="font-medium">Pending Documents</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @pending_docs_count %>
+        </p>
       </div>
-    <% else %>
-      <p class="text-gray-600">No document requests have been filed yet.</p>
-    <% end %>
-  </section>
 
-  <section>
-    <h2 class="mb-4 text-xl font-semibold">All Reported Barangay Concerns</h2>
-
-    <% if @all_barangay_concerns.any? %>
-      <div class="overflow-x-auto">
-        <table class="w-full border-collapse">
-          <thead>
-            <tr class="border-b bg-gray-100 text-left">
-              <th class="p-3">Reporter</th>
-              <th class="p-3">Category</th>
-              <th class="p-3">Reason Summary</th>
-              <th class="p-3">Status</th>
-              <th class="p-3">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <% @all_barangay_concerns.each do |concern| %>
-              <tr class="border-b">
-                <td class="p-3">
-                  <%= concern.resident.profile.first_name %>
-                  <%= concern.resident.profile.last_name %>
-                </td>
-                <td class="p-3"><%= concern.category.humanize %></td>
-                <td class="p-3"><%= truncate(concern.reason, length: 50) %></td>
-                <td class="p-3 font-medium"><%= concern.status.humanize %></td>
-                <td class="p-3">
-                  <%= link_to "Review", barangay_concern_path(concern), class: "text-blue-600 hover:underline" %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <div class="border p-4">
+        <h4 class="font-medium">Ongoing Concerns</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @ongoing_concerns_count %>
+        </p>
       </div>
-    <% else %>
-      <p class="text-gray-600">No concerns have been reported yet.</p>
-    <% end %>
-  </section>
+
+      <div class="border p-4">
+        <h4 class="font-medium">Completed Docs This Week</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @docs_done_this_week %>
+        </p>
+      </div>
+
+      <div class="border p-4">
+        <h4 class="font-medium">Resolved Concerns This Week</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @concerns_resolved_this_week %>
+        </p>
+      </div>
+
+      <div class="border p-4">
+        <h4 class="font-medium">Total Residents</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @total_residents_count %>
+        </p>
+      </div>
+
+    </div>
+
+    <section>
+      <h2 class="mb-4 text-xl font-semibold">
+        All Incoming Resident Document Requests
+      </h2>
+
+      <% if @all_document_requests.any? %>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+
+            <thead>
+              <tr class="border-b bg-gray-100 text-left">
+                <th class="p-3">Resident Name</th>
+                <th class="p-3">Purok</th>
+                <th class="p-3">Document Type</th>
+                <th class="p-3">Purpose</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @all_document_requests.each do |request| %>
+
+                <tr class="border-b">
+
+                  <td class="p-3">
+                    <%= request.resident.profile.first_name %>
+                    <%= request.resident.profile.last_name %>
+                  </td>
+
+                  <td class="p-3">
+                    <%= request.resident.address.purok %>
+                  </td>
+
+                  <td class="p-3">
+                    <%= request.document_type.humanize %>
+                  </td>
+
+                  <td class="p-3">
+                    <%= request.purpose %>
+                  </td>
+
+                  <td class="p-3 font-medium">
+                    <%= request.status.humanize %>
+                  </td>
+
+                  <td class="p-3">
+                    <%= link_to "Review",
+                        document_request_path(request),
+                        class: "text-blue-600 hover:underline" %>
+                  </td>
+
+                </tr>
+
+              <% end %>
+            </tbody>
+
+          </table>
+        </div>
+
+      <% else %>
+        <p class="text-gray-600">
+          No document requests have been filed yet.
+        </p>
+      <% end %>
+
+    </section>
+
+    <section>
+      <h2 class="mb-4 text-xl font-semibold">
+        All Reported Barangay Concerns
+      </h2>
+
+      <% if @all_barangay_concerns.any? %>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+
+            <thead>
+              <tr class="border-b bg-gray-100 text-left">
+                <th class="p-3">Reporter</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Reason Summary</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @all_barangay_concerns.each do |concern| %>
+
+                <tr class="border-b">
+
+                  <td class="p-3">
+                    <%= concern.resident.profile.first_name %>
+                    <%= concern.resident.profile.last_name %>
+                  </td>
+
+                  <td class="p-3">
+                    <%= concern.category.humanize %>
+                  </td>
+
+                  <td class="p-3">
+                    <%= truncate(concern.reason, length: 50) %>
+                  </td>
+
+                  <td class="p-3 font-medium">
+                    <%= concern.status.humanize %>
+                  </td>
+
+                  <td class="p-3">
+                    <%= link_to "Review",
+                        barangay_concern_path(concern),
+                        class: "text-blue-600 hover:underline" %>
+                  </td>
+
+                </tr>
+
+              <% end %>
+            </tbody>
+
+          </table>
+        </div>
+
+      <% else %>
+        <p class="text-gray-600">
+          No concerns have been reported yet.
+        </p>
+      <% end %>
+
+    </section>
+
+  </main>
+
 </div>

@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   resources :barangay_concerns
 
   get '/admin', to: 'admin#index', as: :admin_dashboard
+  get '/admin/document_requests', to: 'admin#document_requests', as: :admin_document_requests
+  get '/admin/barangay_concerns', to: 'admin#barangay_concerns', as: :admin_barangay_concerns
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
