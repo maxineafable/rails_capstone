@@ -1,0 +1,91 @@
+<% # app/views/admin/residents.html.erb %>
+
+<div class="flex min-h-screen gap-8">
+
+  <!-- Sidebar -->
+  <%= render "sidebar" %>
+
+  <!-- Main Content -->
+  <main class="min-w-0 flex-1 space-y-6">
+
+    <!-- Header -->
+    <div>
+      <h1 class="text-2xl font-bold">
+        Registered Barangay Residents
+      </h1>
+
+      <%= link_to "← Back to Admin Dashboard",
+          admin_dashboard_path,
+          class: "mt-2 inline-block text-blue-600 hover:underline" %>
+    </div>
+
+
+    <!-- Total Residents -->
+    <div class="border p-4">
+      <p class="font-medium">
+        Total Registered Onboarded Citizens
+      </p>
+
+      <p class="mt-2 text-2xl font-bold">
+        <%= @residents.count %>
+      </p>
+    </div>
+
+
+    <!-- Residents Table -->
+    <section>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border">
+
+          <thead>
+            <tr class="border-b bg-gray-100 text-left">
+              <th class="border p-3">Full Name</th>
+              <th class="border p-3">Sex</th>
+              <th class="border p-3">Birth Date</th>
+              <th class="border p-3">Purok</th>
+              <th class="border p-3">Street Address</th>
+              <th class="border p-3">System Account Email</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @residents.each do |resident| %>
+
+              <tr class="border-b">
+
+                <td class="border p-3">
+                  <%= "#{resident.profile.last_name}, #{resident.profile.first_name} #{resident.profile.middle_name}".strip.upcase %>
+                </td>
+
+                <td class="border p-3">
+                  <%= resident.profile.sex.humanize %>
+                </td>
+
+                <td class="border p-3">
+                  <%= resident.profile.birth_date.strftime("%B %d, %Y") %>
+                </td>
+
+                <td class="border p-3">
+                  <%= resident.address&.purok || "—" %>
+                </td>
+
+                <td class="border p-3">
+                  <%= resident.address&.street || "—" %>
+                </td>
+
+                <td class="border p-3">
+                  <%= resident.email %>
+                </td>
+
+              </tr>
+
+            <% end %>
+          </tbody>
+
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</div>

@@ -17,7 +17,9 @@ Rails.application.routes.draw do
   get '/admin', to: 'admin#index', as: :admin_dashboard
   get '/admin/document_requests', to: 'admin#document_requests', as: :admin_document_requests
   get '/admin/barangay_concerns', to: 'admin#barangay_concerns', as: :admin_barangay_concerns
-
+  get '/admin/residents', to: 'admin#residents', as: :admin_residents
+  get '/admin/staffs', to: 'admin#staffs', as: :admin_staffs
+  
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

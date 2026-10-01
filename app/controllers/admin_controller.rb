@@ -33,6 +33,14 @@ class AdminController < ApplicationController
     @resolved_concerns = BarangayConcern.resolved.count
     @unactionable_concerns = BarangayConcern.unactionable.count
   end
+
+  def residents
+    @residents = User.includes(:profile, :address).order("profiles.last_name ASC")
+  end
+  
+  def staffs
+    @staffs = User.includes(:profile, :staff).where.associated(:staff).order("staffs.position ASC")
+  end
   
   private
     def authorize_staff!

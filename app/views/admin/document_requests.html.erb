@@ -1,94 +1,119 @@
-<div class="space-y-6">
-  <div>
-    <h1 class="text-2xl font-bold">Admin Console: Document Requests Logs</h1>
+<% # app/views/admin/document_requests.html.erb %>
 
-    <%= link_to "← Back to Main Dashboard",
-        admin_dashboard_path,
-        class: "mt-2 inline-block text-blue-600 hover:underline" %>
-  </div>
+<div class="flex min-h-screen gap-8">
 
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <!-- Sidebar -->
+  <%= render "sidebar" %>
 
-    <div class="border p-4">
-      <h4 class="font-medium">All Requests</h4>
-      <p class="mt-2 text-2xl font-bold">
-        <%= @total_docs %>
-      </p>
+  <!-- Main Content -->
+  <main class="min-w-0 flex-1 space-y-6">
+
+    <div>
+      <h1 class="text-2xl font-bold">
+        Admin Console: Document Requests Logs
+      </h1>
+
+      <%= link_to "← Back to Main Dashboard",
+          admin_dashboard_path,
+          class: "mt-2 inline-block text-blue-600 hover:underline" %>
     </div>
 
-    <div class="border p-4">
-      <h4 class="font-medium">Processing</h4>
-      <p class="mt-2 text-2xl font-bold">
-        <%= @processing_docs %>
-      </p>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+      <div class="border p-4">
+        <h4 class="font-medium">All Requests</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @total_docs %>
+        </p>
+      </div>
+
+      <div class="border p-4">
+        <h4 class="font-medium">Processing</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @processing_docs %>
+        </p>
+      </div>
+
+      <div class="border p-4">
+        <h4 class="font-medium">Rejected</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @rejected_docs %>
+        </p>
+      </div>
+
+      <div class="border p-4">
+        <h4 class="font-medium">Ready for Pickup</h4>
+        <p class="mt-2 text-2xl font-bold">
+          <%= @ready_pickup_docs %>
+        </p>
+      </div>
+
     </div>
 
-    <div class="border p-4">
-      <h4 class="font-medium">Rejected</h4>
-      <p class="mt-2 text-2xl font-bold">
-        <%= @rejected_docs %>
-      </p>
-    </div>
 
-    <div class="border p-4">
-      <h4 class="font-medium">Ready for Pickup</h4>
-      <p class="mt-2 text-2xl font-bold">
-        <%= @ready_pickup_docs %>
-      </p>
-    </div>
+    <!-- Document Requests -->
+    <section>
+      <h2 class="mb-4 text-xl font-semibold">
+        All Document Requests
+      </h2>
 
-  </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border">
 
-  <section>
-    <h2 class="mb-4 text-xl font-semibold">All Document Requests</h2>
-
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse border">
-        <thead>
-          <tr class="border-b bg-gray-100 text-left">
-            <th class="border p-3">Resident Name</th>
-            <th class="border p-3">Purok</th>
-            <th class="border p-3">Document Type</th>
-            <th class="border p-3">Purpose</th>
-            <th class="border p-3">Status</th>
-            <th class="border p-3">Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @all_document_requests.each do |request| %>
-            <tr class="border-b">
-              <td class="border p-3">
-                <%= request.resident.profile.first_name %>
-                <%= request.resident.profile.last_name %>
-              </td>
-
-              <td class="border p-3">
-                <%= request.resident.address.purok %>
-              </td>
-
-              <td class="border p-3">
-                <%= request.document_type.humanize %>
-              </td>
-
-              <td class="border p-3">
-                <%= request.purpose %>
-              </td>
-
-              <td class="border p-3 font-semibold">
-                <%= request.status.humanize %>
-              </td>
-
-              <td class="border p-3">
-                <%= link_to "Review/Process",
-                    document_request_path(request),
-                    class: "text-blue-600 hover:underline" %>
-              </td>
+          <thead>
+            <tr class="border-b bg-gray-100 text-left">
+              <th class="border p-3">Resident Name</th>
+              <th class="border p-3">Purok</th>
+              <th class="border p-3">Document Type</th>
+              <th class="border p-3">Purpose</th>
+              <th class="border p-3">Status</th>
+              <th class="border p-3">Action</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </section>
+          </thead>
+
+          <tbody>
+            <% @all_document_requests.each do |request| %>
+
+              <tr class="border-b">
+
+                <td class="border p-3">
+                  <%= request.resident.profile.first_name %>
+                  <%= request.resident.profile.last_name %>
+                </td>
+
+                <td class="border p-3">
+                  <%= request.resident.address.purok %>
+                </td>
+
+                <td class="border p-3">
+                  <%= request.document_type.humanize %>
+                </td>
+
+                <td class="border p-3">
+                  <%= request.purpose %>
+                </td>
+
+                <td class="border p-3 font-semibold">
+                  <%= request.status.humanize %>
+                </td>
+
+                <td class="border p-3">
+                  <%= link_to "Review/Process",
+                      document_request_path(request),
+                      class: "text-blue-600 hover:underline" %>
+                </td>
+
+              </tr>
+
+            <% end %>
+          </tbody>
+
+        </table>
+      </div>
+    </section>
+
+  </main>
 
 </div>

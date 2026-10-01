@@ -1,0 +1,76 @@
+<% # app/views/admin/staffs.html.erb %>
+
+<div class="flex min-h-screen gap-8">
+
+  <!-- Sidebar -->
+  <%= render "sidebar" %>
+
+  <!-- Main Content -->
+  <main class="min-w-0 flex-1 space-y-6">
+
+    <!-- Header -->
+    <div>
+      <h1 class="text-2xl font-bold">
+        Active Barangay Council & Staff
+      </h1>
+
+      <%= link_to "← Back to Admin Dashboard",
+          admin_dashboard_path,
+          class: "mt-2 inline-block text-blue-600 hover:underline" %>
+    </div>
+
+
+    <!-- Staff Table -->
+    <section>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border">
+
+          <thead>
+            <tr class="border-b bg-gray-100 text-left">
+              <th class="border p-3">Official Designation Role</th>
+              <th class="border p-3">Staff Name</th>
+              <th class="border p-3">Account Email</th>
+              <th class="border p-3">System Active Since</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @staffs.each do |user| %>
+
+              <tr class="border-b">
+
+                <td class="border p-3 font-semibold">
+                  <%= user.staff.position.humanize.upcase %>
+                </td>
+
+                <td class="border p-3">
+                  <% if user.profile.present? %>
+                    <%= user.profile.first_name %>
+                    <%= user.profile.last_name %>
+                  <% else %>
+                    <span class="italic text-gray-500">
+                      (Profile Pending Setup)
+                    </span>
+                  <% end %>
+                </td>
+
+                <td class="border p-3">
+                  <%= user.email %>
+                </td>
+
+                <td class="border p-3">
+                  <%= user.created_at.strftime("%B %d, %Y") %>
+                </td>
+
+              </tr>
+
+            <% end %>
+          </tbody>
+
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</div>

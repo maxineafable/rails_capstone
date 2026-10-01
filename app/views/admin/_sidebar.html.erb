@@ -1,0 +1,25 @@
+<aside class="w-56 shrink-0 border-r pr-6">
+  <h2 class="mb-4 text-lg font-bold">Admin Console</h2>
+
+  <nav class="space-y-1">
+    <%= link_to "Main Dashboard",
+        admin_dashboard_path,
+        class: "block px-3 py-2 hover:bg-gray-100" %>
+
+    <%= link_to "Document Requests",
+        admin_document_requests_path,
+        class: "block px-3 py-2 hover:bg-gray-100" %>
+
+    <%= link_to "Barangay Concerns",
+        admin_barangay_concerns_path,
+        class: "block px-3 py-2 hover:bg-gray-100" %>
+
+    <%= link_to "Residents",
+        admin_residents_path,
+        class: "block px-3 py-2 hover:bg-gray-100" %>
+          
+    <%= link_to "Staffs",
+        admin_staffs_path,
+        class: "block px-3 py-2 hover:bg-gray-100" %>
+  </nav>
+</aside>
