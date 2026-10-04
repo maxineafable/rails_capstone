@@ -1,0 +1,168 @@
+<%# app/views/household_members/new.html.erb %>
+
+<div class="flex">
+  <%= render "admin/sidebar" %>
+
+  <div class="flex-1 space-y-6 p-8">
+
+    <header class="rounded-xl border bg-white p-6">
+      <h2 class="text-2xl font-bold text-gray-800">
+        Add New Household Member
+      </h2>
+
+      <p class="mt-1 text-sm text-gray-500">
+        Household #<%= @household.house_number %>
+        · <%= @household.street %>
+        · Purok <%= @household.purok %>
+      </p>
+    </header>
+
+    <section class="rounded-xl border bg-white p-6">
+
+      <% if @household_member.errors.any? %>
+        <div class="mb-6 rounded border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <h4 class="font-semibold">
+            Please fix the following errors:
+          </h4>
+
+          <ul class="mt-2 list-disc pl-5">
+            <% @household_member.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with model: [@household, @household_member],
+                    url: household_members_path(@household),
+                    local: true do |f| %>
+
+        <!-- NAME -->
+        <div class="mb-6">
+          <h3 class="mb-4 text-lg font-semibold text-gray-800">
+            Personal Information
+          </h3>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+            <div>
+              <%= f.label :first_name, "First Name *",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.text_field :first_name,
+                               required: true,
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+            <div>
+              <%= f.label :middle_name, "Middle Name",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.text_field :middle_name,
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+            <div>
+              <%= f.label :last_name, "Last Name *",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.text_field :last_name,
+                               required: true,
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+            <div>
+              <%= f.label :suffix, "Suffix",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.text_field :suffix,
+                               placeholder: "Jr., Sr.",
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- DETAILS -->
+        <div class="border-t pt-6">
+
+          <h3 class="mb-4 text-lg font-semibold text-gray-800">
+            Resident Details
+          </h3>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+            <div>
+              <%= f.label :birth_date, "Birth Date *",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.date_field :birth_date,
+                               required: true,
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+            <div>
+              <%= f.label :birth_place, "Birth Place *",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.text_field :birth_place,
+                               required: true,
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+            <div>
+              <%= f.label :sex, "Sex *",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.select :sex,
+                           HouseholdMember.sexes.keys.map { |s| [s.humanize, s] },
+                           { include_blank: "Select" },
+                           {
+                             required: true,
+                             class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                           } %>
+            </div>
+
+            <div>
+              <%= f.label :civil_status, "Civil Status *",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.select :civil_status,
+                           HouseholdMember.civil_statuses.keys.map { |c| [c.humanize, c] },
+                           { include_blank: "Select" },
+                           {
+                             required: true,
+                             class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                           } %>
+            </div>
+
+            <div>
+              <%= f.label :citizenship, "Citizenship",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.text_field :citizenship,
+                               value: f.object.citizenship || "Filipino",
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+            <div>
+              <%= f.label :occupation, "Occupation",
+                          class: "mb-1 block text-sm font-medium text-gray-700" %>
+              <%= f.text_field :occupation,
+                               placeholder: "Driver, Teacher, None",
+                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="mt-6 flex items-center gap-3 border-t pt-6">
+
+          <%= f.submit "Save Member",
+                       class: "rounded bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700" %>
+
+          <%= link_to "Cancel",
+                      household_path(@household),
+                      class: "rounded border px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+
+        </div>
+
+      <% end %>
+
+    </section>
+
+  </div>
+</div>

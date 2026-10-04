@@ -80,7 +80,10 @@ class AdminController < ApplicationController
   end
 
   def residents
-    @residents = User.includes(:profile, :address).order("profiles.last_name ASC")
+    # @residents = User.includes(:profile, :address).order("profiles.last_name ASC")
+
+    household_query = Household.includes(:household_members).order(created_at: :desc)
+    @pagy_households, @households = pagy(:offset, household_query, items: 10, page_param: :households_page)
   end
 
   def staffs

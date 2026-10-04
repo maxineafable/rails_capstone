@@ -1,25 +1,29 @@
 Rails.application.routes.draw do
-  devise_for :users, :controllers => {:registrations => "registrations"}
+  devise_for :users, controllers: { registrations: "registrations" }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  resource :profile, only: [:show, :new, :create, :edit, :update]
-  resource :address, only: [:new, :create]
+  resource :profile, only: [ :show, :new, :create, :edit, :update ]
+  resource :address, only: [ :new, :create ]
 
-  get 'document_requests/new', to: 'document_requests#select_type', as: :select_document_type
-  resources :document_requests, only: [:create, :show, :update] do
+  get "document_requests/new", to: "document_requests#select_type", as: :select_document_type
+  resources :document_requests, only: [ :create, :show, :update ] do
     collection do
-      get ':document_type/new', to: 'document_requests#new', as: :new_type
+      get ":document_type/new", to: "document_requests#new", as: :new_type
     end
   end
 
   resources :barangay_concerns
 
-  get '/admin', to: 'admin#index', as: :admin_dashboard
-  get '/admin/document_requests', to: 'admin#document_requests', as: :admin_document_requests
-  get '/admin/barangay_concerns', to: 'admin#barangay_concerns', as: :admin_barangay_concerns
-  get '/admin/residents', to: 'admin#residents', as: :admin_residents
-  get '/admin/staffs', to: 'admin#staffs', as: :admin_staffs
-  
+  get "/admin", to: "admin#index", as: :admin_dashboard
+  get "/admin/document_requests", to: "admin#document_requests", as: :admin_document_requests
+  get "/admin/barangay_concerns", to: "admin#barangay_concerns", as: :admin_barangay_concerns
+  get "/admin/residents", to: "admin#residents", as: :admin_residents
+  get "/admin/staffs", to: "admin#staffs", as: :admin_staffs
+
+  resources :households, except: [ :index ] do
+    resources :household_members, only: [ :new, :create ], as: :members
+  end
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

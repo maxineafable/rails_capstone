@@ -1,0 +1,225 @@
+<div class="flex">
+  <%= render "admin/sidebar" %>
+
+  <div class="flex-1 space-y-6 p-8">
+
+    <!-- HEADER -->
+    <header class="rounded-xl border bg-white p-6">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">
+            Household Census Profile
+          </h2>
+          <p class="mt-1 text-sm text-gray-500">
+            Household record and registered members
+          </p>
+        </div>
+
+        <div class="flex gap-2">
+          <%= link_to "Back",
+                      admin_residents_path,
+                      class: "rounded border px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+
+          <%= link_to "Edit",
+                      edit_household_path(@household),
+                      class: "rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700" %>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- HOUSEHOLD INFORMATION -->
+    <section class="rounded-xl border bg-white p-6">
+
+      <div class="mb-5">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Household Information
+        </h3>
+        <p class="text-sm text-gray-500">
+          Basic information about this household.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+        <div>
+          <p class="text-xs font-medium uppercase text-gray-500">
+            House Number
+          </p>
+          <p class="mt-1 font-medium text-gray-800">
+            <%= @household.house_number %>
+          </p>
+        </div>
+
+        <div>
+          <p class="text-xs font-medium uppercase text-gray-500">
+            Street
+          </p>
+          <p class="mt-1 text-gray-800">
+            <%= @household.street %>
+          </p>
+        </div>
+
+        <div>
+          <p class="text-xs font-medium uppercase text-gray-500">
+            Purok
+          </p>
+          <p class="mt-1 text-gray-800">
+            Purok <%= @household.purok %>
+          </p>
+        </div>
+
+        <div>
+          <p class="text-xs font-medium uppercase text-gray-500">
+            Date Accomplished
+          </p>
+          <p class="mt-1 text-gray-800">
+            <%= @household.date_accomplished.strftime("%B %d, %Y") %>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MEMBERS -->
+    <section class="rounded-xl border bg-white">
+
+      <div class="border-b p-6">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Household Members
+          <span class="ml-1 text-sm font-normal text-gray-500">
+            (<%= @members.count %>)
+          </span>
+        </h3>
+
+        <p class="mt-1 text-sm text-gray-500">
+          Registered residents living in this household.
+        </p>
+      </div>
+
+      <% if @members.any? %>
+
+        <div class="divide-y">
+
+          <% @members.each_with_index do |member, index| %>
+
+            <div class="p-6">
+
+              <div class="mb-4 flex items-center justify-between">
+                <h4 class="font-semibold text-gray-800">
+                  Member <%= index + 1 %>
+                </h4>
+              </div>
+
+              <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+                <div class="lg:col-span-2">
+                  <p class="text-xs font-medium uppercase text-gray-500">
+                    Full Name
+                  </p>
+                  <p class="mt-1 font-medium text-gray-800">
+                    <%= [
+                      member.last_name,
+                      member.first_name,
+                      member.middle_name,
+                      member.suffix
+                    ].compact_blank.join(", ").upcase %>
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-xs font-medium uppercase text-gray-500">
+                    Birth Date
+                  </p>
+                  <p class="mt-1 text-gray-800">
+                    <%= member.birth_date.strftime("%B %d, %Y") %>
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-xs font-medium uppercase text-gray-500">
+                    Sex
+                  </p>
+                  <p class="mt-1 text-gray-800">
+                    <%= member.sex.humanize %>
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-xs font-medium uppercase text-gray-500">
+                    Birth Place
+                  </p>
+                  <p class="mt-1 text-gray-800">
+                    <%= member.birth_place %>
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-xs font-medium uppercase text-gray-500">
+                    Civil Status
+                  </p>
+                  <p class="mt-1 text-gray-800">
+                    <%= member.civil_status.humanize %>
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-xs font-medium uppercase text-gray-500">
+                    Citizenship
+                  </p>
+                  <p class="mt-1 text-gray-800">
+                    <%= member.citizenship.presence || "—" %>
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-xs font-medium uppercase text-gray-500">
+                    Occupation
+                  </p>
+                  <p class="mt-1 text-gray-800">
+                    <%= member.occupation.presence || "None / Unemployed" %>
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      <% else %>
+
+        <div class="p-8 text-center text-sm text-gray-500">
+          No household members have been registered.
+        </div>
+
+      <% end %>
+
+    </section>
+
+    <!-- DELETE -->
+    <section class="rounded-xl border border-red-200 bg-red-50 p-5">
+
+      <h3 class="font-semibold text-red-800">
+        Delete Household Record
+      </h3>
+
+      <p class="mt-1 mb-4 text-sm text-red-700">
+        Deleting this household will also remove all members registered under it.
+      </p>
+
+      <%= button_to "Delete Household Record",
+                    household_path(@household),
+                    method: :delete,
+                    data: {
+                      confirm: "Are you sure you want to delete this household? This will also remove all household members."
+                    },
+                    class: "rounded bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" %>
+
+    </section>
+
+  </div>
+</div>
