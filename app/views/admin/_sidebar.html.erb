@@ -1,25 +1,71 @@
-<aside class="w-56 shrink-0 border-r pr-6">
-  <h2 class="mb-4 text-lg font-bold">Admin Console</h2>
+<aside class="max-w-80 w-full bg-white">
+  <div class="p-6">
+    <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-blue-900 text-blue-900">
+        <span class="text-sm font-bold">BK</span>
+        </div>
 
-  <nav class="space-y-1">
-    <%= link_to "Main Dashboard",
-        admin_dashboard_path,
-        class: "block px-3 py-2 hover:bg-gray-100" %>
+        <div>
+        <p class="text-base font-bold leading-tight text-blue-900">
+            Barangay Kalikid Sur
+        </p>
+        <p class="text-[10px] font-bold tracking-wide text-green-700">
+            ADMINISTRATION AND SERVICE SYSTEM
+        </p>
+        </div>
+    </div>
 
-    <%= link_to "Document Requests",
-        admin_document_requests_path,
-        class: "block px-3 py-2 hover:bg-gray-100" %>
-
-    <%= link_to "Barangay Concerns",
-        admin_barangay_concerns_path,
-        class: "block px-3 py-2 hover:bg-gray-100" %>
-
-    <%= link_to "Residents",
-        admin_residents_path,
-        class: "block px-3 py-2 hover:bg-gray-100" %>
-          
-    <%= link_to "Staffs",
-        admin_staffs_path,
-        class: "block px-3 py-2 hover:bg-gray-100" %>
-  </nav>
+    <nav class="space-y-1">
+    
+      <%= link_to admin_dashboard_path,
+          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_dashboard_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <span>▦</span>
+        <span>Dashboard</span>
+      <% end %>
+    
+      <%= link_to admin_document_requests_path,
+          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_document_requests_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <span>▤</span>
+        <span>Document Requests</span>
+      <% end %>
+    
+      <%= link_to admin_barangay_concerns_path,
+          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_barangay_concerns_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <span>△</span>
+        <span>Concern Reports</span>
+      <% end %>
+    
+      <%= link_to admin_residents_path,
+          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_residents_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <span>♟</span>
+        <span>Residents</span>
+      <% end %>
+    
+      <%= link_to admin_staffs_path,
+          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_staffs_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <span>▣</span>
+        <span>Personnel</span>
+      <% end %>
+    
+      <%= link_to "#",
+          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100" do %>
+        <span>▥</span>
+        <span>Reports</span>
+      <% end %>
+    
+      <%= link_to "#",
+          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100" do %>
+        <span>⚙</span>
+        <span>Settings</span>
+      <% end %>
+    
+      <%= button_to destroy_user_session_path,
+          method: :delete,
+          class: "flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50" do %>
+        <span>←</span>
+        <span>Logout</span>
+      <% end %>
+    
+    </nav>
+  </div>
 </aside>

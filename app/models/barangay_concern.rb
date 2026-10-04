@@ -1,4 +1,6 @@
 class BarangayConcern < ApplicationRecord
+  extend Pagy::Search
+
   belongs_to :resident, class_name: "User", foreign_key: "user_id"
 
   has_one_attached :evidence_image

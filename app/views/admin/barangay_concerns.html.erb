@@ -1,126 +1,180 @@
-<% # app/views/admin/barangay_concerns.html.erb %>
-
-<div class="flex min-h-screen gap-8">
-
-  <!-- Sidebar -->
+<div class="flex">
   <%= render "sidebar" %>
+    <div class="flex-1 p-8 space-y-8">
+      <header class="bg-white rounded-xl p-6 border">
+        <h2 class="text-2xl font-bold">Community Concern ReportsManagement</h2>
+        <p class="text-sm max-w-xl">Monitor and manage community concerns reported by residents.</p>
+      </header>
 
-  <!-- Main Content -->
-  <main class="min-w-0 flex-1 space-y-6">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
 
-    <div>
-      <h1 class="text-2xl font-bold">
-        Admin Console: Barangay Concerns Logs
-      </h1>
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase text-gray-500">Lahat (All)</p>
+              <p class="mt-2 text-2xl font-bold text-blue-800">
+                <%= @total_concerns %>
+              </p>
+              <p class="mt-1 text-xs text-gray-500">Total filed reports</p>
+            </div>
 
-      <%= link_to "← Back to Main Dashboard",
-          admin_dashboard_path,
-          class: "mt-2 inline-block text-blue-600 hover:underline" %>
+            <span class="text-blue-800">▣</span>
+          </div>
+        </div>
+
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase text-amber-700">Pending</p>
+              <p class="mt-2 text-2xl font-bold text-amber-900">
+                <%= @pending_concerns %>
+              </p>
+              <p class="mt-1 text-xs text-gray-500">Aksyon kailangan</p>
+            </div>
+
+            <span class="text-amber-900">♧</span>
+          </div>
+        </div>
+
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase text-blue-700">Ongoing</p>
+              <p class="mt-2 text-2xl font-bold text-blue-800">
+                <%= @ongoing_concerns %>
+              </p>
+              <p class="mt-1 text-xs text-gray-500">Pinoproseso</p>
+            </div>
+
+            <span class="text-blue-800">♟</span>
+          </div>
+        </div>
+
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase text-green-700">Resolved</p>
+              <p class="mt-2 text-2xl font-bold text-green-700">
+                <%= @resolved_concerns %>
+              </p>
+              <p class="mt-1 text-xs text-gray-500">Naresolba na</p>
+            </div>
+
+            <span class="text-green-700">✓</span>
+          </div>
+        </div>
+
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase text-red-600">Dismissed</p>
+              <p class="mt-2 text-2xl font-bold text-red-600">
+                <%= @unactionable_concerns %>
+              </p>
+              <p class="mt-1 text-xs text-gray-500">Unactionable reports</p>
+            </div>
+
+            <span class="text-red-600">⊗</span>
+          </div>
+        </div>
+
+      </div>
+
+      <%= form_with url: admin_barangay_concerns_path, method: :get, local: true,
+        class: "mb-6 flex flex-wrap items-end gap-4" do |f| %>
+
+        <div>
+          <%= f.label :search, "Search Resident:" , class: "mb-1 block text-sm font-medium text-gray-600" %>
+
+            <%= f.text_field :search, value: params[:search], placeholder: "Name, purok, or purpose..." ,
+              class: "w-64 rounded border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none" %>
+        </div>
+
+        <div>
+          <%= f.label :sort_direction, "Date Order:" , class: "mb-1 block text-sm font-medium text-gray-600" %>
+
+            <%= f.select :sort_direction, [ ["Newest First", "desc" ], ["Oldest First", "asc" ] ], { selected:
+              params[:sort_direction] || "desc" }, {
+              class: "rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+              } %>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <%= f.submit "Filter Logs" , name: nil,
+            class: "rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700" %>
+
+              <%= link_to "Reset" , admin_barangay_concerns_path,
+                class: "px-2 py-2 text-sm text-red-600 hover:text-red-700" %>
+        </div>
+
+        <% end %>
+
+
+
+          <!-- Barangay Concerns -->
+          <section>
+            <h2 class="mb-4 text-xl font-semibold">
+              All Barangay Concerns
+            </h2>
+
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse border">
+
+                <thead>
+                  <tr class="border-b bg-gray-100 text-left">
+                    <th class="border p-3">Reporter</th>
+                    <th class="border p-3">Category</th>
+                    <th class="border p-3">Tracking Number</th>
+                    <th class="border p-3">Location Landmark</th>
+                    <th class="border p-3">Status</th>
+                    <th class="border p-3">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% @all_barangay_concerns.each do |concern| %>
+
+                    <tr class="border-b">
+
+                      <td class="border p-3">
+                        <%= concern.resident.profile.first_name %>
+                          <%= concern.resident.profile.last_name %>
+                      </td>
+
+                      <td class="border p-3">
+                        <%= concern.category.humanize %>
+                      </td>
+
+                      <td class="border p-3">
+                        <%= concern.tracking_number %>
+                      </td>
+
+                      <td class="border p-3">
+                        <%= concern.location_description %>
+                      </td>
+
+                      <td class="border p-3 font-semibold">
+                        <%= concern.status.humanize %>
+                      </td>
+
+                      <td class="border p-3">
+                        <%= link_to "Review/Track" , barangay_concern_path(concern),
+                          class: "text-blue-600 hover:underline" %>
+                      </td>
+
+                    </tr>
+
+                    <% end %>
+                </tbody>
+
+              </table>
+            </div>
+          </section>
+
+          <br>
+          <div style="display: flex; justify-content: center; gap: 10px; font-weight: bold; margin-top: 15px;">
+            <%# Pagy 43 Server Side Core Navigation Component Row Link Generator %>
+              <%== @pagy.series_nav %>
+          </div>
     </div>
-
-
-    <!-- Stats -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-
-      <div class="border p-4">
-        <h4 class="font-medium">Total Filed</h4>
-        <p class="mt-2 text-2xl font-bold">
-          <%= @total_concerns %>
-        </p>
-      </div>
-
-      <div class="border p-4">
-        <h4 class="font-medium">Pending</h4>
-        <p class="mt-2 text-2xl font-bold">
-          <%= @pending_concerns %>
-        </p>
-      </div>
-
-      <div class="border p-4">
-        <h4 class="font-medium">Ongoing</h4>
-        <p class="mt-2 text-2xl font-bold">
-          <%= @ongoing_concerns %>
-        </p>
-      </div>
-
-      <div class="border p-4">
-        <h4 class="font-medium">Resolved</h4>
-        <p class="mt-2 text-2xl font-bold">
-          <%= @resolved_concerns %>
-        </p>
-      </div>
-
-      <div class="border p-4">
-        <h4 class="font-medium">Dismissed</h4>
-        <p class="mt-2 text-2xl font-bold">
-          <%= @unactionable_concerns %>
-        </p>
-      </div>
-
-    </div>
-
-
-    <!-- Barangay Concerns -->
-    <section>
-      <h2 class="mb-4 text-xl font-semibold">
-        All Barangay Concerns
-      </h2>
-
-      <div class="overflow-x-auto">
-        <table class="w-full border-collapse border">
-
-          <thead>
-            <tr class="border-b bg-gray-100 text-left">
-              <th class="border p-3">Reporter</th>
-              <th class="border p-3">Category</th>
-              <th class="border p-3">Tracking Number</th>
-              <th class="border p-3">Location Landmark</th>
-              <th class="border p-3">Status</th>
-              <th class="border p-3">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <% @all_barangay_concerns.each do |concern| %>
-
-              <tr class="border-b">
-
-                <td class="border p-3">
-                  <%= concern.resident.profile.first_name %>
-                  <%= concern.resident.profile.last_name %>
-                </td>
-
-                <td class="border p-3">
-                  <%= concern.category.humanize %>
-                </td>
-
-                <td class="border p-3">
-                  <%= concern.tracking_number %>
-                </td>
-
-                <td class="border p-3">
-                  <%= concern.location_description %>
-                </td>
-
-                <td class="border p-3 font-semibold">
-                  <%= concern.status.humanize %>
-                </td>
-
-                <td class="border p-3">
-                  <%= link_to "Review/Track",
-                      barangay_concern_path(concern),
-                      class: "text-blue-600 hover:underline" %>
-                </td>
-
-              </tr>
-
-            <% end %>
-          </tbody>
-
-        </table>
-      </div>
-    </section>
-
-  </main>
-
 </div>
