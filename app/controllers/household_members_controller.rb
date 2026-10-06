@@ -43,7 +43,7 @@ class HouseholdMembersController < ApplicationController
       params.require(:household_member).permit(
         :first_name, :middle_name, :last_name, :suffix,
         :birth_date, :birth_place, :sex, :civil_status,
-        :citizenship, :occupation
+        :citizenship, :occupation, :relationship_to_head
       )
     end
 

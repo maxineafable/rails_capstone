@@ -14,6 +14,10 @@ class HouseholdsController < ApplicationController
 
   def create
     @household = Household.new(household_params)
+
+    first_member = @household.household_members.first
+    first_member.relationship_to_head = "Head" if first_member
+
     if @household.save
       redirect_to admin_residents_path, notice: "Household Census Record ##{@household.house_number} created successfully."
     else
@@ -53,7 +57,7 @@ class HouseholdsController < ApplicationController
         household_members_attributes: [
           :first_name, :middle_name, :last_name, :suffix,
           :birth_date, :birth_place, :sex, :civil_status,
-          :citizenship, :occupation
+          :citizenship, :occupation, :relationship_to_head
         ]
       )
     end

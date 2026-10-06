@@ -11,6 +11,10 @@ class User < ApplicationRecord
   has_many :document_requests, dependent: :destroy
   has_many :barangay_concerns, dependent: :destroy
 
+  has_many :assigned_barangay_concerns,
+           class_name: "BarangayConcern",
+           foreign_key: "assigned_staff_id"
+
   def barangay_staff?
     staff.present?
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_28_230726) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_06_052319) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,6 +68,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_28_230726) do
     t.string "location_description", null: false
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
+    t.bigint "assigned_staff_id"
+    t.index ["assigned_staff_id"], name: "index_barangay_concerns_on_assigned_staff_id"
     t.index ["user_id"], name: "index_barangay_concerns_on_user_id"
   end
 
@@ -99,6 +101,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_28_230726) do
     t.bigint "household_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "relationship_to_head", null: false
     t.index ["household_id"], name: "index_household_members_on_household_id"
   end
 
@@ -157,6 +160,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_28_230726) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "users", on_delete: :cascade
+  add_foreign_key "barangay_concerns", "users", column: "assigned_staff_id"
   add_foreign_key "barangay_concerns", "users", on_delete: :cascade
   add_foreign_key "document_requests", "users", on_delete: :cascade
   add_foreign_key "household_members", "households", on_delete: :cascade

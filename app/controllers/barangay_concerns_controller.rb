@@ -1,6 +1,6 @@
 class BarangayConcernsController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_staff!, only: [:update]
+  before_action :authorize_staff!, only: [ :update ]
 
   def index
     @barangay_concerns = current_user.barangay_concerns
@@ -53,7 +53,7 @@ class BarangayConcernsController < ApplicationController
     end
 
     def admin_barangay_concern_params
-      params.require(:barangay_concern).permit(:status, :staff_remarks)
+      params.require(:barangay_concern).permit(:status, :staff_remarks, :assigned_staff_id)
     end
 
     def authorize_staff!

@@ -2,6 +2,7 @@ class BarangayConcern < ApplicationRecord
   extend Pagy::Search
 
   belongs_to :resident, class_name: "User", foreign_key: "user_id"
+  belongs_to :assigned_staff, class_name: "User", optional: true
 
   has_one_attached :evidence_image
   has_many :status_logs, as: :loggable, dependent: :destroy

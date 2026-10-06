@@ -77,6 +77,15 @@
             <strong>Date Filed:</strong>
             <%= @barangay_concern.created_at.strftime("%B %d, %Y") %>
             </p>
+
+            <% if @barangay_concern.assigned_staff.present? %>
+              <p>
+                <strong>Assigned staff:</strong>
+                <%= @barangay_concern.assigned_staff.profile.first_name %>
+                <%= @barangay_concern.assigned_staff.profile.last_name %>
+                (<%= @barangay_concern.assigned_staff.staff.position.humanize %>)
+              </p>
+            <% end %>
         </div>
 
         <% if @barangay_concern.evidence_image.attached? %>
@@ -150,6 +159,20 @@
             <div class="mb-4">
                 <%= f.label :status, "Update Case Status", class: "mb-1 block font-medium" %>
                 <%= f.select :status, BarangayConcern.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "border p-2" %>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :assigned_staff_id, "Assign Staff", class: "mb-1 block font-medium" %>
+
+              <%= f.select :assigned_staff_id,
+                  User.includes(:profile, :staff).where.associated(:staff).map { |s|
+                    [
+                      "#{s.profile.first_name} #{s.profile.last_name} - #{s.staff.position.humanize}",
+                      s.id
+                    ]
+                  },
+                  { include_blank: "Select Staff" },
+                  class: "border p-2" %>
             </div>
 
             <div class="mb-4">
