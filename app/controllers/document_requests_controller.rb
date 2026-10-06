@@ -1,6 +1,6 @@
 class DocumentRequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_staff!, only: [:update]
+  before_action :authorize_staff!, only: [ :update ]
 
   def select_type
   end
@@ -43,7 +43,7 @@ class DocumentRequestsController < ApplicationController
     if @document_request.update(admin_update_params)
       # @document_request.staff_remarks = nil
 
-      redirect_to @document_request, notice: "Document request status updated successfully."
+      redirect_to admin_document_requests_path, notice: "Document request status updated successfully."
     else
       render :show, status: :unprocessable_entity
     end

@@ -1,154 +1,170 @@
-<div class="grid grid-cols-3 gap-8">
-  <div class="col-span-2 space-y-6">
-    <section>
-      <h3 class="mb-4 text-xl font-semibold">Document Req Log</h3>
+<%= turbo_frame_tag "remote_modal" do %>
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-lg bg-white shadow-lg">
 
-      <div class="border-l-2 pl-4">
-        <% @document_request.status_logs.order(created_at: :asc).each do |log| %>
-          <div class="mb-5">
-            <p class="font-medium">
-              <%= log.human_status %>
-            </p>
+      <div class="flex items-center justify-between border-b p-5">
+        <h2 class="text-xl font-bold text-gray-800">
+          Document Request Details
+        </h2>
 
-            <p class="text-sm text-gray-500">
-              <%= log.created_at.strftime("%B %d, %Y at %I:%M %p") %>
-            </p>
+        <%= link_to "✕", "#",
+                    class: "text-xl text-gray-500 hover:text-gray-800",
+                    data: { action: "click->remote-modal#close" } %>
+      </div>
 
-            <% if log.staff_remarks.present? %>
-              <p class="mt-1 text-sm text-gray-600">
-                Staff Update: <%= log.staff_remarks %>
+      <div class="grid grid-cols-1 gap-6 p-5 lg:grid-cols-3">
+
+        <div class="space-y-6 lg:col-span-2">
+
+          <section>
+            <h3 class="mb-3 font-semibold text-gray-800">Request Information</h3>
+
+            <div class="space-y-2 rounded border p-4 text-sm">
+              <p>
+                <strong>Resident:</strong>
+                <%= @document_request.resident.profile.first_name %>
+                <%= @document_request.resident.profile.last_name %>
               </p>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-    </section>
 
-    <section>
-      <h2 class="text-2xl font-bold">Document Request Details</h2>
+              <p>
+                <strong>Document Ticket:</strong>
+                <%= @document_request.tracking_number %>
+              </p>
 
-      <div class="mt-4 space-y-2">
-        <p>
-          <strong>Resident:</strong>
-          <%= @document_request.resident.profile.first_name %>
-          <%= @document_request.resident.profile.last_name %>
-        </p>
+              <p>
+                <strong>Document Type:</strong>
+                <%= @document_request.document_type.humanize %>
+              </p>
 
-        <p>
-          <strong>Document Ticket:</strong>
-          <%= @document_request.tracking_number %>
-        </p>
+              <% if @document_request.document_type == "certificate_of_income" %>
+                <p>
+                  <strong>Average Monthly Income:</strong>
+                  <%= @document_request.monthly_income %>
+                </p>
 
-        <p>
-          <strong>Document Type:</strong>
-          <%= @document_request.document_type.humanize %>
-        </p>
+                <p>
+                  <strong>Job:</strong>
+                  <%= @document_request.job %>
+                </p>
+              <% end %>
 
-        <% if @document_request.document_type == "certificate_of_income" %>
-          <p>
-            <strong>Average Monthly Income:</strong>
-            <%= @document_request.monthly_income %>
-          </p>
+              <p>
+                <strong>Purpose:</strong>
+                <%= @document_request.purpose %>
+              </p>
 
-          <p>
-            <strong>Job:</strong>
-            <%= @document_request.job %>
-          </p>
-        <% end %>
+              <p>
+                <strong>Resident Remarks:</strong>
+                <%= @document_request.resident_remarks.presence || "None" %>
+              </p>
 
-        <p>
-          <strong>Purpose:</strong>
-          <%= @document_request.purpose %>
-        </p>
+              <p>
+                <strong>Current Status:</strong>
+                <%= @document_request.status_logs.order(created_at: :asc).last&.human_status || "Pending" %>
+              </p>
 
-        <p>
-          <strong>Resident Remarks:</strong>
-          <%= @document_request.resident_remarks.presence || "None" %>
-        </p>
-
-        <p>
-        <strong>Current Status:</strong>
-        <span class="font-semibold"><%= @document_request.status_logs.last.human_status %></span>
-        </p>
-
-        <p>
-            <strong>Current Staff Remarks:</strong>
-            <span class="font-semibold"><%= @document_request.status_logs.last.staff_remarks %></span>
-            <%= @document_request.status_logs.last.staff_remarks.presence || "No updates from the staff yet." %>
-        </p>
-      </div>
-    </section>
-
-    <% if @document_request.valid_id_image.attached? %>
-      <section>
-        <p class="mb-2 font-semibold">
-          Verification ID (<%= @document_request.valid_id_type.humanize %>):
-        </p>
-
-        <%= image_tag @document_request.valid_id_image,
-            class: "block max-w-[400px] border" %>
-      </section>
-    <% end %>
-  </div>
-
-  <% if current_user.barangay_staff? %>
-    <section>
-      <h3 class="mb-4 text-xl font-semibold">Barangay Staff Action Panel</h3>
-
-      <%= form_with model: @document_request do |f| %>
-        <% if @document_request.errors.any? %>
-            <div class="mb-6 text-red-600">
-                <h3 class="mb-2 font-semibold">
-                Please fix the following errors:
-                </h3>
-
-                <ul class="list-disc pl-5">
-                <% @document_request.errors.full_messages.each do |message| %>
-                    <li><%= message %></li>
-                <% end %>
-                </ul>
+              <p>
+                <strong>Staff Remarks:</strong>
+                <%= @document_request.status_logs.order(created_at: :asc).last&.staff_remarks.presence || "No updates from the staff yet." %>
+              </p>
             </div>
+          </section>
+
+          <% if @document_request.valid_id_image.attached? %>
+            <section>
+              <h3 class="mb-3 font-semibold text-gray-800">
+                Verification ID (<%= @document_request.valid_id_type.humanize %>)
+              </h3>
+
+              <%= image_tag @document_request.valid_id_image,
+                            class: "max-h-80 max-w-full rounded border object-contain" %>
+            </section>
+          <% end %>
+
+          <section>
+            <h3 class="mb-3 font-semibold text-gray-800">Request History</h3>
+
+            <% if @document_request.status_logs.any? %>
+              <div class="space-y-4 border-l-2 border-gray-200 pl-4">
+                <% @document_request.status_logs.order(created_at: :asc).each do |log| %>
+                  <div>
+                    <p class="font-medium text-gray-800">
+                      <%= log.human_status %>
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+                      <%= log.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                    </p>
+
+                    <% if log.staff_remarks.present? %>
+                      <p class="mt-1 text-sm text-gray-600">
+                        <%= log.staff_remarks %>
+                      </p>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-sm text-gray-500">No request history available.</p>
+            <% end %>
+          </section>
+
+        </div>
+
+        <% if current_user.barangay_staff? %>
+          <section>
+            <h3 class="mb-3 font-semibold text-gray-800">Staff Action</h3>
+
+            <div class="rounded border p-4">
+              <%= form_with model: @document_request, local: true do |f| %>
+
+                <% if @document_request.errors.any? %>
+                  <div class="mb-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                    <p class="font-semibold">Please fix the following errors:</p>
+
+                    <ul class="mt-2 list-disc pl-5">
+                      <% @document_request.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <div class="mb-4">
+                  <%= f.label :status, "Request Status",
+                              class: "mb-1 block text-sm font-medium text-gray-700" %>
+
+                  <%= f.select :status,
+                               DocumentRequest.statuses.keys.map { |s| [s.humanize, s] },
+                               {},
+                               class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm" %>
+                </div>
+
+                <div class="mb-4">
+                  <%= f.label :staff_remarks, "Staff Remarks",
+                              class: "mb-1 block text-sm font-medium text-gray-700" %>
+
+                  <%= f.text_area :staff_remarks,
+                                  rows: 4,
+                                  class: "w-full rounded border border-gray-300 px-3 py-2 text-sm" %>
+                </div>
+
+                <%= f.submit "Update Request",
+                             class: "w-full cursor-pointer rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700" %>
+              <% end %>
+            </div>
+          </section>
         <% end %>
 
-        <div class="mb-4">
-          <%= f.label :status, "Update Request Status", class: "mb-1 block font-medium" %>
-
-          <%= f.select :status,
-              DocumentRequest.statuses.keys.map { |s| [s.humanize, s] },
-              {},
-              class: "border p-2" %>
-        </div>
-
-        <div class="mb-4">
-          <%= f.label :staff_remarks, "Staff Remarks / Notes", class: "mb-1 block font-medium" %>
-
-          <%= f.text_area :staff_remarks,
-              rows: 3,
-              class: "w-full max-w-[500px] border p-2" %>
-        </div>
-
-        <%= f.submit "Update Request",
-            class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
-      <% end %>
-
-      <div class="mt-4">
-        <%= link_to "← Back to Admin Console",
-            admin_dashboard_path,
-            class: "text-blue-600 hover:underline" %>
       </div>
-    </section>
-  <% else %>
-    <section>
-      <p>
-        <strong>Staff Remarks:</strong>
-        <%= @document_request.status_logs.last.staff_remarks.presence || "No updates from the staff yet." %>
-      </p>
 
-      <div class="mt-4">
-        <%= link_to "← Back to Dashboard",
-            root_path,
-            class: "text-blue-600 hover:underline" %>
+      <div class="flex justify-end border-t p-4">
+        <%= link_to "Close",
+                    "#",
+                    class: "rounded border px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+                    data: { action: "click->remote-modal#close" } %>
       </div>
-    </section>
-  <% end %>
-</div>
+
+    </div>
+  </div>
+<% end %>

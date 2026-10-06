@@ -154,10 +154,30 @@
                       <%= request.status.humanize %>
                     </td>
 
-                    <td class="border p-3">
-                      <%= link_to "Review/Process" , document_request_path(request),
-                        class: "text-blue-600 hover:underline" %>
-                    </td>
+                    
+                      <td class="border p-3 space-x-4">
+                        <%= link_to "View" , document_request_path(request),
+                          data: { turbo_frame: "remote_modal" },
+                          class: "text-blue-600 hover:underline" %>
+                        
+                          <% if request.pending? %>
+                            <%= link_to "Approve" , document_request_path(request),
+                              data: { turbo_frame: "remote_modal" },
+                              class: "text-blue-600 hover:underline" %>
+
+                            <%= link_to "Reject" , document_request_path(request),
+                              data: { turbo_frame: "remote_modal" },
+                              class: "text-blue-600 hover:underline" %>
+                          <% elsif request.processing? %>
+                            <%= link_to "Mark as ready" , document_request_path(request),
+                              data: { turbo_frame: "remote_modal" },
+                              class: "text-blue-600 hover:underline" %>
+                          <% elsif request.ready_to_pickup? %>
+                            <%= link_to "Release" , document_request_path(request),
+                              data: { turbo_frame: "remote_modal" },
+                              class: "text-blue-600 hover:underline" %>
+                          <% end %>
+                      </td>
 
                   </tr>
 
@@ -175,3 +195,8 @@
 
     </div>
 </div>
+
+<!-- HTML Target Box Container for remote modal injection loads -->
+<%= turbo_frame_tag "remote_modal" do %>
+  <!-- This space will dynamically fill up with the show form content when a link is clicked -->
+<% end %>
