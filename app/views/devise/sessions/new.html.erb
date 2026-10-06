@@ -1,26 +1,60 @@
-<h2>Log in</h2>
+<% content_for :title, "Log in | Barangay Kalikid Sur" %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :password %></p>
-    <p><%= f.password_field :password, autocomplete: "current-password" %></p>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <p><%= f.check_box :remember_me %></p>
-      <p><%= f.label :remember_me %></p>
+<div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
+  <header class="flex h-[85px] items-center bg-white px-5 shadow-[0_5px_12px_rgba(15,23,42,0.18)] sm:px-8">
+    <div class="mx-auto flex w-full max-w-[640px] items-center gap-2.5">
+      <span class="h-8 w-8 shrink-0 rounded-full bg-[#07349e] sm:h-10 sm:w-10" aria-hidden="true"></span>
+      <span class="flex flex-col">
+        <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px]">Barangay Kalikid Sur</strong>
+        <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px]">Digital System for Registered Residents</small>
+      </span>
     </div>
-  <% end %>
+  </header>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
+  <main class="flex min-h-[calc(100vh-85px)] items-center justify-center px-4 py-[18px] sm:items-start sm:px-6 sm:pt-[18px]">
+    <section class="w-full max-w-[640px] rounded-xl bg-white px-5 pb-8 pt-8 shadow-[0_5px_18px_rgba(15,23,42,0.25)] sm:px-[26px] sm:pb-11 sm:pt-12" aria-labelledby="login-title">
+      <div class="mx-auto mb-4 h-[90px] w-[90px] rounded-full bg-white shadow-[0_2px_5px_rgba(15,23,42,0.2)] sm:mb-4 sm:h-[112px] sm:w-[112px]" aria-hidden="true"></div>
+      <h1 id="login-title" class="mb-3 text-center text-[26px] font-bold leading-tight tracking-[-0.04em] sm:text-[30px]">Welcome!</h1>
+      <p class="mb-3 rounded-full bg-[#dce4ff] px-2 py-1 text-center text-[9px] font-bold tracking-[0.04em] text-[#07349e] sm:text-[12px]">KALIKID SUR, CABANATUAN CITY, NUEVA ECIJA</p>
+      <p class="mb-8 text-center text-[12px] leading-[1.5] text-slate-600 sm:mb-8 sm:text-[13px]">Access barangay clearance, certificates, indigency,<br class="hidden sm:block"> and community assistance online.</p>
 
-<%= render "devise/shared/links" %>
+      <% if resource.errors.any? %>
+        <div class="mb-4 text-sm text-red-700" role="alert"><%= resource.errors.full_messages.to_sentence %></div>
+      <% end %>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "text-left" }) do |f| %>
+        <div class="mb-4">
+          <%= f.label :email, class: "mb-1 block text-sm font-semibold" %>
+          <div class="flex h-12 items-center gap-3 rounded-xl bg-[#f1f2ff] px-3 sm:h-[49px]">
+            <svg class="h-4 w-4 shrink-0 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3.5 6.5h17v12h-17z"/><path d="m4 7 8 6 8-6"/></svg>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "juan@gmail.com", class: "h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400" %>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <%= f.label :password, class: "mb-1 block text-sm font-semibold" %>
+          <div class="flex h-12 items-center gap-2 rounded-xl bg-[#f1f2ff] px-3 sm:h-[49px]">
+            <svg class="h-4 w-4 shrink-0 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg>
+            <%= f.password_field :password, autocomplete: "current-password", placeholder: "********", class: "h-full min-w-0 flex-1 bg-transparent text-sm tracking-[0.18em] outline-none placeholder:text-slate-400" %>
+            <svg class="h-5 w-5 shrink-0 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+          </div>
+        </div>
+
+        <div class="mb-4 flex min-h-5 items-center justify-between">
+          <% if devise_mapping.rememberable? %>
+            <label class="flex items-center gap-1.5 text-xs text-slate-600"><%= f.check_box :remember_me, class: "h-3.5 w-3.5 accent-[#1550a8]" %><span>Remember me</span></label>
+          <% end %>
+          <% if devise_mapping.recoverable? %>
+            <%= link_to "Forgot Password?", new_password_path(resource_name), class: "ml-auto text-xs font-semibold text-[#07349e] no-underline" %>
+          <% end %>
+        </div>
+
+        <%= f.submit "Sign In", class: "h-12 w-full cursor-pointer rounded-xl border-0 bg-[#07349e] text-base font-semibold text-white hover:bg-[#0d408f] sm:h-[49px]" %>
+      <% end %>
+
+      <% if devise_mapping.registerable? %>
+        <p class="mt-8 rounded-xl bg-[#e5ecff] px-3 py-3 text-center text-xs text-slate-800 sm:mt-10 sm:py-3.5 sm:text-base">Don't have an online resident account yet?<%= link_to "Register", new_registration_path(resource_name), class: "font-bold text-[#07349e] no-underline" %></p>
+      <% end %>
+    </section>
+  </main>
+</div>

@@ -1,62 +1,95 @@
-<div class="space-y-6">
-  <div>
-    <h1 class="text-2xl font-bold">My Profile</h1>
-    <p class="text-gray-600">Your personal information and address.</p>
-    <%= link_to "Edit Profile", edit_profile_path %>
+<% resident_name = [@profile&.first_name, @profile&.middle_name, @profile&.last_name, @profile&.suffix].compact_blank.join(" ") %>
+<% resident_name = "Resident Profile" if resident_name.blank? %>
+<% initials = [@profile&.first_name&.first, @profile&.last_name&.first].compact.join.upcase.presence || "R" %>
+<% full_address = [@address&.house_number, @address&.street, @address&.purok, @address&.barangay, @address&.city, @address&.province].compact_blank.join(", ") %>
+
+<div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
+  <header class="bg-white shadow-[0_3px_10px_rgba(15,23,42,0.18)]">
+    <div class="mx-auto flex min-h-[82px] max-w-[1140px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:flex-nowrap lg:px-0">
+      <%= link_to root_path, class: "flex shrink-0 items-center gap-2.5 no-underline" do %>
+        <span class="h-9 w-9 rounded-full bg-[#07349e] sm:h-10 sm:w-10" aria-hidden="true"></span>
+        <span class="flex flex-col text-slate-900">
+          <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px]">Barangay Kalikid Sur</strong>
+          <small class="mt-0.5 text-[9px] text-slate-600 sm:text-[10px]">Digital System for Registered Residents</small>
+        </span>
+      <% end %>
+
+      <nav class="flex w-full flex-wrap items-center justify-center gap-1 rounded-lg bg-[#eff3ff] p-1 text-[11px] font-medium sm:gap-2 lg:w-auto lg:min-w-[600px] lg:justify-between lg:px-5" aria-label="Main navigation">
+        <%= link_to "Home", root_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <%= link_to "Requests (Kahilingan)", select_document_type_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <%= link_to "Reports (Sumbong)", barangay_concerns_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <%= link_to "Profile", profile_path, class: "rounded-md bg-white px-3 py-2 font-semibold text-[#07349e]" %>
+        <% if current_user.barangay_staff? %>
+          <%= link_to "Admin", admin_dashboard_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <% end %>
+        <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+      </nav>
+    </div>
+  </header>
+
+  <div class="mx-auto max-w-[620px] space-y-3.5 px-4 py-6 sm:px-0 sm:py-7">
+    <section class="flex min-h-[132px] items-center gap-4 rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7" aria-label="Resident identity">
+      <div class="relative flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-full bg-[#e4ebff] text-2xl font-bold text-[#07349e] ring-4 ring-[#f5f4f7] sm:h-[82px] sm:w-[82px]">
+        <%= initials %>
+        <span class="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-emerald-700 text-[12px] text-white" aria-label="Resident account"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m9.2 16.2-4-4 1.4-1.4 2.6 2.6 7.2-7.2 1.4 1.4z"/></svg></span>
+      </div>
+      <div class="min-w-0">
+        <p class="mb-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-slate-500">Registered Resident</p>
+        <h1 class="break-words text-[20px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[22px]"><%= resident_name %></h1>
+        <p class="mt-1 text-[11px] text-slate-500">Barangay Kalikid Sur</p>
+      </div>
+    </section>
+
+    <section class="rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6" aria-labelledby="personal-details-title">
+      <div class="mb-4 flex items-center justify-between gap-3">
+        <div>
+          <h2 id="personal-details-title" class="text-[15px] font-semibold">Personal Details</h2>
+          <p class="mt-0.5 text-[10px] text-slate-600">Impormasyon ng Residente</p>
+        </div>
+        <%= link_to edit_profile_path, class: "inline-flex shrink-0 items-center gap-1 rounded-md bg-[#07349e] px-3 py-2 text-[10px] font-semibold text-white no-underline hover:bg-[#0b2e83]" do %>
+          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 5 5 5M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16z"/></svg> Edit / Baguhin
+        <% end %>
+      </div>
+
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[#07349e]"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+          <div class="min-w-0"><p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600">Permanent Address / Tirahan</p><p class="mt-0.5 break-words text-[11px] font-medium"><%= full_address.presence || "Address not added yet" %></p></div>
+        </div>
+        <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[#07349e]"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="1.5"/><path d="M11 17h2"/></svg></span>
+          <div class="min-w-0"><p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600">Birth Date / Petsa ng Kapanganakan</p><p class="mt-0.5 text-[11px] font-medium"><%= @profile&.birth_date&.strftime("%B %d, %Y") || "Not provided" %></p></div>
+        </div>
+        <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[#07349e]"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6.5h16v11H4z"/><path d="m5 7 7 5.5L19 7"/></svg></span>
+          <div class="min-w-0"><p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600">Email Address / Koreo Elektroniko</p><p class="mt-0.5 break-all text-[11px] font-medium"><%= current_user.email %></p></div>
+        </div>
+        <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[11px] font-bold text-[#07349e]">ID</span>
+          <div class="min-w-0"><p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600">Sex / Kasarian</p><p class="mt-0.5 text-[11px] font-medium"><%= @profile&.sex&.humanize || "Not provided" %></p></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+      <section class="rounded-xl bg-white p-5 shadow-sm" aria-labelledby="security-title">
+        <div class="mb-3 flex items-center gap-2"><span class="flex h-7 w-7 items-center justify-center rounded-md bg-[#dce7ff] text-[#07349e]"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v10h14V10a2 2 0 0 0-2-2ZM10 6a2 2 0 1 1 4 0v2h-4Z"/></svg></span><div><h2 id="security-title" class="text-[12px] font-semibold">Security / Seguridad</h2><p class="text-[9px] text-slate-600">Account Protection</p></div></div>
+        <div class="rounded-md bg-[#eff3ff] p-2.5"><h3 class="text-[10px] font-semibold">Change Password / Palitan ang Password</h3><p class="mt-1 text-[10px] leading-relaxed text-slate-600">Keep your civic portal account safe by using a strong, unique password.</p></div>
+        <%= link_to edit_user_registration_path, class: "mt-4 flex items-center justify-between rounded-md bg-[#dfe8ff] px-2.5 py-2 text-[10px] font-semibold text-[#07349e] no-underline hover:bg-[#d3dfff]" do %><span>⚿ Update Password</span><span aria-hidden="true">›</span><% end %>
+      </section>
+
+      <section class="rounded-xl bg-white p-5 shadow-sm" aria-labelledby="account-title">
+        <div class="mb-3 flex items-center gap-2"><span class="flex h-7 w-7 items-center justify-center rounded-md bg-[#d8ffef] text-[12px] text-emerald-700" aria-hidden="true">✓</span><div><h2 id="account-title" class="text-[12px] font-semibold">Resident Account</h2><p class="text-[9px] text-slate-600">Katayuan ng Account</p></div></div>
+        <p class="text-[10px] font-semibold">Profile Completion</p>
+        <p class="mt-1 text-[10px] leading-relaxed text-slate-600">Keep your resident details up to date to help the barangay process your requests.</p>
+        <% profile_complete = @profile.present? && @address.present? %>
+        <div class="mt-3 rounded-md bg-[#eff3ff] px-2.5 py-2 text-[10px] font-semibold <%= profile_complete ? "text-emerald-800" : "text-amber-800" %>"><%= profile_complete ? "✓ Profile and address complete" : "Profile or address needs completion" %></div>
+        <% unless profile_complete %><%= link_to "Complete Details", @profile.present? ? edit_profile_path : new_profile_path, class: "mt-2 inline-block text-[10px] font-semibold text-[#07349e] underline" %><% end %>
+      </section>
+    </div>
+
+    <div class="flex justify-end pb-2 pt-0.5">
+      <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "inline-flex items-center gap-1.5 rounded-md bg-red-700 px-4 py-2.5 text-[10px] font-semibold text-white no-underline hover:bg-red-800" do %><span aria-hidden="true">⇥</span> Log Out / Mag-logout<% end %>
+    </div>
   </div>
-
-  <section class="space-y-4">
-    <h2 class="text-xl font-semibold">Personal Information</h2>
-
-    <div>
-      <p class="font-medium">First Name</p>
-      <p><%= @profile.first_name %></p>
-    </div>
-
-    <div>
-      <p class="font-medium">Middle Name</p>
-      <p><%= @profile.middle_name.presence || "None" %></p>
-    </div>
-
-    <div>
-      <p class="font-medium">Last Name</p>
-      <p><%= @profile.last_name %></p>
-    </div>
-
-    <div>
-      <p class="font-medium">Suffix</p>
-      <p><%= @profile.suffix.presence || "None" %></p>
-    </div>
-
-    <div>
-      <p class="font-medium">Birth Date</p>
-      <p><%= @profile.birth_date.strftime("%B %d, %Y") %></p>
-    </div>
-
-    <div>
-      <p class="font-medium">Sex</p>
-      <p><%= @profile.sex.humanize %></p>
-    </div>
-  </section>
-
-  <section class="space-y-4 border-t pt-6">
-    <h2 class="text-xl font-semibold">Address</h2>
-
-    <div>
-      <p class="font-medium">Address</p>
-      <p>
-        <%= [
-          @address.house_number,
-          @address.street,
-          @address.purok,
-          @address.barangay,
-          @address.city,
-          @address.province
-        ].compact_blank.join(", ") %>
-      </p>
-    </div>
-  </section>
-  
-  <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete } %>
-  
 </div>

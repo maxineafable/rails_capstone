@@ -1,34 +1,74 @@
-<div class="space-y-6">
-  <div>
-    <h2 class="text-2xl font-bold">Select Document to Request</h2>
-    <p class="text-gray-600">
-      Choose the specific certificate or clearance you need from the Barangay.
-    </p>
-  </div>
+<% purok = current_user.address&.purok %>
 
-  <div class="space-y-2">
-    <%= link_to "Barangay Clearance",
-        new_type_document_requests_path(document_type: "barangay_clearance"),
-        class: "block text-blue-600 hover:underline" %>
+<div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
+  <header class="bg-white shadow-[0_3px_10px_rgba(15,23,42,0.18)]">
+    <div class="mx-auto flex min-h-[74px] max-w-[1140px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:flex-nowrap lg:px-0">
+      <%= link_to root_path, class: "flex shrink-0 items-center gap-2.5 no-underline" do %>
+        <span class="h-9 w-9 rounded-full bg-[#07349e] sm:h-10 sm:w-10" aria-hidden="true"></span>
+        <span class="flex flex-col text-slate-900">
+          <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px]">Barangay Kalikid Sur</strong>
+          <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px]">Digital System for Registered Residents</small>
+        </span>
+      <% end %>
 
-    <%= link_to "Certificate of Indigency",
-        new_type_document_requests_path(document_type: "certificate_of_indigency"),
-        class: "block text-blue-600 hover:underline" %>
+      <nav class="flex w-full flex-wrap items-center justify-center gap-1 rounded-lg bg-[#eff3ff] p-1 text-[10px] font-medium sm:gap-2 lg:w-auto lg:min-w-[600px] lg:justify-between lg:px-5" aria-label="Main navigation">
+        <%= link_to "Home", root_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <%= link_to "Requests (Kahilingan)", select_document_type_path, class: "rounded-md bg-white px-3 py-2 font-semibold text-[#07349e]" %>
+        <%= link_to "Reports (Sumbong)", barangay_concerns_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <%= link_to "Profile", current_user.profile.present? ? profile_path : new_profile_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <% if current_user.barangay_staff? %>
+          <%= link_to "Admin", admin_dashboard_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+        <% end %>
+        <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
+      </nav>
+    </div>
+  </header>
 
-    <%= link_to "Certificate of Residency",
-        new_type_document_requests_path(document_type: "certificate_of_residency"),
-        class: "block text-blue-600 hover:underline" %>
+  <div class="mx-auto max-w-[1140px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:px-0">
+    <section class="flex flex-col gap-4 rounded-lg bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-4" aria-labelledby="document-select-title">
+      <div class="min-w-0">
+        <p class="mb-1 text-[8px] font-bold tracking-[0.08em] text-emerald-700">◉ OPISYAL NA SERBISYONG BARANGAY</p>
+        <h1 id="document-select-title" class="text-[18px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[20px]">Request a Barangay Document <span class="font-normal text-slate-700">(Humiling ng Opisyal na Dokumento)</span></h1>
+        <p class="mt-1 max-w-[700px] text-[10px] leading-relaxed text-slate-600">Mabilis at transparent na paghiling ng mga opisyal na sertipikasyon at clearance alinsunod sa Citizen's Charter.</p>
+      </div>
+      <div class="flex shrink-0 items-center gap-2 rounded-md bg-[#eff3ff] px-3 py-2.5 sm:min-w-[150px]">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#244fbd] text-white" aria-hidden="true"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3.5h7l4.5 4.5v12.5H7z"/><path d="M14 3.5V8h4.5M10 12h5m-5 3h5"/></svg></span>
+        <span class="flex flex-col"><small class="text-[7px] font-semibold uppercase tracking-wide text-slate-600">Resident Record</small><strong class="text-[9px] font-semibold text-slate-900"><%= purok.present? ? "Purok #{purok} · Kalikid Sur" : "Kalikid Sur Resident" %></strong></span>
+      </div>
+    </section>
 
-    <%= link_to "Good Moral Character",
-        new_type_document_requests_path(document_type: "good_moral_character"),
-        class: "block text-blue-600 hover:underline" %>
+    <section class="space-y-3.5" aria-label="Available documents">
+      <%= link_to new_type_document_requests_path(document_type: "barangay_clearance"), class: "group flex min-h-[106px] items-center justify-between gap-4 rounded-lg border-l-4 border-[#07349e] bg-white px-5 py-5 shadow-sm no-underline transition hover:-translate-y-0.5 hover:shadow-md sm:px-6 sm:py-6" do %>
+        <span><strong class="block text-[22px] font-medium leading-tight tracking-[-0.03em] text-[#07349e] sm:text-[25px]">Barangay Clearance</strong><span class="mt-1 block text-[11px] leading-relaxed text-slate-700 sm:text-xs">Para sa trabaho, negosyo, at iba pang opisyal na pangangailangan.</span></span>
+        <svg class="h-6 w-6 shrink-0 text-[#07349e] transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12h17m-7-7 7 7-7 7"/></svg>
+      <% end %>
 
-    <%= link_to "Certificate of Income",
-        new_type_document_requests_path(document_type: "certificate_of_income"),
-        class: "block text-blue-600 hover:underline" %>
+      <%= link_to new_type_document_requests_path(document_type: "certificate_of_indigency"), class: "group flex min-h-[106px] items-center justify-between gap-4 rounded-lg border-l-4 border-[#07349e] bg-white px-5 py-5 shadow-sm no-underline transition hover:-translate-y-0.5 hover:shadow-md sm:px-6 sm:py-6" do %>
+        <span><strong class="block text-[22px] font-medium leading-tight tracking-[-0.03em] text-[#07349e] sm:text-[25px]">Certificate of Indigency</strong><span class="mt-1 block text-[11px] leading-relaxed text-slate-700 sm:text-xs">Para sa iba’t ibang uri ng tulong para sa mga nangangailangan.</span></span>
+        <svg class="h-6 w-6 shrink-0 text-[#07349e] transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12h17m-7-7 7 7-7 7"/></svg>
+      <% end %>
 
-    <%= link_to "Certificate of Low Income",
-        new_type_document_requests_path(document_type: "certificate_of_low_income"),
-        class: "block text-blue-600 hover:underline" %>
+      <%= link_to new_type_document_requests_path(document_type: "certificate_of_residency"), class: "group flex min-h-[106px] items-center justify-between gap-4 rounded-lg border-l-4 border-[#07349e] bg-white px-5 py-5 shadow-sm no-underline transition hover:-translate-y-0.5 hover:shadow-md sm:px-6 sm:py-6" do %>
+        <span><strong class="block text-[22px] font-medium leading-tight tracking-[-0.03em] text-[#07349e] sm:text-[25px]">Certificate of Residency</strong><span class="mt-1 block text-[11px] leading-relaxed text-slate-700 sm:text-xs">Para sa pagpapatunay ng iyong tirahan at iba pang opisyal na pangangailangan.</span></span>
+        <svg class="h-6 w-6 shrink-0 text-[#07349e] transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12h17m-7-7 7 7-7 7"/></svg>
+      <% end %>
+
+      <%= link_to new_type_document_requests_path(document_type: "good_moral_character"), class: "group flex min-h-[106px] items-center justify-between gap-4 rounded-lg border-l-4 border-[#07349e] bg-white px-5 py-5 shadow-sm no-underline transition hover:-translate-y-0.5 hover:shadow-md sm:px-6 sm:py-6" do %>
+        <span><strong class="block text-[22px] font-medium leading-tight tracking-[-0.03em] text-[#07349e] sm:text-[25px]">Certificate of Good Moral Character</strong><span class="mt-1 block text-[11px] leading-relaxed text-slate-700 sm:text-xs">Para sa mga nangangailangan ng Certificate ng mabuting asal.</span></span>
+        <svg class="h-6 w-6 shrink-0 text-[#07349e] transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12h17m-7-7 7 7-7 7"/></svg>
+      <% end %>
+
+      <%= link_to new_type_document_requests_path(document_type: "certificate_of_income"), class: "group flex min-h-[106px] items-center justify-between gap-4 rounded-lg border-l-4 border-[#07349e] bg-white px-5 py-5 shadow-sm no-underline transition hover:-translate-y-0.5 hover:shadow-md sm:px-6 sm:py-6" do %>
+        <span><strong class="block text-[22px] font-medium leading-tight tracking-[-0.03em] text-[#07349e] sm:text-[25px]">Certificate of Income</strong><span class="mt-1 block text-[11px] leading-relaxed text-slate-700 sm:text-xs">Para sa pagpapatunay ng kita para sa iba’t ibang opisyal na transaksyon.</span></span>
+        <svg class="h-6 w-6 shrink-0 text-[#07349e] transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12h17m-7-7 7 7-7 7"/></svg>
+      <% end %>
+
+      <%= link_to new_type_document_requests_path(document_type: "certificate_of_low_income"), class: "group flex min-h-[106px] items-center justify-between gap-4 rounded-lg border-l-4 border-[#07349e] bg-white px-5 py-5 shadow-sm no-underline transition hover:-translate-y-0.5 hover:shadow-md sm:px-6 sm:py-6" do %>
+        <span><strong class="block text-[22px] font-medium leading-tight tracking-[-0.03em] text-[#07349e] sm:text-[25px]">Certificate of Low Income</strong><span class="mt-1 block text-[11px] leading-relaxed text-slate-700 sm:text-xs">Para sa mga benepisyong nangangailangan ng patunay na mababang kita.</span></span>
+        <svg class="h-6 w-6 shrink-0 text-[#07349e] transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12h17m-7-7 7 7-7 7"/></svg>
+      <% end %>
+    </section>
+
+    <div class="pb-2 pt-1 text-center text-[10px] text-slate-500"><%= link_to "← Back to Dashboard", root_path, class: "font-medium text-[#07349e] underline" %></div>
   </div>
 </div>
