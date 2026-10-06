@@ -2,6 +2,7 @@ class HouseholdMembersController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_staff!
   before_action :set_household
+  before_action :set_household_member, only: [ :edit, :update ]
 
   def new
     @household_member = @household.household_members.build
@@ -18,9 +19,24 @@ class HouseholdMembersController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @household_member.update(member_params)
+      redirect_to household_path(@household), notice: "Resident details for #{@household_member.first_name} have been updated successfully."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
     def set_household
       @household = Household.find(params[:household_id])
+    end
+
+    def set_household_member
+      @household_member = @household.household_members.find(params[:id])
     end
 
     def member_params

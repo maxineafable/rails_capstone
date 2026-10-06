@@ -154,6 +154,14 @@
                           </p>
                         </div>
 
+                        <div>
+                          <p class="text-xs text-gray-500">Action</p>
+                          <p class="text-gray-700">
+                            <!-- <%= member.occupation.presence || "—" %> -->
+                            <%= link_to "Edit Details", edit_household_member_path(house, member), class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+                          </p>
+                        </div>
+
                       </div>
 
                     </div>

@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get "/admin/staffs", to: "admin#staffs", as: :admin_staffs
 
   resources :households, except: [ :index ] do
-    resources :household_members, only: [ :new, :create ], as: :members
+    resources :household_members, only: [ :new, :create, :edit, :update ], as: :members
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

@@ -25,7 +25,7 @@ class HouseholdsController < ApplicationController
   end
 
   def update
-    if @household.update(household_params)
+    if @household.update(household_edit_params)
       redirect_to household_path(@household), notice: "Household Census records modified successfully."
     else
       render :edit, status: :unprocessable_entity
@@ -41,6 +41,10 @@ class HouseholdsController < ApplicationController
   private
     def set_household
       @household = Household.find(params[:id])
+    end
+
+    def household_edit_params
+      params.require(:household).permit(:house_number, :street, :purok, :date_accomplished)
     end
 
     def household_params
