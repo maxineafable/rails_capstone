@@ -28,10 +28,6 @@ class ProfilesController < ApplicationController
     render :edit, status: :unprocessable_entity
   end
 
-  def new
-    @profile = current_user.build_profile
-  end
-
   def create
     @profile = current_user.build_profile(profile_params)
     if @profile.save

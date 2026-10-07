@@ -15,6 +15,9 @@ class User < ApplicationRecord
            class_name: "BarangayConcern",
            foreign_key: "assigned_staff_id"
 
+  accepts_nested_attributes_for :profile, allow_destroy: true
+  accepts_nested_attributes_for :address, allow_destroy: true
+
   def barangay_staff?
     staff.present?
   end
