@@ -1,10 +1,3 @@
-<% resident_name = current_user.profile&.first_name.presence || "Resident" %>
-<% purok = current_user.address&.purok %>
-<% active_requests = @document_requests.count { |request| %w[pending processing].include?(request.status) } %>
-<% active_reports = @barangay_concerns.count { |concern| %w[pending ongoing].include?(concern.status) } %>
-<% completed_records = @document_requests.count { |request| request.ready_to_pickup? } + @barangay_concerns.count { |concern| concern.resolved? } %>
-<% recent_records = (@document_requests.to_a + @barangay_concerns.to_a).sort_by(&:created_at).reverse %>
-
 <div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
   <header class="bg-white shadow-[0_3px_10px_rgba(15,23,42,0.18)]">
     <div class="mx-auto flex min-h-[82px] max-w-[1140px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:flex-nowrap lg:px-0">
@@ -37,9 +30,18 @@
     <section class="flex flex-col gap-4 rounded-lg bg-white p-4 shadow-sm sm:p-5 lg:flex-row lg:items-center lg:justify-between" aria-labelledby="welcome-title">
       <div class="min-w-0">
         <p class="mb-2 inline-flex max-w-full items-center gap-1 rounded-full bg-[#d8ffef] px-2.5 py-1 text-[9px] font-semibold text-emerald-800">
-          <span aria-hidden="true">●</span> <% if current_user.profile.present? && current_user.address.present? %>VERIFIED RESIDENT<% else %>RESIDENT ACCOUNT<% end %><% if purok.present? %> · PUROK <%= purok %><% end %>, BARANGAY KALIKID SUR
+          <span aria-hidden="true">●</span> 
+          <% if current_user.profile.present? && current_user.address.present? %>
+            VERIFIED RESIDENT
+          <% else %>
+            RESIDENT ACCOUNT
+          <% end %>
+          <% if current_user.address.purok.present? %>
+           ● <%= current_user.address.purok %>
+          <% end %>
+          <span class="uppercase"><%= current_user.address.barangay %></span>
         </p>
-        <h1 id="welcome-title" class="text-[23px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[27px]">Welcome back, <%= resident_name %>!</h1>
+        <h1 id="welcome-title" class="text-[23px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[27px]">Welcome back, <%= current_user.profile.first_name %>!</h1>
         <p class="mt-1 max-w-[630px] text-xs leading-relaxed text-slate-600">Maligayang Pagdating sa inyong digital civic desk. Subaybayan ang inyong mga kahilingan at sumbong sa mabilis at tapat na serbisyo publiko.</p>
         <% unless current_user.profile.present? && current_user.address.present? %>
           <p class="mt-2 text-xs text-amber-800">Complete your resident information to access all services. <%= link_to "Continue registration", current_user.profile.present? ? edit_profile_path : new_profile_path, class: "font-semibold underline" %></p>
@@ -47,9 +49,9 @@
       </div>
 
       <dl class="grid w-full shrink-0 grid-cols-3 gap-1 rounded-lg bg-[#eff3ff] p-1.5 text-center lg:w-[300px]">
-        <div class="rounded-md bg-white px-2 py-2"><dt class="text-[8px] font-semibold uppercase tracking-wide text-slate-600">Active<br>Requests</dt><dd class="text-[24px] font-bold leading-tight text-[#07349e]"><%= format("%02d", active_requests) %></dd><dd class="text-[8px] text-slate-500">Request</dd></div>
-        <div class="rounded-md bg-white px-2 py-2"><dt class="text-[8px] font-semibold uppercase tracking-wide text-slate-600">Active<br>Reports</dt><dd class="text-[24px] font-bold leading-tight text-slate-900"><%= format("%02d", active_reports) %></dd><dd class="text-[8px] text-slate-500">Concern</dd></div>
-        <div class="rounded-md bg-white px-2 py-2"><dt class="text-[8px] font-semibold uppercase tracking-wide text-slate-600">Completed</dt><dd class="text-[24px] font-bold leading-tight text-emerald-700"><%= format("%02d", completed_records) %></dd><dd class="text-[8px] text-slate-500">Accomplished</dd></div>
+        <div class="rounded-md bg-white px-2 py-2"><dt class="text-[8px] font-semibold uppercase tracking-wide text-slate-600">Active<br>Requests</dt><dd class="text-[24px] font-bold leading-tight text-[#07349e]"><%= format("%02d", @active_requests) %></dd><dd class="text-[8px] text-slate-500">Request</dd></div>
+        <div class="rounded-md bg-white px-2 py-2"><dt class="text-[8px] font-semibold uppercase tracking-wide text-slate-600">Active<br>Reports</dt><dd class="text-[24px] font-bold leading-tight text-slate-900"><%= format("%02d", @active_reports) %></dd><dd class="text-[8px] text-slate-500">Concern</dd></div>
+        <div class="rounded-md bg-white px-2 py-2"><dt class="text-[8px] font-semibold uppercase tracking-wide text-slate-600">Completed</dt><dd class="text-[24px] font-bold leading-tight text-emerald-700"><%= format("%02d", @completed_records) %></dd><dd class="text-[8px] text-slate-500">Accomplished</dd></div>
       </dl>
     </section>
 
@@ -89,32 +91,74 @@
           <h2 id="recent-title" class="text-[18px] font-bold tracking-[-0.03em] sm:text-[20px]">🔹My Recent Requests &amp; Reports</h2>
           <p class="mt-1 text-[10px] text-slate-600">Mga Kasalukuyang Kahilingan at Sumbong na nasa ilalim pa ng pagsasuri o handa nang kunin.</p>
         </div>
-        <div class="flex flex-wrap gap-1 text-[9px]">
-          <span class="rounded bg-[#eff3ff] px-2.5 py-1.5 font-semibold text-[#07349e]">All Records (<%= @document_requests.size + @barangay_concerns.size %>)</span>
-          <%= link_to "Documents (#{@document_requests.size})", select_document_type_path, class: "rounded bg-[#f5f7fc] px-2.5 py-1.5 text-slate-700 no-underline hover:bg-[#e7edff]" %>
-          <%= link_to "Reports (#{@barangay_concerns.size})", barangay_concerns_path, class: "rounded bg-[#f5f7fc] px-2.5 py-1.5 text-slate-700 no-underline hover:bg-[#e7edff]" %>
+        <% active_filter = params[:filter] || "all" %>
+        <div class="flex flex-wrap gap-1 text-[9px] mb-4">
+          <%= link_to root_path(filter: "all"), 
+                class: "rounded px-2.5 py-1.5 font-semibold no-underline transition #{active_filter == "all" ? 'bg-[#eff3ff] text-[#07349e]' : 'bg-[#f5f7fc] text-slate-700 hover:bg-[#e7edff]'}" do %>
+            All Records (<%= @document_requests.size + @barangay_concerns.size %>)
+          <% end %>
+
+          <%= link_to root_path(filter: "documents"), 
+                class: "rounded px-2.5 py-1.5 font-semibold no-underline transition #{active_filter == "documents" ? 'bg-[#eff3ff] text-[#07349e]' : 'bg-[#f5f7fc] text-slate-700 hover:bg-[#e7edff]'}" do %>
+            Documents (<%= @document_requests.size %>)
+          <% end %>
+
+          <%= link_to root_path(filter: "concerns"), 
+                class: "rounded px-2.5 py-1.5 font-semibold no-underline transition #{active_filter == "concerns" ? 'bg-[#eff3ff] text-[#07349e]' : 'bg-[#f5f7fc] text-slate-700 hover:bg-[#e7edff]'}" do %>
+            Reports (<%= @barangay_concerns.size %>)
+          <% end %>
         </div>
       </div>
 
-      <% if recent_records.any? %>
+      <% if @recent_records.any? %>
         <div class="overflow-x-auto">
           <table class="w-full min-w-[680px] border-collapse text-left">
             <thead>
               <tr class="bg-[#eff3ff] text-[8px] font-semibold uppercase tracking-wide text-slate-600">
-                <th class="px-3 py-3">Tracking Ref Number</th><th class="px-3 py-3">Service / Concern Type</th><th class="px-3 py-3">Date Filed</th><th class="px-3 py-3">Current Status</th><th class="px-3 py-3">Action</th>
+                <th class="px-3 py-3">Tracking Ref Number</th>
+                <th class="px-3 py-3">Service / Concern Type</th>
+                <th class="px-3 py-3">Date Filed</th>
+                <th class="px-3 py-3">Current Status</th>
+                <th class="px-3 py-3">Action</th>
               </tr>
             </thead>
             <tbody class="text-[10px]">
-              <% recent_records.each do |record| %>
+              <% @recent_records.each do |record| %>
                 <% is_request = record.is_a?(DocumentRequest) %>
                 <% status_label = record.status.humanize %>
+                
+                <%# Dynamic badge coloration engine mapped safely to match layout styling classes %>
                 <% status_color = is_request ? (record.ready_to_pickup? ? "bg-emerald-200 text-emerald-900" : record.rejected? ? "bg-red-100 text-red-800" : "bg-indigo-100 text-indigo-900") : (record.resolved? ? "bg-emerald-200 text-emerald-900" : record.unactionable? ? "bg-red-100 text-red-800" : "bg-indigo-100 text-indigo-900") %>
-                <tr class="border-b border-slate-100 last:border-0">
-                  <td class="px-3 py-3 font-semibold text-[#07349e]"><%= link_to record.tracking_number, (is_request ? document_request_path(record) : barangay_concern_path(record)), class: "no-underline hover:underline" %></td>
-                  <td class="px-3 py-3"><span class="block font-medium"><%= is_request ? record.document_type.humanize : record.category.humanize %></span><span class="mt-0.5 block max-w-[250px] text-[9px] text-slate-500"><%= is_request ? "Purpose: #{truncate(record.purpose, length: 68)}" : truncate(record.reason, length: 68) %></span></td>
-                  <td class="px-3 py-3"><%= record.created_at.strftime("%B %d, %Y") %><span class="mt-0.5 block text-[9px] text-slate-500"><%= record.created_at.strftime("%I:%M %p") %></span></td>
-                  <td class="px-3 py-3"><span class="inline-flex rounded-full px-2.5 py-1 text-[8px] font-bold <%= status_color %>">● <%= status_label.upcase %></span></td>
-                  <td class="px-3 py-3"><%= link_to "View", (is_request ? document_request_path(record) : barangay_concern_path(record)), class: "font-semibold text-[#07349e] underline" %></td>
+                
+                <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition">
+                  
+                  <td class="px-3 py-3 font-semibold text-[#07349e]">
+                    <% tracking_token = is_request ? (record.tracking_number.presence || "REQ-#{record.id}") : (record.tracking_number.presence || "BRGY-#{record.id}") %>
+                    <%= link_to tracking_token, (is_request ? document_request_path(record) : barangay_concern_path(record)), class: "no-underline hover:underline" %>
+                  </td>
+                  
+                  <td class="px-3 py-3">
+                    <span class="block font-medium"><%= is_request ? record.document_type.humanize : record.category.humanize %></span>
+                    <span class="mt-0.5 block max-w-[250px] text-[9px] text-slate-500">
+                      <%= is_request ? "Purpose: #{truncate(record.purpose, length: 68)}" : truncate(record.reason, length: 68) %>
+                    </span>
+                  </td>
+                  
+                  <td class="px-3 py-3">
+                    <%= record.created_at.strftime("%B %d, %Y") %>
+                    <span class="mt-0.5 block text-[9px] text-slate-500"><%= record.created_at.strftime("%I:%M %p") %></span>
+                  </td>
+                  
+                  <td class="px-3 py-3">
+                    <span class="inline-flex rounded-full px-2.5 py-1 text-[8px] font-bold <%= status_color %>">
+                      ● <%= status_label.upcase %>
+                    </span>
+                  </td>
+                  
+                  <td class="px-3 py-3">
+                    <%= link_to "View", (is_request ? document_request_path(record) : barangay_concern_path(record)), class: "font-semibold text-[#07349e] underline" %>
+                  </td>
+                  
                 </tr>
               <% end %>
             </tbody>
@@ -122,7 +166,13 @@
         </div>
       <% else %>
         <div class="rounded-md bg-[#f7f8fc] px-4 py-8 text-center text-xs text-slate-600">
-          You haven't submitted any document requests or reported concerns yet. Use the service cards above to get started.
+          <% if active_filter == "documents" %>
+            You haven't submitted any document application requests yet.
+          <% elsif active_filter == "concerns" %>
+            You haven't reported any community incident concerns yet.
+          <% else %>
+            You haven't submitted any document requests or reported concerns yet. Use the service cards above to get started.
+          <% end %>
         </div>
       <% end %>
     </section>

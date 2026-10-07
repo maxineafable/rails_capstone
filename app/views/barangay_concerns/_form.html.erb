@@ -82,56 +82,28 @@
 <% end %>
 
 <script>
-  (() => {
-    const initializeConcernForm = () => {
-      const mapElement = document.getElementById("concern-map");
-      if (!mapElement || !window.L || mapElement.dataset.mapReady === "true") return;
+  document.addEventListener("turbo:load", () => {
+      const map = L.map('concern-map').setView([15.4786, 121.0502], 15);
 
-      const latitudeField = document.getElementById("latitude");
-      const longitudeField = document.getElementById("longitude");
-      const initialLat = Number.parseFloat(latitudeField?.value);
-      const initialLng = Number.parseFloat(longitudeField?.value);
-      const hasInitialLocation = Number.isFinite(initialLat) && Number.isFinite(initialLng);
-      const defaultCenter = [15.4786, 121.0502];
-      const center = hasInitialLocation ? [initialLat, initialLng] : defaultCenter;
-      const map = L.map(mapElement, { scrollWheelZoom: false }).setView(center, hasInitialLocation ? 16 : 14);
-      mapElement._concernMap = map;
-      mapElement.dataset.mapReady = "true";
-
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 
-      let marker = hasInitialLocation ? L.marker(center).addTo(map) : null;
-      map.on("click", event => {
-        const { lat, lng } = event.latlng;
-        latitudeField.value = lat.toFixed(6);
-        longitudeField.value = lng.toFixed(6);
-        if (marker) marker.setLatLng(event.latlng);
-        else marker = L.marker(event.latlng).addTo(map);
-      });
+      let marker = null
 
-      requestAnimationFrame(() => map.invalidateSize());
-    };
+      map.on('click', e => {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
 
-    document.addEventListener("turbo:load", initializeConcernForm);
-    document.addEventListener("DOMContentLoaded", initializeConcernForm);
-    initializeConcernForm();
+        document.getElementById('latitude').value = lat.toFixed(6);
+        document.getElementById('longitude').value = lng.toFixed(6);
 
-    document.addEventListener("turbo:before-cache", () => {
-      const mapElement = document.getElementById("concern-map");
-      if (mapElement?._concernMap) {
-        mapElement._concernMap.remove();
-        delete mapElement._concernMap;
-        delete mapElement.dataset.mapReady;
-      }
-    });
-
-    const reasonField = document.getElementById("barangay_concern_reason");
-    const characterCount = document.getElementById("reason-character-count");
-    if (reasonField && characterCount) {
-      reasonField.addEventListener("input", () => { characterCount.textContent = reasonField.value.length; });
-    }
-  })();
+        if (marker) {
+          marker.setLatLng(e.latlng);
+        } else {
+          marker = L.marker(e.latlng).addTo(map)
+        }
+      })
+  })
 </script>
