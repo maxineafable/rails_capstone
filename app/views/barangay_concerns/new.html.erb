@@ -1,33 +1,12 @@
 <div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
-  <header class="bg-white shadow-[0_3px_10px_rgba(15,23,42,0.18)]">
-    <div class="mx-auto flex min-h-[74px] max-w-[1140px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:flex-nowrap lg:px-0">
-      <%= link_to root_path, class: "flex shrink-0 items-center gap-2.5 no-underline" do %>
-        <span class="h-9 w-9 rounded-full bg-[#07349e] sm:h-10 sm:w-10" aria-hidden="true"></span>
-        <span class="flex flex-col text-slate-900">
-          <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px]">Barangay Kalikid Sur</strong>
-          <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px]">Digital System for Registered Residents</small>
-        </span>
-      <% end %>
+  <%= render "shared/navbar", active: :reports %>
 
-      <nav class="flex w-full flex-wrap items-center justify-center gap-1 rounded-lg bg-[#eff3ff] p-1 text-[10px] font-medium sm:gap-2 lg:w-auto lg:min-w-[600px] lg:justify-between lg:px-5" aria-label="Main navigation">
-        <%= link_to "Home", root_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
-        <%= link_to "Requests (Kahilingan)", select_document_type_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
-        <%= link_to "Reports (Sumbong)", barangay_concerns_path, class: "rounded-md bg-white px-3 py-2 font-semibold text-[#07349e]" %>
-        <%= link_to "Profile", current_user.profile.present? ? profile_path : new_profile_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
-        <% if current_user.barangay_staff? %>
-          <%= link_to "Admin", admin_dashboard_path, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
-        <% end %>
-        <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "rounded-md px-3 py-2 text-slate-800 hover:bg-white" %>
-      </nav>
-    </div>
-  </header>
-
-  <div class="mx-auto max-w-[1140px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:px-0">
-    <section class="relative overflow-hidden rounded-lg bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6" aria-labelledby="concern-title">
+  <div class="mx-auto max-w-[1280px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-6 lg:px-6 lg:py-8">
+    <section class="relative overflow-hidden rounded-lg bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6 lg:px-9 lg:py-8" aria-labelledby="concern-title">
       <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#07349e] via-[#2457c5] to-emerald-700"></div>
-      <h1 id="concern-title" class="text-[20px] font-bold tracking-[-0.04em] text-[#07349e] sm:text-[22px]">Report a Community Concern</h1>
-      <p class="mt-1 text-[10px] font-medium text-emerald-700">Mag-ulat ng Suliranin o Sumbong sa Barangay Kalikid Sur</p>
-      <p class="mt-2 max-w-[760px] text-[10px] leading-relaxed text-slate-600">Tulungang nating panatilihing ligtas, maayos, at malinis ang ating pamayanan. Ang bawat ulat ay direktang natatanggap ng Lupon at Barangay para sa kaukulang aksyon.</p>
+      <h1 id="concern-title" class="text-[20px] font-bold tracking-[-0.04em] text-[#07349e] sm:text-[22px] lg:text-[30px]">Report a Community Concern</h1>
+      <p class="mt-1 text-[10px] font-medium text-emerald-700 lg:text-[13px]">Mag-ulat ng Suliranin o Sumbong sa Barangay Kalikid Sur</p>
+      <p class="mt-2 max-w-[900px] text-[10px] leading-relaxed text-slate-600 lg:mt-3 lg:text-[13px]">Tulungang nating panatilihing ligtas, maayos, at malinis ang ating pamayanan. Ang bawat ulat ay direktang natatanggap ng Lupon at Barangay para sa kaukulang aksyon.</p>
     </section>
 
     <%= render "form", barangay_concern: @barangay_concern %>
