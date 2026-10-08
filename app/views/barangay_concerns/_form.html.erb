@@ -1,6 +1,6 @@
-<%= form_with model: barangay_concern, local: true, html: { class: "space-y-3.5" } do |f| %>
+<%= form_with model: barangay_concern, local: true, html: { class: "space-y-3.5 lg:space-y-6" } do |f| %>
   <% if barangay_concern.errors.any? %>
-    <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 lg:p-6 lg:text-[20px]" role="alert">
       <h2 class="mb-2 font-semibold">Pakisuri ang mga detalye / Please fix the following:</h2>
       <ul class="list-inside list-disc space-y-1"><% barangay_concern.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
     </div>
@@ -9,75 +9,75 @@
   <%= f.hidden_field :latitude, id: "latitude" %>
   <%= f.hidden_field :longitude, id: "longitude" %>
 
-  <section class="rounded-lg bg-white p-4 sm:px-5 sm:py-4" aria-labelledby="category-heading">
-    <div class="mb-3 flex items-center justify-between gap-2">
-      <h2 id="category-heading" class="text-[12px] font-semibold text-[#07349e]"><span class="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#244fbd] text-[9px] text-white">1</span>Select Category / Pumili ng Kategorya <span class="text-red-600">*</span></h2>
-      <span class="text-[8px] font-medium text-slate-600">Required</span>
+  <section class="rounded-lg bg-white p-4 sm:px-5 sm:py-4 lg:p-8" aria-labelledby="category-heading">
+    <div class="mb-3 flex items-center justify-between gap-2 lg:mb-5 lg:gap-4">
+      <h2 id="category-heading" class="text-[12px] font-semibold text-[#07349e] lg:text-[20px]"><span class="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#244fbd] text-[9px] text-white lg:h-6 lg:w-6 lg:text-[13px]">1</span>Select Category / Pumili ng Kategorya <span class="text-red-600">*</span></h2>
+      <span class="text-[8px] font-medium text-slate-600 lg:text-[13px]">Required</span>
     </div>
 
     <% categories = [["Drainage", "Daluyan / Kanal", "health_and_sanitation", "≋"], ["Roads", "Kalsada / Lubak", "infrastructure", "╫"], ["Street lights", "Siraing Ilaw sa Poste", "peace_and_order", "☼"], ["Garbage", "Basura / Kalinisan", "waste_management", "▤"], ["Other", "Iba Pang Suliranin", "others", "⊞"]] %>
-    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5 md:gap-3">
+    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5 md:gap-3 lg:gap-4">
       <% categories.each do |title, translation, value, icon| %>
         <% category_id = "concern_category_#{value}" %>
         <div class="relative">
           <%= f.radio_button :category, value, id: category_id, required: true, class: "peer sr-only" %>
-          <label for="<%= category_id %>" class="flex min-h-[76px] cursor-pointer flex-col items-center justify-center rounded-lg border border-transparent bg-[#eff3ff] px-2 py-2 text-center text-slate-800 transition hover:border-[#9eb4ff] peer-checked:border-[#244fbd] peer-checked:bg-[#e1e9ff] peer-checked:ring-1 peer-checked:ring-[#244fbd] peer-focus-visible:ring-2 peer-focus-visible:ring-[#244fbd]">
-            <span class="mb-1 text-[18px] font-semibold leading-none text-[#244fbd]" aria-hidden="true"><%= icon %></span>
-            <span class="text-[9px] font-semibold"><%= title %></span>
-            <span class="text-[8px] leading-tight text-slate-600"><%= translation %></span>
+          <label for="<%= category_id %>" class="flex min-h-[76px] cursor-pointer lg:min-h-[132px] lg:px-4 lg:py-4 flex-col items-center justify-center rounded-lg border border-transparent bg-[#eff3ff] px-2 py-2 text-center text-slate-800 transition hover:border-[#9eb4ff] peer-checked:border-[#244fbd] peer-checked:bg-[#e1e9ff] peer-checked:ring-1 peer-checked:ring-[#244fbd] peer-focus-visible:ring-2 peer-focus-visible:ring-[#244fbd]">
+            <span class="mb-1 text-[18px] font-semibold leading-none lg:mb-2 lg:text-[24px] text-[#244fbd]" aria-hidden="true"><%= icon %></span>
+            <span class="text-[9px] font-semibold lg:text-[15px]"><%= title %></span>
+            <span class="text-[8px] leading-tight text-slate-600 lg:text-[13px]"><%= translation %></span>
           </label>
         </div>
       <% end %>
     </div>
-    <p class="mt-2 rounded-md bg-[#eff3ff] px-2.5 py-2 text-[9px] leading-relaxed text-slate-700"><span class="font-semibold text-[#244fbd]">ⓘ</span> Ang pagpili ng tamang kategorya ay awtomatikong nagpapadala ng sumbong sa nakatalagang Barangay upang mapabilis ang inspeksyon.</p>
+    <p class="mt-3 rounded-md bg-[#eff3ff] px-3 py-2.5 text-[9px] leading-relaxed text-slate-700 lg:mt-6 lg:px-4 lg:py-3 lg:text-[13px]"><span class="font-semibold text-[#244fbd]">ⓘ</span> Ang pagpili ng tamang kategorya ay awtomatikong nagpapadala ng sumbong sa nakatalagang Barangay upang mapabilis ang inspeksyon.</p>
   </section>
 
-  <section class="rounded-lg bg-white p-4 sm:px-5 sm:py-4" aria-labelledby="description-heading">
-    <div class="mb-3 flex items-center justify-between gap-2">
-      <h2 id="description-heading" class="text-[12px] font-semibold text-[#07349e]"><span class="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#244fbd] text-[9px] text-white">2</span>Issue Description / Detalye ng Sumbong <span class="text-red-600">*</span></h2>
-      <span class="text-[8px] font-medium text-slate-600">Kinakailangan</span>
+  <section class="rounded-lg bg-white p-4 sm:px-5 sm:py-4 lg:p-8" aria-labelledby="description-heading">
+    <div class="mb-3 flex items-center justify-between gap-2 lg:mb-5 lg:gap-4">
+      <h2 id="description-heading" class="text-[12px] font-semibold text-[#07349e] lg:text-[20px]"><span class="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#244fbd] text-[9px] text-white lg:h-6 lg:w-6 lg:text-[13px]">2</span>Issue Description / Detalye ng Sumbong <span class="text-red-600">*</span></h2>
+      <span class="text-[8px] font-medium text-slate-600 lg:text-[13px]">Kinakailangan</span>
     </div>
-    <p class="mb-3 text-[9px] text-slate-600">Magbigay ng kumpletong detalye upang madaling matukoy at maaksiyunan ng mga kawani ng barangay.</p>
+    <p class="mb-4 text-[9px] text-slate-600 lg:mb-5 lg:text-[13px]">Magbigay ng kumpletong detalye upang madaling matukoy at maaksiyunan ng mga kawani ng barangay.</p>
 
     <div class="mb-3">
-      <%= f.label :location_description, "Purok / Sona ng Insidente · Eksaktong Lokasyon", class: "mb-1 block text-[9px] font-medium" %>
-      <%= f.text_field :location_description, required: true, placeholder: "Hal. Purok 3, malapit sa Barangay Hall", class: "h-10 w-full rounded-md border-0 bg-[#eff3ff] px-3 text-[10px] outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-[#244fbd]/30" %>
+      <%= f.label :location_description, "Purok / Sona ng Insidente · Eksaktong Lokasyon", class: "mb-1 block text-[9px] font-medium lg:text-[15px]" %>
+      <%= f.text_field :location_description, required: true, placeholder: "Hal. Purok 3, malapit sa Barangay Hall", class: "h-10 w-full rounded-md border-0 bg-[#eff3ff] px-3 text-[10px] lg:h-14 lg:px-4 lg:text-[16px] outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-[#244fbd]/30" %>
     </div>
 
     <div>
-      <%= f.label :reason, "Paglalarawan ng nangyari", class: "mb-1 block text-[9px] font-medium" %>
-      <%= f.text_area :reason, required: true, maxlength: 500, rows: 5, placeholder: "Ilarawan ang problema, kailan ito nangyari, at iba pang detalyeng makatutulong sa pagsisiyasat.", class: "min-h-[115px] w-full resize-y rounded-md border-0 bg-[#eff3ff] px-3 py-2.5 text-[10px] leading-relaxed outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-[#244fbd]/30" %>
-      <p class="mt-1 text-right text-[8px] text-[#07349e]"><span id="reason-character-count"><%= barangay_concern.reason.to_s.length %></span> / 500 characters</p>
+      <%= f.label :reason, "Paglalarawan ng nangyari", class: "mb-1 block text-[9px] font-medium lg:text-[15px]" %>
+      <%= f.text_area :reason, required: true, maxlength: 500, rows: 5, placeholder: "Ilarawan ang problema, kailan ito nangyari, at iba pang detalyeng makatutulong sa pagsisiyasat.", class: "min-h-[115px] w-full resize-y rounded-md border-0 bg-[#eff3ff] px-3 py-2.5 text-[10px] lg:min-h-[180px] lg:px-4 lg:py-4 lg:text-[16px] leading-relaxed outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-[#244fbd]/30" %>
+      <p class="mt-1 text-right text-[8px] text-[#07349e] lg:text-[13px]"><span id="reason-character-count"><%= barangay_concern.reason.to_s.length %></span> / 500 characters</p>
     </div>
 
     <div class="mt-3">
-      <%= f.label :resident_remarks, "Karagdagang Tala / Additional Remarks (Optional)", class: "mb-1 block text-[9px] font-medium" %>
-      <%= f.text_area :resident_remarks, rows: 2, class: "min-h-[56px] w-full resize-y rounded-md border-0 bg-[#eff3ff] px-3 py-2 text-[10px] outline-none focus:ring-2 focus:ring-[#244fbd]/30" %>
+      <%= f.label :resident_remarks, "Karagdagang Tala / Additional Remarks (Optional)", class: "mb-1 block text-[9px] font-medium lg:text-[15px]" %>
+      <%= f.text_area :resident_remarks, rows: 2, class: "min-h-[56px] w-full resize-y rounded-md border-0 bg-[#eff3ff] px-3 py-2 text-[10px] lg:min-h-[88px] lg:px-4 lg:py-3 lg:text-[16px] outline-none focus:ring-2 focus:ring-[#244fbd]/30" %>
     </div>
 
-    <div class="mt-4">
-      <h3 class="mb-1 text-[10px] font-semibold text-slate-900">Pin ang lokasyon sa mapa <span class="font-normal text-slate-500">(Optional)</span></h3>
-      <p class="mb-2 text-[9px] text-slate-600">Pindutin ang mapa upang markahan ang lugar ng insidente.</p>
-      <div id="concern-map" class="h-[220px] w-full overflow-hidden rounded-lg border border-[#dce4ff] bg-[#eff3ff] sm:h-[260px]" role="application" aria-label="Map to select incident location"></div>
-      <p class="mt-1.5 text-[8px] text-slate-500">© OpenStreetMap contributors · Mag-zoom o i-drag ang mapa para mas eksaktong lokasyon.</p>
+    <div class="mt-5 lg:mt-6">
+      <h3 class="mb-2 text-[10px] font-semibold text-slate-900 lg:text-[13px]">Pin ang lokasyon sa mapa <span class="font-normal text-slate-500">(Optional)</span></h3>
+      <p class="mb-2 text-[9px] text-slate-600 lg:text-[13px]">Pindutin ang mapa upang markahan ang lugar ng insidente.</p>
+      <div id="concern-map" class="h-[220px] w-full overflow-hidden rounded-lg border border-[#dce4ff] bg-[#eff3ff] sm:h-[260px] lg:h-[400px]" role="application" aria-label="Map to select incident location"></div>
+      <p class="mt-2 text-[8px] text-slate-500 lg:text-[13px]">© OpenStreetMap contributors · Mag-zoom o i-drag ang mapa para mas eksaktong lokasyon.</p>
     </div>
   </section>
 
-  <section class="rounded-lg bg-white p-4 sm:px-5 sm:py-4" aria-labelledby="evidence-heading">
-    <h2 id="evidence-heading" class="mb-1 text-[12px] font-semibold text-[#07349e]"><span class="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#244fbd] text-[9px] text-white">3</span>Photo of the Concern / Larawan ng Sitwasyon <span class="text-[9px] font-normal text-slate-600">(Optional)</span></h2>
-    <p class="mb-3 text-[9px] leading-relaxed text-slate-600">Maglakip ng malinaw na larawan ng sira o sitwasyon upang agad makita ang tamang lugar at kalagayan.</p>
-    <label class="flex min-h-[110px] cursor-pointer flex-col items-center justify-center rounded-lg bg-[#f7f8ff] px-4 py-4 text-center hover:bg-[#eff3ff]">
+  <section class="rounded-lg bg-white p-4 sm:px-5 sm:py-4 lg:p-8" aria-labelledby="evidence-heading">
+    <h2 id="evidence-heading" class="mb-2 text-[12px] font-semibold text-[#07349e] lg:text-[20px]"><span class="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#244fbd] text-[9px] text-white lg:h-6 lg:w-6 lg:text-[13px]">3</span>Photo of the Concern / Larawan ng Sitwasyon <span class="text-[9px] font-normal text-slate-600 lg:text-[13px]">(Optional)</span></h2>
+    <p class="mb-4 text-[9px] leading-relaxed text-slate-600 lg:mb-5 lg:text-[13px]">Maglakip ng malinaw na larawan ng sira o sitwasyon upang agad makita ang tamang lugar at kalagayan.</p>
+    <label class="flex min-h-[110px] cursor-pointer lg:min-h-[160px] lg:px-6 lg:py-6 flex-col items-center justify-center rounded-lg bg-[#f7f8ff] px-4 py-4 text-center hover:bg-[#eff3ff]">
       <span class="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#dce4ff] text-base text-[#244fbd]" aria-hidden="true">⇧</span>
-      <span class="text-[10px] font-semibold">Kumuha ng larawan o mag-browse mula sa cellphone</span>
-      <span class="mt-1 text-[8px] text-slate-500">Tumatanggap ng JPG, PNG at iba pang image format.</span>
-      <%= f.file_field :evidence_image, accept: "image/*", capture: "environment", class: "mt-3 block w-full max-w-[350px] text-[9px] file:mr-2 file:cursor-pointer file:rounded-md file:border-0 file:bg-[#dce7ff] file:px-3 file:py-2 file:text-[9px] file:font-semibold file:text-[#07349e]" %>
+      <span class="text-[10px] font-semibold lg:text-[13px]">Kumuha ng larawan o mag-browse mula sa cellphone</span>
+      <span class="mt-1 text-[8px] text-slate-500 lg:text-[13px]">Tumatanggap ng JPG, PNG at iba pang image format.</span>
+      <%= f.file_field :evidence_image, accept: "image/*", capture: "environment", class: "mt-4 block w-full max-w-[500px] text-[9px] lg:text-[13px] file:mr-2 file:cursor-pointer file:rounded-md file:border-0 file:bg-[#dce7ff] file:px-3 file:py-2 file:text-[13px] file:font-semibold file:text-[#07349e]" %>
     </label>
   </section>
 
-  <section class="rounded-lg bg-white p-3 sm:px-5 sm:py-4">
-    <%= f.submit "➤  Submit Report (Isumite ang Sumbong)", class: "h-10 w-full cursor-pointer rounded-md border-0 bg-[#2445b8] text-[10px] font-semibold text-white shadow-sm hover:bg-[#17379f] focus:outline-none focus:ring-2 focus:ring-[#2445b8]/40 focus:ring-offset-2" %>
-    <%= link_to "Kanselahin ang Form (Cancel)", root_path, class: "mt-1 block rounded-md bg-[#eff3ff] px-3 py-2.5 text-center text-[9px] font-medium text-slate-800 no-underline hover:bg-[#e1e9ff]" %>
-    <p class="mt-2 text-center text-[8px] text-slate-500">Protected in accordance with the Data Privacy Act.</p>
+  <section class="rounded-lg bg-white p-3 sm:px-5 sm:py-4 lg:p-6">
+    <%= f.submit "➤  Submit Report (Isumite ang Sumbong)", class: "h-10 w-full cursor-pointer rounded-md border-0 bg-[#2445b8] text-[10px] lg:h-14 lg:text-[13px] font-semibold text-white shadow-sm hover:bg-[#17379f] focus:outline-none focus:ring-2 focus:ring-[#2445b8]/40 focus:ring-offset-2" %>
+    <%= link_to "Kanselahin ang Form (Cancel)", root_path, class: "mt-2 block rounded-md bg-[#eff3ff] px-3 py-2.5 text-center text-[9px] lg:py-3.5 lg:text-[13px] font-medium text-slate-800 no-underline hover:bg-[#e1e9ff]" %>
+    <p class="mt-3 text-center text-[8px] text-slate-500 lg:text-[13px]">Protected in accordance with the Data Privacy Act.</p>
   </section>
 <% end %>
 

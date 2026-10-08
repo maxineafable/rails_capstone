@@ -1,22 +1,25 @@
-<div class="flex p-4 items-center justify-between bg-neutral-100">
-    <div>
-        <%= link_to "Barangay Kalikid Sur", root_path %>
-    </div>
-    <nav class="flex items-center gap-4">
-        <% if user_signed_in? %>
-            <span>Logged in as: <%= current_user.email %></span>
-            <!--<%= link_to "Dashboard", root_path %>-->
-            <% if current_user.profile.present? %>
-                <%= link_to "Profile", profile_path %>
-            <% end %>
-            <% if current_user.barangay_staff? %>
-                <%= link_to "Admin", admin_dashboard_path %>
-            <% end %>
-            <%= link_to "My Concerns", barangay_concerns_path %>
-            <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete } %>
-        <% else %>
-            <%= link_to "Login", new_user_session_path %>
-            <%= link_to "Sign Up", new_user_registration_path %>
-        <% end %>
+<% active_item = local_assigns[:active] %>
+
+<header class="bg-white shadow-[0_3px_10px_rgba(15,23,42,0.18)]">
+  <div class="mx-auto flex min-h-[82px] max-w-[1280px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:min-h-[100px] lg:flex-nowrap lg:gap-6 lg:px-6 lg:py-4">
+    <%= link_to root_path, class: "flex shrink-0 items-center gap-2.5 no-underline" do %>
+      <span class="h-9 w-9 rounded-full bg-[#07349e] sm:h-10 sm:w-10 lg:h-12 lg:w-12" aria-hidden="true"></span>
+      <span class="flex flex-col text-slate-900">
+        <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px] lg:text-[30px]">Barangay Kalikid Sur</strong>
+        <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px] lg:text-[13px]">Digital System for Registered Residents</small>
+      </span>
+    <% end %>
+
+    <% base_link_classes = "rounded-md px-3 py-2 lg:px-4 lg:py-3" %>
+    <nav class="flex w-full flex-wrap items-center justify-center gap-1 rounded-lg bg-[#eff3ff] p-1 text-[11px] font-medium sm:gap-2 lg:w-auto lg:min-w-[720px] lg:justify-between lg:px-3 lg:py-2 lg:text-[15px]" aria-label="Main navigation">
+      <%= link_to "Home", root_path, class: "#{base_link_classes} #{active_item == :home ? 'bg-white font-semibold text-[#07349e]' : 'text-slate-800 hover:bg-white'}" %>
+      <%= link_to "Requests (Kahilingan)", select_document_type_path, class: "#{base_link_classes} #{active_item == :requests ? 'bg-white font-semibold text-[#07349e]' : 'text-slate-800 hover:bg-white'}" %>
+      <%= link_to "Reports (Sumbong)", barangay_concerns_path, class: "#{base_link_classes} #{active_item == :reports ? 'bg-white font-semibold text-[#07349e]' : 'text-slate-800 hover:bg-white'}" %>
+      <%= link_to "Profile", current_user.profile.present? ? profile_path : new_profile_path, class: "#{base_link_classes} #{active_item == :profile ? 'bg-white font-semibold text-[#07349e]' : 'text-slate-800 hover:bg-white'}" %>
+      <% if current_user.barangay_staff? %>
+        <%= link_to "Admin", admin_dashboard_path, class: "#{base_link_classes} text-slate-800 hover:bg-white" %>
+      <% end %>
+
     </nav>
-</div>
+  </div>
+</header>

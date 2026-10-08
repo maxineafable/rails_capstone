@@ -1,78 +1,95 @@
-<div class="space-y-6">
-  <div>
-    <h1 class="text-2xl font-bold">My Reported Concerns</h1>
-    <p class="text-gray-600">
-      View the concerns and issues you have reported to the Barangay.
-    </p>
-  </div>
+<div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
+  <%= render "shared/navbar", active: :reports %>
 
-  <div class="grid grid-cols-2 gap-4 md:grid-cols-5">
-    <div>
-      <p class="text-sm text-gray-600">Total</p>
-      <p class="text-2xl font-bold"><%= @total_concerns %></p>
-    </div>
+  <main class="mx-auto max-w-[1280px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-5 lg:px-6 lg:py-7">
+    <section class="relative overflow-hidden rounded-lg bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6 lg:px-8 lg:py-7" aria-labelledby="reports-title">
+      <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#07349e] via-[#2457c5] to-emerald-700" aria-hidden="true"></div>
+      <h1 id="reports-title" class="text-2xl font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[26px] lg:text-[30px]">Submitted Community Concern Reports</h1>
+      <p class="mt-1 text-[10px] font-semibold text-emerald-700 lg:text-[13px]">Talaan ng mga Naipadalang Ulat at Sumbong</p>
+      <p class="mt-2 max-w-[760px] text-[10px] leading-relaxed text-slate-600 lg:text-[13px]">Track the status of every concern you've reported to the barangay. / Subaybayan ang katayuan ng bawat sumbong na inyong isinumite.</p>
+    </section>
 
-    <div>
-      <p class="text-sm text-gray-600">Pending</p>
-      <p class="text-2xl font-bold"><%= @pending_concerns %></p>
-    </div>
+    <section class="grid grid-cols-2 gap-3 rounded-lg bg-white p-4 shadow-sm sm:gap-4 sm:p-5 lg:grid-cols-4 lg:gap-4 lg:p-5" aria-label="Concern report summary">
+      <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#dce7ff] text-[#07349e] lg:h-11 lg:w-11" aria-hidden="true"><svg class="h-5 w-5 lg:h-6 lg:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h11l5 5v9H4z"/><path d="M15 5v5h5M8 14h8m-8 3h5"/></svg></span>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Total Reports (Kabuuan)</p><p class="mt-0.5 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @total_concerns %> <span class="text-[8px] font-medium text-slate-600 lg:text-[13px]">reports recorded</span></p></div>
+      </div>
+      <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#ffdec2] text-amber-900 lg:h-11 lg:w-11" aria-hidden="true"><svg class="h-5 w-5 lg:h-6 lg:w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v2l-2 2v3l2 2v2l-2 2v3l2 2v1H6v-1l2-2v-3l-2-2v-2l2-2V7L6 5V3Z"/></svg></span>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Pending (Naka-pending)</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @pending_concerns %><span class="rounded-full bg-[#ffdec2] px-2 py-0.5 text-[8px] font-semibold text-amber-950 lg:text-[13px]">In Queue</span></p></div>
+      </div>
+      <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#dce4ff] text-[#244fbd] lg:h-11 lg:w-11" aria-hidden="true"><svg class="h-5 w-5 lg:h-6 lg:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m14 6 4-4 4 4-4 4m-2-2-9 9m-2-4 8 8m-7-2-3 3m13-11 4 4"/></svg></span>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">In Progress (Kasalukuyang Ginagawa)</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @ongoing_concerns %><span class="rounded-full bg-[#dce4ff] px-2 py-0.5 text-[8px] font-semibold text-[#17379f] lg:text-[13px]">Dispatched</span></p></div>
+      </div>
+      <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-200 text-emerald-800 lg:h-11 lg:w-11" aria-hidden="true"><svg class="h-5 w-5 lg:h-6 lg:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 11.2V12a8 8 0 1 1-4.7-7.3"/><path d="m8.5 11.5 3 3L21 5"/></svg></span>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Resolved (Nalutas)</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @resolved_concerns %><span class="rounded-full bg-emerald-200 px-2 py-0.5 text-[8px] font-semibold text-emerald-900 lg:text-[13px]">Closed &amp; Cleared</span></p></div>
+      </div>
+    </section>
 
-    <div>
-      <p class="text-sm text-gray-600">Ongoing</p>
-      <p class="text-2xl font-bold"><%= @ongoing_concerns %></p>
-    </div>
+    <section class="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-[#eff3ff] px-3 py-2.5 sm:px-4" aria-label="Concern report statuses">
+      <div class="flex flex-wrap items-center gap-2 text-[9px] font-semibold text-slate-700 lg:gap-3 lg:text-[13px]">
+        <span class="rounded-md bg-white px-3 py-2 text-[#07349e] shadow-sm">All Reports (Lahat ng Ulat) <span class="ml-1 rounded-full bg-[#dce4ff] px-1.5 py-0.5"><%= @total_concerns %></span></span>
+        <span class="rounded-md px-2 py-1.5">Pending (Naka-pending) <span class="rounded-full bg-[#dce4ff] px-1.5 py-0.5"><%= @pending_concerns %></span></span>
+        <span class="rounded-md px-2 py-1.5">In Progress <span class="rounded-full bg-[#dce4ff] px-1.5 py-0.5"><%= @ongoing_concerns %></span></span>
+        <span class="rounded-md px-2 py-1.5">Resolved (Nalutas) <span class="rounded-full bg-emerald-200 px-1.5 py-0.5"><%= @resolved_concerns %></span></span>
+        <% if @unactionable_concerns.positive? %><span class="rounded-md px-2 py-1.5">Unactionable <span class="rounded-full bg-rose-100 px-1.5 py-0.5"><%= @unactionable_concerns %></span></span><% end %>
+      </div>
+      <%= link_to "＋ Report a Concern", new_barangay_concern_path, class: "rounded-md bg-[#07349e] px-4 py-2.5 text-[10px] font-semibold text-white no-underline shadow-sm transition hover:bg-[#0b2e83] lg:px-5 lg:py-3 lg:text-[13px]" %>
+    </section>
 
-    <div>
-      <p class="text-sm text-gray-600">Resolved</p>
-      <p class="text-2xl font-bold"><%= @resolved_concerns %></p>
-    </div>
+    <% if @barangay_concerns.any? %>
+      <section class="space-y-3" aria-label="Submitted concern reports">
+        <% @barangay_concerns.each do |concern| %>
+          <% category_label = { "health_and_sanitation" => "Drainage", "infrastructure" => "Roads", "peace_and_order" => "Streetlights", "waste_management" => "Garbage", "others" => "Other" }.fetch(concern.category, concern.category.humanize) %>
+          <% category_icon, category_icon_style = case concern.category
+             when "peace_and_order" then ["☼", "bg-[#ffdec2] text-amber-900"]
+             when "infrastructure" then ["⚑", "bg-[#dce4ff] text-[#17379f]"]
+             when "waste_management" then ["▤", "bg-emerald-200 text-emerald-800"]
+             when "health_and_sanitation" then ["≋", "bg-emerald-200 text-emerald-800"]
+             else ["⊞", "bg-[#dce4ff] text-[#17379f]"]
+             end %>
+          <% accent_style, status_style, status_label = if concern.pending?
+             ["border-amber-900", "bg-[#ffdec2] text-amber-950", "Pending (Naka-pending)"]
+           elsif concern.ongoing?
+             ["border-[#2445b8]", "bg-[#dce4ff] text-[#17379f]", "In Progress (Kasalukuyang Ginagawa)"]
+           elsif concern.resolved?
+             ["border-emerald-700", "bg-emerald-200 text-emerald-900", "Resolved (Nalutas)"]
+           else
+             ["border-rose-700", "bg-rose-100 text-rose-900", "Unactionable"]
+           end %>
 
-    <div>
-      <p class="text-sm text-gray-600">Unactionable</p>
-      <p class="text-2xl font-bold"><%= @unactionable_concerns %></p>
-    </div>
-  </div>
+          <article class="overflow-hidden rounded-lg border-l-4 <%= accent_style %> bg-white shadow-sm lg:border-l-[6px]">
+            <div class="flex flex-col gap-3 px-4 py-4 sm:px-5 lg:px-7 lg:py-5">
+              <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                <div class="flex min-w-0 items-center gap-3">
+                  <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xl font-semibold <%= category_icon_style %> lg:h-11 lg:w-11" aria-hidden="true"><%= category_icon %></span>
+                  <div class="min-w-0">
+                    <h2 class="text-sm font-semibold text-slate-900 lg:text-[20px]"><%= category_label %></h2>
+                    <p class="text-[9px] text-slate-700 lg:text-[13px]">◷ <%= concern.created_at.strftime("%B %d, %Y • %I:%M %p") %></p>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+                  <div class="text-left sm:text-right"><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Reference No.</p><p class="rounded-sm bg-[#eff3ff] px-2 py-1 font-mono text-xs font-semibold tracking-wide text-slate-800 lg:text-[16px]"><%= concern.tracking_number %></p></div>
+                  <span class="rounded-full px-3 py-1.5 text-[8px] font-semibold <%= status_style %> lg:text-[13px]">● <%= status_label %></span>
+                </div>
+              </div>
 
-  <%= link_to "Report a Concern", new_barangay_concern_path,
-      class: "text-blue-600 hover:underline" %>
-
-  <% if @barangay_concerns.any? %>
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse text-left">
-        <thead>
-          <tr class="border-b bg-gray-100">
-            <th class="p-3">Category</th>
-            <th class="p-3">Reason</th>
-            <th class="p-3">Date Filed</th>
-            <th class="p-3">Status</th>
-            <th class="p-3">Date Resolved</th>
-            <th class="p-3">Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @barangay_concerns.each do |concern| %>
-            <tr class="border-b">
-              <td class="p-3"><%= concern.category.humanize %></td>
-              <td class="p-3"><%= truncate(concern.reason, length: 50) %></td>
-              <td class="p-3"><%= concern.created_at.strftime("%B %d, %Y") %></td>
-              <td class="p-3 font-medium"><%= concern.status.humanize %></td>
-              <td class="p-3">
-                <%= concern.resolved_at ? concern.resolved_at.strftime("%B %d, %Y") : "—" %>
-              </td>
-              <td class="p-3">
-                <%= link_to "View Details",
-                    barangay_concern_path(concern),
-                    class: "text-blue-600 hover:underline" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <p class="text-gray-600">
-      You haven't reported any concerns yet.
-    </p>
-  <% end %>
+              <p class="text-xs leading-relaxed text-slate-800 lg:text-[16px]">“<%= truncate(concern.reason, length: 180) %>”</p>
+            </div>
+            <div class="flex flex-col justify-between gap-2 bg-[#f7f9ff] px-4 py-2.5 text-[9px] sm:flex-row sm:items-center sm:px-5 lg:px-7 lg:text-[13px]">
+              <span class="font-medium text-slate-800">♧ <%= concern.location_description %></span>
+              <%= link_to "View Details (Tingnan ang Detalye) →", barangay_concern_path(concern), class: "font-semibold text-[#07349e] no-underline hover:underline" %>
+            </div>
+          </article>
+        <% end %>
+      </section>
+    <% else %>
+      <section class="rounded-lg bg-white px-5 py-10 text-center shadow-sm sm:px-8 lg:py-14">
+        <p class="text-sm font-semibold text-slate-800 lg:text-[20px]">You haven't reported any concerns yet.</p>
+        <p class="mt-2 text-xs text-slate-600 lg:text-[16px]">Use the report button above to submit a community concern.</p>
+      </section>
+    <% end %>
+  </main>
 </div>

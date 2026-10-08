@@ -1,201 +1,99 @@
 <% # app/views/devise/registrations/new.html.erb %>
 
-<div class="min-h-screen bg-gray-50 px-4 py-10">
-  <div class="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-sm">
+<div class="min-h-screen bg-[#f4f4f7] text-slate-900">
+  <header class="border-b border-slate-200 bg-white shadow-sm">
+    <div class="mx-auto flex max-w-5xl items-center gap-3 px-4 py-5 sm:px-6 sm:py-6">
+      <span class="h-10 w-10 shrink-0 rounded-full bg-[#07349b] sm:h-12 sm:w-12" aria-hidden="true"></span>
+      <div>
+        <p class="text-xl font-bold leading-tight tracking-tight text-slate-900 sm:text-2xl lg:text-[30px]">Barangay Kalikid Sur</p>
+        <p class="text-[10px] leading-tight text-slate-500 lg:text-[13px]">Digital System for Registered Residents</p>
+      </div>
+    </div>
+  </header>
 
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold text-gray-900">
-        Resident Registration
-      </h2>
-      <p class="mt-1 text-sm text-gray-500">
-        Create your account and provide your resident information.
-      </p>
+  <main class="mx-auto max-w-5xl px-4 py-5 sm:px-6 sm:py-7 lg:py-8">
+    <div class="mb-6 rounded-lg bg-white px-5 py-5 shadow-[0_2px_8px_rgba(15,23,42,0.14)] sm:px-7 sm:py-6">
+      <p class="text-[10px] font-bold uppercase tracking-wide text-[#07349b] lg:text-[13px]">Registration</p>
+      <h1 class="text-xl font-semibold leading-7 text-slate-800 sm:text-2xl lg:text-[30px] lg:leading-9">Basic Details</h1>
     </div>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <div class="mb-6 flex gap-3 rounded-lg border border-indigo-100 bg-indigo-50/80 px-4 py-4 text-sm leading-relaxed text-slate-600 shadow-[0_2px_8px_rgba(15,23,42,0.12)] sm:px-5 sm:py-5 lg:text-[16px]">
+      <svg class="mt-0.5 h-5 w-5 shrink-0 text-[#07349b] sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 1.7 3.5 4v5.1c0 4.1 2.8 7.7 6.5 9.2 3.7-1.5 6.5-5.1 6.5-9.2V4L10 1.7Zm3.1 6.1a.8.8 0 0 0-1.2-1l-2.8 3.3-1.1-1.2a.8.8 0 0 0-1.2 1.1l1.8 1.9a.8.8 0 0 0 1.2-.1l3.3-4Z" clip-rule="evenodd"/></svg>
+      <p><strong class="font-semibold text-slate-800">Opisyal na Paalala mula sa Tanggapan ng Punong Barangay:</strong><br>
+        Siguraduhing tama at tugma sa inyong valid government ID ang mga impormasyong ilalagay upang maiwasan ang pagkaantala sa pag-apruba ng inyong Citizen Record.</p>
+    </div>
 
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "rounded-lg bg-white p-4 shadow-sm sm:p-6 lg:p-8" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
-      <!-- ACCOUNT INFORMATION -->
-      <section class="mb-8">
-        <h3 class="mb-4 text-lg font-semibold text-gray-900">
-          Account Information
-        </h3>
+      <% input_class = "mt-1 w-full rounded-lg border-0 bg-[#eef2ff] px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-[#1746ac] lg:px-4 lg:py-3 lg:text-[16px]" %>
+      <% label_class = "block text-xs font-medium leading-tight text-slate-800 lg:text-[15px]" %>
+      <% hint_class = "mt-0.5 block text-[10px] leading-tight text-slate-500 lg:text-[13px]" %>
 
-        <div class="space-y-4">
+      <section class="mb-7">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h2 class="flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]">
+            <svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a2 2 0 0 0-2 2v1H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3V4a2 2 0 0 0-2-2Zm0 2h2v1H9V4a1 1 0 0 1 1-1Zm-3 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm6 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM6 14h8v1H6v-1Z"/></svg>
+            Pangalan <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Full Legal Name</span>
+          </h2>
+          <span class="text-[9px] font-medium text-red-600 sm:text-[10px] lg:text-[13px]">* Kinakailangan (Required)</span>
+        </div>
 
-          <div>
-            <%= f.label :email, "Email Address", class: "mb-1 block text-sm font-medium text-gray-700" %>
-            <%= f.email_field :email,
-                autofocus: true,
-                autocomplete: "email",
-                required: true,
-                class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
+        <% resource.build_profile unless resource.profile %>
+        <%= f.fields_for :profile do |p| %>
+          <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-5">
+            <div><%= p.label :first_name, "Pangalan", class: label_class %><span class="<%= hint_class %>">(First Name)</span><%= p.text_field :first_name, required: true, placeholder: "Hal. Juan", class: input_class %></div>
+            <div><%= p.label :middle_name, "Gitnang Pangalan", class: label_class %><span class="<%= hint_class %>">(Middle Name)</span><%= p.text_field :middle_name, placeholder: "Hal. Santos", class: input_class %></div>
+            <div><%= p.label :last_name, "Apelyido", class: label_class %><span class="<%= hint_class %>">(Last Name)</span><%= p.text_field :last_name, required: true, placeholder: "Hal. Dela Cruz", class: input_class %></div>
+            <div><%= p.label :suffix, "Karagdagan", class: label_class %><span class="<%= hint_class %>">(Suffix)</span><%= p.text_field :suffix, placeholder: "Jr., Sr., III", class: input_class %></div>
+            <div><%= p.label :birth_date, "Birth Date *", class: label_class %><%= p.date_field :birth_date, required: true, class: input_class %></div>
+            <div><%= p.label :sex, "Sex *", class: label_class %><%= p.select :sex, [["Male", "male"], ["Female", "female"]], { include_blank: "Select an Option" }, { required: true, class: input_class } %></div>
           </div>
+        <% end %>
+      </section>
 
-          <div>
-            <%= f.label :password, "Password", class: "mb-1 block text-sm font-medium text-gray-700" %>
-
-            <% if @minimum_password_length %>
-              <p class="mb-1 text-xs text-gray-500">
-                Minimum <%= @minimum_password_length %> characters
-              </p>
-            <% end %>
-
-            <%= f.password_field :password,
-                autocomplete: "new-password",
-                required: true,
-                class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
+      <section class="mb-7 border-t border-slate-100 pt-5">
+        <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]">
+          <svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18s6-5.1 6-10A6 6 0 1 0 4 8c0 4.9 6 10 6 10Zm0-7a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/></svg>
+          Tirahan at Purok <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Complete Address &amp; Purok</span>
+        </h2>
+        <% resource.build_address unless resource.address %>
+        <%= f.fields_for :address do |a| %>
+          <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 lg:grid-cols-6 lg:gap-x-5 lg:gap-y-5">
+            <div class="lg:col-span-2"><%= a.label :house_number, "House / Lot / Blk No.", class: label_class %><span class="<%= hint_class %>">(Numero ng Bahay o Lote)</span><%= a.text_field :house_number, required: true, placeholder: "Hal. Blk 12 Lot 4", class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :street, "Street / Sitio / Subd.", class: label_class %><span class="<%= hint_class %>">(Kalye o Sitio)</span><%= a.text_field :street, required: true, placeholder: "Hal. Rizal Avenue", class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :purok, "Purok / Zone", class: label_class %><span class="<%= hint_class %>">(Piliin ang inyong Purok)</span><%= a.text_field :purok, required: true, placeholder: "-- Pumili ng Purok --", class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :barangay, "Barangay *", class: label_class %><%= a.text_field :barangay, value: "Cabanatuan Barangay", required: true, class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :city, "City / Municipality *", class: label_class %><%= a.text_field :city, value: "Cabanatuan City", required: true, class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :province, "Province *", class: label_class %><%= a.text_field :province, value: "Nueva Ecija", required: true, class: input_class %></div>
           </div>
+        <% end %>
+      </section>
 
-          <div>
-            <%= f.label :password_confirmation, "Confirm Password", class: "mb-1 block text-sm font-medium text-gray-700" %>
-
-            <%= f.password_field :password_confirmation,
-                autocomplete: "new-password",
-                required: true,
-                class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-          </div>
-
+      <section class="mb-5 border-t border-slate-100 pt-4">
+        <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]"><svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5Zm8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM4 15h5a4 4 0 0 0-5-3v3Zm8 0h4v-2h-4v2Z"/></svg>Impormasyon sa Pakikipag-ugnayan <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Contact Details</span></h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div><%= f.label :email, "Email Address", class: label_class %><span class="<%= hint_class %>">(Elektronikong Liham)</span><%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, placeholder: "juan.delacruz@email.com", class: input_class %></div>
         </div>
       </section>
 
-      <!-- PERSONAL INFORMATION -->
-      <section class="mb-8 border-t pt-8">
-        <h3 class="mb-1 text-lg font-semibold text-gray-900">
-          Personal Information
-        </h3>
-
-        <p class="mb-4 text-sm text-gray-500">
-          Enter your basic personal information.
-        </p>
-
-        <% resource.build_profile unless resource.profile %>
-
-        <%= f.fields_for :profile do |p| %>
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-            <div>
-              <%= p.label :first_name, "First Name *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= p.text_field :first_name,
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= p.label :middle_name, "Middle Name", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= p.text_field :middle_name,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= p.label :last_name, "Last Name *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= p.text_field :last_name,
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= p.label :suffix, "Suffix", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= p.text_field :suffix,
-                  placeholder: "Jr., Sr., III",
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= p.label :birth_date, "Birth Date *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= p.date_field :birth_date,
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= p.label :sex, "Sex *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= p.select :sex,
-                  [["Male", "male"], ["Female", "female"]],
-                  { include_blank: "Select Sex" },
-                  { required: true, class: "w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:border-blue-600 focus:outline-none" } %>
-            </div>
-
-          </div>
-        <% end %>
+      <section class="mb-7 border-t border-slate-100 pt-5">
+        <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]"><svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 8V6a5 5 0 0 1 10 0v2h1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1Zm2 0h6V6a3 3 0 1 0-6 0v2Zm3 3a1.5 1.5 0 0 0-.5 2.9V16h1v-2.1A1.5 1.5 0 0 0 10 11Z" clip-rule="evenodd"/></svg>Proteksyon ng Account <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Account Security</span></h2>
+        <% if @minimum_password_length %><p class="mb-3 text-[10px] text-slate-500 lg:text-[13px]">Minimum <%= @minimum_password_length %> characters</p><% end %>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div><%= f.label :password, "Gumawa ng Password", class: label_class %><span class="<%= hint_class %>">(Create Password)</span><%= f.password_field :password, autocomplete: "new-password", required: true, placeholder: "Enter password", class: input_class %></div>
+          <div><%= f.label :password_confirmation, "Kumpirmahin ang Password", class: label_class %><span class="<%= hint_class %>">(Confirm Password)</span><%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, placeholder: "Confirm password", class: input_class %></div>
+        </div>
       </section>
 
-      <!-- ADDRESS -->
-      <section class="mb-8 border-t pt-8">
-        <h3 class="mb-1 text-lg font-semibold text-gray-900">
-          Barangay Address
-        </h3>
-
-        <p class="mb-4 text-sm text-gray-500">
-          Enter your current residential address.
-        </p>
-
-        <% resource.build_address unless resource.address %>
-
-        <%= f.fields_for :address do |a| %>
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-            <div>
-              <%= a.label :house_number, "House / Building Number *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= a.text_field :house_number,
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= a.label :street, "Street Address *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= a.text_field :street,
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= a.label :purok, "Purok / Zone *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= a.text_field :purok,
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= a.label :barangay, "Barangay *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= a.text_field :barangay,
-                  value: "Cabanatuan Barangay",
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= a.label :city, "City / Municipality *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= a.text_field :city,
-                  value: "Cabanatuan City",
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= a.label :province, "Province *", class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= a.text_field :province,
-                  value: "Nueva Ecija",
-                  required: true,
-                  class: "w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-600 focus:outline-none" %>
-            </div>
-
-          </div>
-        <% end %>
-      </section>
-
-      <!-- SUBMIT -->
-      <div class="border-t pt-6">
-        <%= f.submit "Register New Account",
-            class: "w-full rounded-md bg-blue-800 px-4 py-3 font-semibold text-white hover:bg-blue-900" %>
+      <div class="border-t border-slate-100 pt-4">
+        <%= f.submit "Register", class: "w-full cursor-pointer rounded-lg bg-[#07349b] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#052b82] focus:outline-none focus:ring-2 focus:ring-[#07349b] focus:ring-offset-2 lg:py-4 lg:text-[20px]" %>
       </div>
-
+      <div class="mt-4 text-center text-xs text-slate-600 lg:text-[16px]"><span>Mayroon ka nang account?</span> <%= render "devise/shared/links" %></div>
     <% end %>
 
-    <div class="mt-6 text-center text-sm">
-      <%= render "devise/shared/links" %>
+    <div class="mt-4 rounded-lg bg-white px-4 py-4 text-center text-[10px] leading-relaxed text-slate-500 shadow-sm lg:px-6 lg:py-5 lg:text-[13px]">
+      Nangangailangan ng gabay o tulong sa pagpaparehistro? Pumunta sa Barangay Hall Information Desk tuwing Lunes hanggang Biyernes, 8:00 AM - 5:00 PM.
     </div>
-
-  </div>
+  </main>
 </div>
