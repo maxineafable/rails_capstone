@@ -63,9 +63,9 @@
             <div class="lg:col-span-2"><%= a.label :house_number, "House / Lot / Blk No.", class: label_class %><span class="<%= hint_class %>">(Numero ng Bahay o Lote)</span><%= a.text_field :house_number, required: true, placeholder: "Hal. Blk 12 Lot 4", class: input_class %></div>
             <div class="lg:col-span-2"><%= a.label :street, "Street / Sitio / Subd.", class: label_class %><span class="<%= hint_class %>">(Kalye o Sitio)</span><%= a.text_field :street, required: true, placeholder: "Hal. Rizal Avenue", class: input_class %></div>
             <div class="lg:col-span-2"><%= a.label :purok, "Purok / Zone", class: label_class %><span class="<%= hint_class %>">(Piliin ang inyong Purok)</span><%= a.text_field :purok, required: true, placeholder: "-- Pumili ng Purok --", class: input_class %></div>
-            <div><%= a.label :barangay, "Barangay *", class: label_class %><%= a.text_field :barangay, value: "Cabanatuan Barangay", required: true, class: input_class %></div>
-            <div><%= a.label :city, "City / Municipality *", class: label_class %><%= a.text_field :city, value: "Cabanatuan City", required: true, class: input_class %></div>
-            <div><%= a.label :province, "Province *", class: label_class %><%= a.text_field :province, value: "Nueva Ecija", required: true, class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :barangay, "Barangay *", class: label_class %><%= a.text_field :barangay, value: "Cabanatuan Barangay", required: true, class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :city, "City / Municipality *", class: label_class %><%= a.text_field :city, value: "Cabanatuan City", required: true, class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :province, "Province *", class: label_class %><%= a.text_field :province, value: "Nueva Ecija", required: true, class: input_class %></div>
           </div>
         <% end %>
       </section>
