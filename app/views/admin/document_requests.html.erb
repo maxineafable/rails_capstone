@@ -154,31 +154,31 @@
                       <%= request.status.humanize %>
                     </td>
 
-                    
-                      <td class="border p-3 space-x-4">
-                        <%= link_to "View" , document_request_path(request),
-                          data: { turbo_frame: "remote_modal" },
-                          class: "text-blue-600 hover:underline" %>
-                        
-                          <% if request.pending? %>
-                            <%= link_to "Approve" , document_request_path(request),
+                    <td class="border p-3 space-x-4">
+                      <%= link_to "View", document_request_path(request),
+                            data: { turbo_frame: "remote_modal" },
+                            class: "text-blue-600 hover:underline" %>
+                      
+                      <% if request.pending? %>
+                        <%= link_to "Approve", document_request_path(request, intent: "approve"),
                               data: { turbo_frame: "remote_modal" },
-                              class: "text-blue-600 hover:underline" %>
+                              class: "text-emerald-600 hover:underline font-medium" %>
 
-                            <%= link_to "Reject" , document_request_path(request),
+                        <%= link_to "Reject", document_request_path(request, intent: "reject"),
                               data: { turbo_frame: "remote_modal" },
-                              class: "text-blue-600 hover:underline" %>
-                          <% elsif request.processing? %>
-                            <%= link_to "Mark as ready" , document_request_path(request),
+                              class: "text-rose-600 hover:underline font-medium" %>
+                              
+                      <% elsif request.processing? %>
+                        <%= link_to "Mark as ready", document_request_path(request, intent: "ready"),
                               data: { turbo_frame: "remote_modal" },
-                              class: "text-blue-600 hover:underline" %>
-                          <% elsif request.ready_to_pickup? %>
-                            <%= link_to "Release" , document_request_path(request),
+                              class: "text-amber-600 hover:underline font-medium" %>
+                              
+                      <% elsif request.ready_to_pickup? %>
+                        <%= link_to "Release", document_request_path(request, intent: "release"),
                               data: { turbo_frame: "remote_modal" },
-                              class: "text-blue-600 hover:underline" %>
-                          <% end %>
-                      </td>
-
+                              class: "text-emerald-600 hover:underline font-medium" %>
+                      <% end %>
+                    </td>
                   </tr>
 
                   <% end %>

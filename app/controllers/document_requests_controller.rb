@@ -1,6 +1,7 @@
 class DocumentRequestsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_staff!, only: [ :update ]
+  before_action :ensure_turbo_frame_request, only: [ :show ]
 
   def select_type
   end
@@ -11,6 +12,8 @@ class DocumentRequestsController < ApplicationController
     else
       @document_request = current_user.document_requests.find(params[:id])
     end
+
+    @intent = params[:intent]
   end
 
   def new
@@ -71,6 +74,15 @@ class DocumentRequestsController < ApplicationController
     def authorize_staff!
       unless current_user.barangay_staff?
         redirect_to root_path, alert: "Unauthorized!"
+      end
+    end
+
+    def ensure_turbo_frame_request
+      # prevent user directly in example /doc-reqs/11
+      unless turbo_frame_request? && turbo_frame_request_id == "remote_modal"
+        destination = current_user.barangay_staff? ? admin_document_requests_path : root_path
+
+        redirect_to destination, alert: "Direct access to this page is not allowed."
       end
     end
 end
