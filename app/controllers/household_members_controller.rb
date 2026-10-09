@@ -3,6 +3,7 @@ class HouseholdMembersController < ApplicationController
   before_action :authorize_staff!
   before_action :set_household
   before_action :set_household_member, only: [ :edit, :update ]
+  before_action :ensure_turbo_frame_request, only: [:new, :edit]
 
   def new
     @household_member = @household.household_members.build
@@ -50,6 +51,13 @@ class HouseholdMembersController < ApplicationController
     def authorize_staff!
       unless current_user.barangay_staff?
         redirect_to root_path, alert: "Unauthorized!"
+      end
+    end
+
+    def ensure_turbo_frame_request
+      unless turbo_frame_request? && turbo_frame_request_id == "remote_modal"
+        # Fallback redirect to index layout if accessed outside a turbo frame request loop
+        redirect_to admin_residents_path, alert: "Please access this drawer form from the residents table panel."
       end
     end
 end

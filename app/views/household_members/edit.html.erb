@@ -1,164 +1,137 @@
-<%# app/views/household_members/edit.html.erb %>
+<%= turbo_frame_tag "remote_modal" do %>
+  <!-- OVERLAY BACKDROP SHADOW EFFECT -->
+  <div class="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm">
+    
+    <!-- RIGHT SIDE SLIDING DRAWER SHEET PANEL CONTAINER -->
+    <div class="h-screen w-full max-w-2xl overflow-y-auto bg-white shadow-2xl flex flex-col animate-slide-in">
 
-<div class="flex">
-  <%= render "admin/sidebar" %>
-
-  <div class="flex-1 space-y-6 p-8">
-
-    <header class="rounded-xl border bg-white p-6">
-      <h2 class="text-2xl font-bold text-gray-800">
-        Edit Household Member
-      </h2>
-
-      <p class="mt-1 text-sm text-gray-500">
-        <%= "#{@household_member.first_name} #{@household_member.last_name}".upcase %>
-        · Household #<%= @household.house_number %>
-        · <%= @household.street %>
-      </p>
-    </header>
-
-    <section class="rounded-xl border bg-white p-6">
-
-      <% if @household_member.errors.any? %>
-        <div class="mb-6 rounded border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-          <h4 class="font-semibold">
-            Please fix the following errors:
-          </h4>
-
-          <ul class="mt-2 list-disc pl-5">
-            <% @household_member.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
-
-      <%= form_with model: [@household, @household_member],
-                    url: household_member_path(@household, @household_member),
-                    method: :patch,
-                    local: true do |f| %>
-
-        <div class="mb-6">
-          <h3 class="mb-4 text-lg font-semibold text-gray-800">
-            Personal Information
-          </h3>
-
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
-            <div>
-              <%= f.label :first_name, "First Name *",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :first_name,
-                               required: true,
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= f.label :middle_name, "Middle Name",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :middle_name,
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= f.label :last_name, "Last Name *",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :last_name,
-                               required: true,
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= f.label :suffix, "Suffix",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :suffix,
-                               placeholder: "Jr., Sr.",
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
-            </div>
-
-          </div>
+      <!-- STICKY DRAWER PANEL HEADER CONTROLS -->
+      <div class="sticky top-0 z-10 flex items-center justify-between border-b bg-gray-50 p-5">
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">
+            Edit Household Member
+          </h2>
+          <p class="mt-0.5 text-xs font-semibold text-blue-600 tracking-wide uppercase">
+            <%= "#{@household_member.first_name} #{@household_member.last_name}" %>
+          </p>
+          <p class="mt-0.5 text-xs text-gray-500 font-medium">
+            Household #<%= @household.house_number %> · <%= @household.street %>
+          </p>
         </div>
 
-        <div class="border-t pt-6">
+        <!-- STIMULUS MODAL DISMISS TOGGLE ACTION BUTTON LINK -->
+        <%= link_to "✕", "#",
+                    class: "rounded-lg p-2 text-xl text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition",
+                    data: { action: "click->remote-modal#close" } %>
+      </div>
 
-          <h3 class="mb-4 text-lg font-semibold text-gray-800">
-            Resident Details
-          </h3>
+      <!-- MAIN CONFIGURABLE DRAW SCROLL BODY INNER AREA FORM -->
+      <div class="flex-1 p-6 space-y-6">
+        <%= form_with model: [@household, @household_member],
+                      url: household_member_path(@household, @household_member),
+                      method: :patch,
+                      local: true do |f| %>
 
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-
-            <div>
-              <%= f.label :birth_date, "Birth Date *",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.date_field :birth_date,
-                               required: true,
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+          <% if @household_member.errors.any? %>
+            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              <h4 class="font-semibold">Please fix the following errors:</h4>
+              <ul class="mt-2 list-disc pl-5">
+                <% @household_member.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
             </div>
+          <% end %>
 
-            <div>
-              <%= f.label :birth_place, "Birth Place *",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :birth_place,
-                               required: true,
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
+          <!-- PERSONAL DATA GROUP -->
+          <div class="space-y-4">
+            <h3 class="text-md font-semibold text-gray-800 border-b pb-2">
+              Personal Information
+            </h3>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <%= f.label :first_name, "First Name *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :first_name, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
+
+              <div>
+                <%= f.label :middle_name, "Middle Name", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :middle_name, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
+
+              <div>
+                <%= f.label :last_name, "Last Name *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :last_name, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
+
+              <div>
+                <%= f.label :suffix, "Suffix", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :suffix, placeholder: "Jr., Sr.", class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
             </div>
-
-            <div>
-              <%= f.label :sex, "Sex *",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.select :sex,
-                           HouseholdMember.sexes.keys.map { |s| [s.humanize, s] },
-                           { include_blank: "Select" },
-                           {
-                             required: true,
-                             class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                           } %>
-            </div>
-
-            <div>
-              <%= f.label :civil_status, "Civil Status *",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.select :civil_status,
-                           HouseholdMember.civil_statuses.keys.map { |c| [c.humanize, c] },
-                           { include_blank: "Select" },
-                           {
-                             required: true,
-                             class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                           } %>
-            </div>
-
-            <div>
-              <%= f.label :citizenship, "Citizenship",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :citizenship,
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
-            </div>
-
-            <div>
-              <%= f.label :occupation, "Occupation",
-                          class: "mb-1 block text-sm font-medium text-gray-700" %>
-              <%= f.text_field :occupation,
-                               class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" %>
-            </div>
-
           </div>
 
-        </div>
+          <!-- RESIDENT ACCOUNT DETAILS LAYOUT MATRIX -->
+          <div class="mt-8 space-y-4">
+            <h3 class="text-md font-semibold text-gray-800 border-b pb-2">
+              Resident Details
+            </h3>
 
-        <div class="mt-6 flex items-center gap-3 border-t pt-6">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <%= f.label :birth_date, "Birth Date *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.date_field :birth_date, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
 
-          <%= f.submit "Update Member Details",
-                       class: "rounded bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700" %>
+              <div>
+                <%= f.label :birth_place, "Birth Place *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :birth_place, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
 
-          <%= link_to "Cancel",
-                      household_path(@household),
-                      class: "rounded border px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+              <div>
+                <%= f.label :sex, "Sex *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.select :sex, HouseholdMember.sexes.keys.map { |s| [s.humanize, s] }, { include_blank: "Select" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
+              </div>
 
-        </div>
+              <div>
+                <%= f.label :civil_status, "Civil Status *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.select :civil_status, HouseholdMember.civil_statuses.keys.map { |c| [c.humanize, c] }, { include_blank: "Select" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
+              </div>
 
-      <% end %>
+              <div>
+                <%= f.label :citizenship, "Citizenship", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :citizenship, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
 
-    </section>
+              <div>
+                <%= f.label :occupation, "Occupation", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :occupation, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
+              </div>
 
+              <div class="sm:col-span-2">
+                <%= f.label :relationship_to_head, "Relationship To Head", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.text_field :relationship_to_head, 
+                placeholder: "Child, Grandchild, Spouse", 
+                readonly: @household_member.relationship_to_head == "Head",
+                class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none #{@household_member.relationship_to_head == 'Head' ? 'bg-gray-50 text-gray-500 cursor-not-allowed border-gray-200' : 'bg-white'}" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM STICKY BUTTON BAR ACTION LAYOUT -->
+          <div class="mt-8 flex items-center justify-end gap-3 border-t pt-4">
+            <%= link_to "Cancel", "#",
+                        class: "rounded-lg border bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition",
+                        data: { action: "click->remote-modal#close" } %>
+
+            <%= f.submit "Update Member Details",
+                         class: "cursor-pointer rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition" %>
+          </div>
+
+        <% end %>
+      </div>
+
+    </div>
   </div>
-</div>
+<% end %>

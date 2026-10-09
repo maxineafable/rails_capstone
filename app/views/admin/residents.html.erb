@@ -87,11 +87,9 @@
               
                 <%= link_to "Add Individual Member to This House", 
                   new_household_member_path(house), 
+                  data: { turbo_frame: "remote_modal" }, 
                   style: "padding: 6px 12px; background-color: #28a745; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; font-size: 0.9em;" %>
               </div>
-
-
-
 
               <% if house.household_members.any? %>
 
@@ -158,7 +156,10 @@
                           <p class="text-xs text-gray-500">Action</p>
                           <p class="text-gray-700">
                             <!-- <%= member.occupation.presence || "—" %> -->
-                            <%= link_to "Edit Details", edit_household_member_path(house, member), class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+                            <%= link_to "Edit Details",
+                              edit_household_member_path(house, member),
+                              data: { turbo_frame: "remote_modal" },
+                              class: "text-blue-600 hover:text-blue-800 font-semibold" %>
                           </p>
                         </div>
 
@@ -198,3 +199,8 @@
 
     </div>
 </div>
+
+<!-- HTML Target Box Container for remote modal injection loads -->
+<%= turbo_frame_tag "remote_modal" do %>
+  <!-- This space will dynamically fill up with the show form content when a link is clicked -->
+<% end %>
