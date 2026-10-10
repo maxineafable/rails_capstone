@@ -14,7 +14,7 @@ class HouseholdMembersController < ApplicationController
     @household_member = @household.household_members.build(member_params)
 
     if @household_member.save
-      redirect_to household_path(@household), notice: "New family member has been successfully added to Household ##{@household.house_number}."
+      redirect_to admin_residents_path, notice: "New family member has been successfully added to Household ##{@household.house_number}."
     else
       render :new, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class HouseholdMembersController < ApplicationController
 
   def update
     if @household_member.update(member_params)
-      redirect_to household_path(@household), notice: "Resident details for #{@household_member.first_name} have been updated successfully."
+      redirect_to admin_residents_path, notice: "Resident details for #{@household_member.first_name} have been updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end

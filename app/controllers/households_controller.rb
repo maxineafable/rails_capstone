@@ -2,6 +2,7 @@ class HouseholdsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_staff!
   before_action :set_household, only: [ :show, :edit, :update, :destroy ]
+  before_action :ensure_turbo_frame_request, only: [ :new, :edit ]
 
   def show
     @members = @household.household_members
@@ -29,10 +30,21 @@ class HouseholdsController < ApplicationController
   end
 
   def update
-    if @household.update(household_edit_params)
-      redirect_to household_path(@household), notice: "Household Census records modified successfully."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @household.update(household_edit_params)
+        format.html { redirect_to admin_residents_path, notice: "Household Census records modified successfully." }
+        
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(ActionView::RecordIdentifier.dom_id(@household), 
+                                  partial: "households/household_card", 
+                                  locals: { household: @household }),
+            turbo_stream.update("remote_modal", "")
+          ]
+        end
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -65,6 +77,13 @@ class HouseholdsController < ApplicationController
     def authorize_staff!
       unless current_user.barangay_staff?
         redirect_to root_path, alert: "Unauthorized!"
+      end
+    end
+
+    def ensure_turbo_frame_request
+      unless turbo_frame_request? && turbo_frame_request_id == "remote_modal"
+        # Fallback redirect to index layout if accessed outside a turbo frame request loop
+        redirect_to admin_residents_path, alert: "Please access this drawer form from the residents table panel."
       end
     end
 end

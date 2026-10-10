@@ -14,189 +14,25 @@
 
       <div class="flex justify-end">
         <%= link_to "Encode New Household Census Entry" , new_household_path,
+          data: { turbo_frame: "remote_modal" }, 
           class: "rounded bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700" %>
       </div>
 
-      <% if @households.any? %>
-
-        <% @households.each do |house| %>
-
-          <div class="rounded-lg border bg-white">
-
-            <!-- HOUSEHOLD -->
-            <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-6 md:items-center">
-
-              <div>
-                <p class="text-xs text-gray-500">House Number</p>
-                <p class="font-semibold text-gray-800">
-                  <%= house.house_number %>
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs text-gray-500">Street</p>
-                <p class="text-gray-700">
-                  <%= house.street %>
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs text-gray-500">Purok</p>
-                <p class="text-gray-700">
-                  Purok <%= house.purok %>
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs text-gray-500">Members</p>
-                <p class="text-gray-700">
-                  <%= house.household_members.count %> Person(s)
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs text-gray-500">Date Accomplished</p>
-                <p class="text-gray-700">
-                  <%= house.date_accomplished.strftime("%B %d, %Y") %>
-                </p>
-              </div>
-
-              <div class="flex gap-2 md:justify-end">
-                <%= link_to "View" , household_path(house),
-                  class: "rounded border px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100" %>
-
-                  <%= link_to "Edit" , edit_household_path(house),
-                    class: "rounded border px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50" %>
-
-                    <button type="button"
-                      onclick="document.getElementById('members-<%= house.id %>').classList.toggle('hidden')"
-                      class="rounded border px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100">
-                      Members
-                    </button>
-              </div>
-
-            </div>
-
-            <!-- MEMBERS BLOCK -->
-            <div id="members-<%= house.id %>" class="hidden border-t bg-gray-50 p-5">
-
-              <div class="flex items-center justify-between">
-                <h3 class="mb-4 font-semibold text-gray-800">
-                  Household Members
-                </h3>
-              
-                <%= link_to "Add Individual Member to This House", 
-                  new_household_member_path(house), 
-                  data: { turbo_frame: "remote_modal" }, 
-                  style: "padding: 6px 12px; background-color: #28a745; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; font-size: 0.9em;" %>
-              </div>
-
-              <% if house.household_members.any? %>
-
-                <div class="space-y-3">
-
-                  <% house.household_members.each do |member| %>
-
-                    <div class="rounded border bg-white p-4">
-
-                      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
-                        <div>
-                          <p class="text-xs text-gray-500">Name</p>
-                          <p class="font-medium text-gray-800">
-                            <%= [ member.first_name, member.middle_name, member.last_name, member.suffix
-                              ].compact_blank.join(" ") %>
-                        </p>
-                      </div>
-
-                      <div>
-                        <p class=" text-xs text-gray-500">Birth Date
-                          </p>
-                          <p class="text-gray-700">
-                            <%= member.birth_date.strftime("%B %d, %Y") %>
-                          </p>
-                        </div>
-
-                        <div>
-                          <p class="text-xs text-gray-500">Birth Place</p>
-                          <p class="text-gray-700">
-                            <%= member.birth_place %>
-                          </p>
-                        </div>
-
-                        <div>
-                          <p class="text-xs text-gray-500">Sex</p>
-                          <p class="text-gray-700">
-                            <%= member.sex.humanize %>
-                          </p>
-                        </div>
-
-                        <div>
-                          <p class="text-xs text-gray-500">Civil Status</p>
-                          <p class="text-gray-700">
-                            <%= member.civil_status.humanize %>
-                          </p>
-                        </div>
-
-                        <div>
-                          <p class="text-xs text-gray-500">Citizenship</p>
-                          <p class="text-gray-700">
-                            <%= member.citizenship.presence || "—" %>
-                          </p>
-                        </div>
-
-                        <div>
-                          <p class="text-xs text-gray-500">Occupation</p>
-                          <p class="text-gray-700">
-                            <%= member.occupation.presence || "—" %>
-                          </p>
-                        </div>
-
-                        <div>
-                          <p class="text-xs text-gray-500">Action</p>
-                          <p class="text-gray-700">
-                            <!-- <%= member.occupation.presence || "—" %> -->
-                            <%= link_to "Edit Details",
-                              edit_household_member_path(house, member),
-                              data: { turbo_frame: "remote_modal" },
-                              class: "text-blue-600 hover:text-blue-800 font-semibold" %>
-                          </p>
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <% end %>
-
-                </div>
-
-                <% else %>
-
-                  <p class="text-sm text-gray-500">
-                    No household members recorded.
-                  </p>
-
-                  <% end %>
-
-            </div>
-
-          </div>
-
+      <div class="space-y-4">
+        <% if @households.any? %>
+          <% @households.each do |house| %>
+            <%= render "households/household_card", household: house %>
           <% end %>
+        <% else %>
+          <div class="rounded-lg border border-dashed bg-white p-12 text-center text-sm text-gray-500 shadow-sm">
+            📂 No household census records found in the system registry.
+          </div>
+        <% end %>
+      </div>
 
-            <% else %>
-
-              <div class="rounded-lg border bg-white p-8 text-center text-sm text-gray-500">
-                No household census records found.
-              </div>
-
-              <% end %>
-
-                <div class="flex justify-center">
-                  <%== @pagy_households.series_nav %>
-                </div>
-
+      <div class="flex justify-center">
+        <%== @pagy_households.series_nav %>
+      </div>
     </div>
 </div>
 

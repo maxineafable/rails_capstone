@@ -1,0 +1,131 @@
+<%# app/views/households/_household_card.html.erb %>
+<div id="<%= dom_id(household) %>" class="rounded-lg border bg-white shadow-sm overflow-hidden transition hover:border-gray-300">
+
+  <!-- MAIN HOUSEHOLD SUMMARY TRACKING GRID -->
+  <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-6 md:items-center">
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">House Number</p>
+      <p class="font-bold text-gray-800 mt-0.5">
+        <%= household.house_number %>
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Street</p>
+      <p class="text-gray-700 mt-0.5 font-medium">
+        <%= household.street %>
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Purok</p>
+      <p class="text-gray-700 mt-0.5 font-medium">
+        Purok <%= household.purok %>
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Members</p>
+      <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 mt-0.5">
+        <%= household.household_members.count %> Person(s)
+      </span>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Date Accomplished</p>
+      <p class="text-gray-600 mt-0.5 text-sm font-medium">
+        <%= household.date_accomplished.strftime("%B %d, %Y") %>
+      </p>
+    </div>
+
+    <!-- ACTION BUTTON GROUP -->
+    <div class="flex flex-wrap gap-2 md:justify-end">
+      <%= link_to "View", household_path(household),
+                  class: "rounded border bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition" %>
+
+      <%= link_to "Edit", edit_household_path(household),
+                  data: { turbo_frame: "remote_modal" },
+                  class: "rounded border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition" %>
+
+      <button type="button"
+              onclick="document.getElementById('members-<%= household.id %>').classList.toggle('hidden')"
+              class="rounded border bg-slate-800 text-white px-3 py-1.5 text-xs font-semibold hover:bg-slate-700 transition">
+        Toggle Members
+      </button>
+    </div>
+  </div>
+
+  <!-- DROPDOWN MEMBERS DETAILS CONTAINER BLOCK -->
+  <div id="members-<%= household.id %>" class="hidden border-t bg-gray-50 p-5">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-3 mb-4 gap-2">
+      <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wide flex items-center gap-2">
+        👥 Household Family Members List
+      </h3>
+    
+      <%= link_to "➕ Add Individual Member to This House", 
+                  new_household_member_path(household), 
+                  data: { turbo_frame: "remote_modal" }, 
+                  class: "inline-flex items-center rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-500 transition" %>
+    </div>
+
+    <% if household.household_members.any? %>
+      <div class="space-y-3">
+        <% household.household_members.each do |member| %>
+          <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm relative group hover:border-gray-300 transition">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Full Name</p>
+                <p class="font-bold text-gray-800 text-sm mt-0.5">
+                  <%= [member.first_name, member.middle_name, member.last_name, member.suffix].compact_blank.join(" ") %>
+                </p>
+              </div>
+
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Birth Date</p>
+                <p class="text-gray-700 text-sm mt-0.5">
+                  <%= member.birth_date.strftime("%B %d, %Y") %>
+                </p>
+              </div>
+
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Birth Place</p>
+                <p class="text-gray-700 text-sm mt-0.5"><%= member.birth_place %></p>
+              </div>
+
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Sex / Gender</p>
+                <p class="text-gray-700 text-sm mt-0.5"><%= member.sex.humanize %></p>
+              </div>
+
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Civil Status</p>
+                <p class="text-gray-700 text-sm mt-0.5"><%= member.civil_status.humanize %></p>
+              </div>
+
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Citizenship</p>
+                <p class="text-gray-700 text-sm mt-0.5"><%= member.citizenship.presence || "—" %></p>
+              </div>
+
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Occupation</p>
+                <p class="text-gray-700 text-sm mt-0.5"><%= member.occupation.presence || "—" %></p>
+              </div>
+
+              <div class="flex items-end">
+                <%= link_to "✏️ Edit Details",
+                            edit_household_member_path(household, member),
+                            data: { turbo_frame: "remote_modal" },
+                            class: "inline-flex items-center gap-1 rounded bg-slate-100 hover:bg-slate-200 text-blue-700 font-semibold text-xs px-2.5 py-1.5 border border-slate-200 tracking-wide transition" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-4 border border-dashed rounded-lg bg-white border-gray-300">
+        <p class="text-sm text-gray-500 font-medium">No household members recorded yet.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
