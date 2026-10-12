@@ -1,6 +1,7 @@
 class BarangayConcernsController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_staff!, only: [ :update ]
+  before_action :authorize_staff!, only: [ :edit, :update ]
+  before_action :ensure_turbo_frame_request, only: [ :edit ]
 
   def index
     @barangay_concerns = current_user.barangay_concerns
@@ -20,6 +21,12 @@ class BarangayConcernsController < ApplicationController
     end
 
     # @status_logs = @barangay_concern.status_logs.order(created_at: :asc)
+  end
+
+  def edit
+    if current_user.barangay_staff?
+      @barangay_concern = BarangayConcern.find(params[:id])
+    end
   end
 
   def new
@@ -59,6 +66,15 @@ class BarangayConcernsController < ApplicationController
     def authorize_staff!
       unless current_user.barangay_staff?
         redirect_to root_path, alert: "Unauthorized!"
+      end
+    end
+
+    def ensure_turbo_frame_request
+      # prevent user directly in example /doc-reqs/11
+      unless turbo_frame_request? && turbo_frame_request_id == "remote_modal"
+        destination = current_user.barangay_staff? ? admin_barangay_concerns_path : root_path
+
+        redirect_to destination, alert: "Direct access to this page is not allowed."
       end
     end
 end

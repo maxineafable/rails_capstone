@@ -1,22 +1,205 @@
-<div class="grid grid-cols-3 gap-8">
-    <div class="col-span-2 space-y-6">
-        <section>
-          <h3 class="mb-4 text-xl font-semibold">Barangay Concern Log</h3>
+<div class="flex">
+  <%= render "admin/sidebar" %>
 
-          <div class="border-l-2 pl-4">
-            <% @barangay_concern.status_logs.order(created_at: :asc).each do |log| %>
-              <div class="mb-5">
-                <p class="font-medium">
+  <section class="flex-1 p-8 space-y-8">
+    <div class="rounded-xl bg-white p-6 shadow-sm">
+
+      <!-- Report Header -->
+      <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Report Details
+          </p>
+
+          <h1 class="text-2xl font-semibold text-gray-900">
+            <%= @barangay_concern.tracking_number.presence || "Concern ##{@barangay_concern.id}" %>
+          </h1>
+        </div>
+
+        <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-800">
+          <%= @barangay_concern.status.humanize %>
+        </span>
+      </div>
+
+      <!-- Evidence Photo -->
+      <% if @barangay_concern.evidence_image.attached? %>
+        <section class="mb-6">
+          <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+            Incident Evidence Photo
+          </h2>
+
+          <%= image_tag @barangay_concern.evidence_image,
+              class: "h-auto max-h-[450px] w-full rounded-lg object-cover" %>
+
+          <p class="mt-1 text-xs italic text-gray-500">
+            Citizen-uploaded evidence for this concern report.
+          </p>
+        </section>
+      <% end %>
+
+      <!-- Concern Description -->
+      <section class="mb-6 rounded-lg bg-blue-50 p-4">
+        <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+          Details / Full Description
+        </h2>
+
+        <p class="whitespace-pre-line text-sm leading-6 text-gray-800">
+          <%= @barangay_concern.reason %>
+        </p>
+
+        <% if @barangay_concern.resident_remarks.present? %>
+          <div class="mt-3 border-t border-blue-100 pt-3">
+            <h3 class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-600">
+              Resident Remarks
+            </h3>
+
+            <p class="whitespace-pre-line text-sm text-gray-700">
+              <%= @barangay_concern.resident_remarks %>
+            </p>
+          </div>
+        <% end %>
+      </section>
+
+      <!-- Report Location -->
+      <section class="mb-6">
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-600">
+            Exact Location
+          </h2>
+
+          <% if @barangay_concern.latitude.present? && @barangay_concern.longitude.present? %>
+            <span class="text-xs font-semibold text-blue-800">
+              <%= number_with_precision(@barangay_concern.latitude, precision: 4) %>°,
+              <%= number_with_precision(@barangay_concern.longitude, precision: 4) %>°
+            </span>
+          <% end %>
+        </div>
+
+        <div class="mb-3 rounded-lg bg-blue-50 p-3">
+          <p class="text-sm text-gray-800">
+            <%= @barangay_concern.location_description.presence || "No location description provided." %>
+          </p>
+        </div>
+
+        <% if @barangay_concern.latitude.present? && @barangay_concern.longitude.present? %>
+          <div
+            id="concern-map"
+            class="h-64 w-full rounded-lg z-0"
+            data-lat="<%= @barangay_concern.latitude %>"
+            data-lng="<%= @barangay_concern.longitude %>">
+          </div>
+        <% else %>
+          <div class="rounded-lg bg-gray-50 p-6 text-sm text-gray-500">
+            No map coordinates are available for this report.
+          </div>
+        <% end %>
+      </section>
+
+      <!-- Reporter Information -->
+      <section class="mb-6">
+        <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+          Reporter Information
+        </h2>
+
+        <div class="rounded-lg bg-blue-50 p-4">
+          <p class="font-semibold text-gray-900">
+            <%= @barangay_concern.resident.profile.first_name %>
+            <%= @barangay_concern.resident.profile.last_name %>
+          </p>
+
+          <div class="mt-3 grid grid-cols-1 gap-3 text-sm text-gray-600 sm:grid-cols-2">
+            <p>
+              <span class="font-medium text-gray-700">Email:</span>
+              <%= @barangay_concern.resident.email %>
+            </p>
+
+            <p>
+              <span class="font-medium text-gray-700">Purok:</span>
+              <%= @barangay_concern.resident.address&.purok || "Not provided" %>
+            </p>
+
+            <p>
+              <span class="font-medium text-gray-700">Address:</span>
+              <%= [
+                @barangay_concern.resident.address&.house_number,
+                @barangay_concern.resident.address&.street,
+                @barangay_concern.resident.address&.barangay,
+                @barangay_concern.resident.address&.city
+              ].compact_blank.join(", ").presence || "Not provided" %>
+            </p>
+
+            <p>
+              <span class="font-medium text-gray-700">Date Filed:</span>
+              <%= @barangay_concern.created_at.strftime("%b %d, %Y at %I:%M %p") %>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assigned Personnel and Status History -->
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+        <!-- Assigned Personnel -->
+        <section>
+          <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+            Assigned Personnel
+          </h2>
+
+          <div class="rounded-lg bg-blue-50 p-4">
+            <% if @barangay_concern.assigned_staff.present? %>
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-800 text-sm font-semibold text-white">
+                  <%= "#{@barangay_concern.assigned_staff.profile.first_name.first}#{@barangay_concern.assigned_staff.profile.last_name.first}".upcase %>
+                </div>
+
+                <div class="min-w-0">
+                  <p class="font-semibold text-gray-900">
+                    <%= @barangay_concern.assigned_staff.profile.first_name %>
+                    <%= @barangay_concern.assigned_staff.profile.last_name %>
+                  </p>
+
+                  <p class="text-sm text-gray-600">
+                    <%= @barangay_concern.assigned_staff.staff.position.humanize %>
+                  </p>
+                </div>
+              </div>
+            <% else %>
+              <p class="text-sm text-gray-600">
+                No personnel has been assigned yet.
+              </p>
+            <% end %>
+
+            <% if current_user.barangay_staff? %>
+              <%= link_to "Update Status",
+                  edit_barangay_concern_path(@barangay_concern),
+                  data: { turbo_frame: "remote_modal" },
+                  class: "mt-4 block w-full rounded-md bg-blue-800 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-blue-900 sm:max-w-xs" %>
+            <% end %>
+          </div>
+        </section>
+
+        <!-- Status History -->
+        <section>
+          <h2 class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-600">
+            Status History
+          </h2>
+
+          <div class="ml-1 border-l-2 border-gray-200 pl-4">
+            <% @barangay_concern.status_logs.order(created_at: :desc).each_with_index do |log, index| %>
+              <div class="relative mb-5 last:mb-0">
+                <span class="absolute -left-[21px] top-1 h-3 w-3 rounded-full <%= index.zero? ? 'bg-blue-800' : 'bg-gray-300' %>"></span>
+
+                <p class="text-sm font-semibold text-gray-900">
                   <%= log.human_status %>
                 </p>
 
-                <p class="text-sm text-gray-500">
-                  <%= log.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                <p class="mt-1 text-xs text-gray-500">
+                  <%= log.created_at.strftime("%b %d, %Y at %I:%M %p") %>
                 </p>
 
                 <% if log.staff_remarks.present? %>
-                  <p class="mt-1 text-sm text-gray-600">
-                    Staff Update: <%= log.staff_remarks %>
+                  <p class="mt-1 whitespace-pre-line text-sm text-gray-600">
+                    <%= log.staff_remarks %>
                   </p>
                 <% end %>
               </div>
@@ -24,179 +207,54 @@
           </div>
         </section>
 
-        <div>
-            <h2 class="text-2xl font-bold">
-            Community Concern Report #<%= @barangay_concern.id %>
-            </h2>
-        </div>
+      </div>
 
-        <div class="space-y-2">
-            <p>
-            <strong>Filed By:</strong>
-            <%= @barangay_concern.resident.profile.first_name %>
-            <%= @barangay_concern.resident.profile.last_name %>
-            </p>
+      <!-- Back Link -->
+      <div class="mt-6 border-t pt-4">
+        <%= link_to "← Back to Concern Reports",
+            admin_barangay_concerns_path,
+            class: "text-sm font-medium text-blue-800 hover:underline" %>
+      </div>
 
-            <p>
-                <strong>Ticket:</strong>
-                <%= @barangay_concern.tracking_number %>
-            </p>
-
-            <p>
-            <strong>Category:</strong>
-            <%= @barangay_concern.category.humanize %>
-            </p>
-
-            <p>
-            <strong>Details / Reason:</strong>
-            <%= @barangay_concern.reason %>
-            </p>
-
-            <p>
-                <strong>Location</strong>
-                <%= @barangay_concern.location_description %>
-            </p>
-
-            <p>
-            <strong>Resident Notes:</strong>
-            <%= @barangay_concern.resident_remarks.presence || "None" %>
-            </p>
-
-            <p>
-            <strong>Current Status:</strong>
-            <span class="font-semibold"><%= @barangay_concern.status_logs.last.human_status %></span>
-            </p>
-
-            <p>
-                <strong>Current Staff Remarks:</strong>
-                <span class="font-semibold"><%= @barangay_concern.status_logs.last.staff_remarks %></span>
-                <%= @barangay_concern.status_logs.last.staff_remarks.presence || "No updates from the staff yet." %>
-            </p>
-
-            <p>
-            <strong>Date Filed:</strong>
-            <%= @barangay_concern.created_at.strftime("%B %d, %Y") %>
-            </p>
-
-            <% if @barangay_concern.assigned_staff.present? %>
-              <p>
-                <strong>Assigned staff:</strong>
-                <%= @barangay_concern.assigned_staff.profile.first_name %>
-                <%= @barangay_concern.assigned_staff.profile.last_name %>
-                (<%= @barangay_concern.assigned_staff.staff.position.humanize %>)
-              </p>
-            <% end %>
-        </div>
-
-        <% if @barangay_concern.evidence_image.attached? %>
-            <div>
-            <p class="mb-2 font-semibold">Uploaded Evidence Photo:</p>
-
-            <%= image_tag @barangay_concern.evidence_image, class: "block max-w-[400px] border" %>
-            </div>
-        <% end %>
-
-        <% if @barangay_concern.latitude.present? && @barangay_concern.longitude.present? %>
-          <div>
-            <h3 class="text-lg font-semibold">Report Location</h3>
-
-            <div id="map" class="h-100 w-full rounded"
-                data-lat="<%= @barangay_concern.latitude %>"
-                data-lng="<%= @barangay_concern.longitude %>"
-            ></div>
-          </div>
-
-          <script>
-            document.addEventListener("turbo:load", function() {
-              const mapDiv = document.querySelector('#map')
-              if (!mapDiv) return
-
-              const latitude = parseFloat(mapDiv.dataset.lat);
-              const longitude = parseFloat(mapDiv.dataset.lng);
-
-              if (!latitude || !longitude) return
-
-              const map = L.map("map").setView(
-                [latitude, longitude],
-                15
-              );
-
-              console.log(map)
-
-              L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                  maxZoom: 19,
-                  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              }).addTo(map);
-
-              L.marker([latitude, longitude])
-                .addTo(map)
-                .bindPopup("Reported location")
-                .openPopup();
-            });
-          </script>
-        <% end %>
     </div>
-
-    <% if current_user.barangay_staff? %>
-        <section>
-            <h3 class="mb-4 text-xl font-semibold">Barangay Staff Action Panel</h3>
-
-            <%= form_with model: @barangay_concern, local: true do |f| %>
-            <% if @barangay_concern.errors.any? %>
-                <div class="mb-6 text-red-600">
-                    <h3 class="mb-2 font-semibold">
-                    Please fix the following errors:
-                    </h3>
-
-                    <ul class="list-disc pl-5">
-                    <% @barangay_concern.errors.full_messages.each do |message| %>
-                        <li><%= message %></li>
-                    <% end %>
-                    </ul>
-                </div>
-            <% end %>
-
-            <div class="mb-4">
-                <%= f.label :status, "Update Case Status", class: "mb-1 block font-medium" %>
-                <%= f.select :status, BarangayConcern.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "border p-2" %>
-            </div>
-
-            <div class="mb-4">
-              <%= f.label :assigned_staff_id, "Assign Staff", class: "mb-1 block font-medium" %>
-
-              <%= f.select :assigned_staff_id,
-                  User.includes(:profile, :staff).where.associated(:staff).map { |s|
-                    [
-                      "#{s.profile.first_name} #{s.profile.last_name} - #{s.staff.position.humanize}",
-                      s.id
-                    ]
-                  },
-                  { include_blank: "Select Staff" },
-                  class: "border p-2" %>
-            </div>
-
-            <div class="mb-4">
-                <%= f.label :staff_remarks, "Staff Resolution Notes / Actions Taken", class: "mb-1 block font-medium" %>
-                <%= f.text_area :staff_remarks, rows: 3, class: "w-full max-w-[500px] border p-2" %>
-            </div>
-
-            <%= f.submit "Update Case Tracking", class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
-            <% end %>
-
-            <div class="mt-4">
-            <%= link_to "← Back to Admin Console", admin_dashboard_path, class: "text-blue-600 hover:underline" %>
-            </div>
-        </section>
-    <% else %>
-        <section class="border-t pt-6">
-            <p>
-            <strong>Official Action Summary:</strong>
-            <%= @barangay_concern.status_logs.last.staff_remarks.presence || "This issue is currently awaiting official review." %>
-            </p>
-
-            <div class="mt-4">
-            <%= link_to "← Back to Dashboard", root_path, class: "text-blue-600 hover:underline" %>
-            </div>
-        </section>
-    <% end %>
+  </section>
 </div>
+
+<!-- HTML Target Box Container for remote modal injection loads -->
+<%= turbo_frame_tag "remote_modal" do %>
+  <!-- This space will dynamically fill up with the show form content when a link is clicked -->
+<% end %>
+
+<script>
+  (() => {
+    function initializeConcernMap() {
+      const mapDiv = document.getElementById("concern-map");
+
+      if (!mapDiv || mapDiv.dataset.initialized === "true") return;
+      if (typeof L === "undefined") return;
+
+      const latitude = parseFloat(mapDiv.dataset.lat);
+      const longitude = parseFloat(mapDiv.dataset.lng);
+
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+      const map = L.map(mapDiv).setView([latitude, longitude], 15);
+
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      L.marker([latitude, longitude])
+        .addTo(map)
+        .bindPopup("Reported location");
+
+      mapDiv.dataset.initialized = "true";
+    }
+
+    document.addEventListener("turbo:load", initializeConcernMap);
+    document.addEventListener("turbo:frame-load", initializeConcernMap);
+
+    initializeConcernMap();
+  })();
+</script>
