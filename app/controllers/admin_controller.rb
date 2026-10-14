@@ -3,16 +3,47 @@ class AdminController < ApplicationController
   before_action :authorize_staff!
 
   def index
-    @all_document_requests = DocumentRequest.order(created_at: :desc)
-    @all_barangay_concerns = BarangayConcern.order(created_at: :desc)
-
     @pending_docs_count = DocumentRequest.pending.count
     @ongoing_concerns_count = BarangayConcern.ongoing.count
 
-    @docs_done_this_week = DocumentRequest.ready_to_pickup.where(updated_at: Time.current.all_week).count
-    @concerns_resolved_this_week = BarangayConcern.resolved.where(updated_at: Time.current.all_week).count
+    @docs_done_this_week = DocumentRequest
+      .ready_to_pickup
+      .where(updated_at: Time.current.all_week)
+      .count
+
+    @concerns_resolved_this_week = BarangayConcern
+      .resolved
+      .where(updated_at: Time.current.all_week)
+      .count
 
     @total_residents_count = Profile.count
+
+    @document_requests = DocumentRequest
+      .includes(resident: [ :profile, :address ])
+      .order(created_at: :desc)
+      .to_a
+
+    @barangay_concerns = BarangayConcern
+      .includes(resident: [ :profile, :address ])
+      .order(created_at: :desc)
+      .to_a
+
+    case params[:filter]
+    when "documents"
+      records_pool = @document_requests
+    when "concerns"
+      records_pool = @barangay_concerns
+    else
+      records_pool = @document_requests + @barangay_concerns
+    end
+
+    @recent_activities = records_pool.sort_by(&:created_at).reverse
+
+    @pagy, @recent_activities = pagy(
+      :offset,
+      @recent_activities,
+      limit: 2
+    )
   end
 
   def document_requests
