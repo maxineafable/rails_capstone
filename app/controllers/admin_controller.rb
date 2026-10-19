@@ -47,7 +47,7 @@ class AdminController < ApplicationController
   end
 
   def document_requests
-    query = DocumentRequest.joins(resident: [ :profile, :address ]).includes(resident: [ :profile, :address ])
+    query = DocumentRequest.joins(resident: [:profile, :address]).includes(resident: [:profile, :address])
 
     if params[:search].present?
       search_term = "%#{params[:search].downcase}%"
@@ -58,22 +58,21 @@ class AdminController < ApplicationController
       )
     end
 
-    # allowed_sort_columns = {
-    #   "resident_name" => "profiles.last_name",
-    #   "date"          => "document_requests.created_at"
-    # }
+    if params[:status].present? && DocumentRequest.statuses.key?(params[:status])
+      query = query.where(status: params[:status])
+    end
+
+    if params[:document_type].present?
+      query = query.where(document_type: params[:document_type])
+    end
 
     sort_direction = params[:sort_direction] == "asc" ? "ASC" : "DESC"
     query = query.order("document_requests.created_at #{sort_direction}")
 
-    # sort_column = allowed_sort_columns[params[:sort]] || "document_requests.created_at"
-    # sort_direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
-
-    # query = query.order("#{sort_column} #{sort_direction}")
-
     @pagy, @all_document_requests = pagy(:offset, query, items: 10)
 
     @total_docs = DocumentRequest.count
+    @pending_docs_count = DocumentRequest.pending.count
     @processing_docs = DocumentRequest.processing.count
     @rejected_docs = DocumentRequest.rejected.count
     @ready_pickup_docs = DocumentRequest.ready_to_pickup.count
@@ -91,17 +90,18 @@ class AdminController < ApplicationController
       )
     end
 
+    if params[:status].present? && BarangayConcern.statuses.key?(params[:status])
+      query = query.where(status: params[:status])
+    end
+
+    if params[:category].present? && BarangayConcern.categories.key?(params[:category])
+      query = query.where(category: params[:category])
+    end
+
     sort_direction = params[:sort_direction] == "asc" ? "ASC" : "DESC"
     query = query.order("barangay_concerns.created_at #{sort_direction}")
 
-    # query = query.order("#{sort_column} #{sort_direction}")
-
     @pagy, @all_barangay_concerns = pagy(:offset, query, items: 10)
-
-
-
-
-    # @all_barangay_concerns = BarangayConcern.order(created_at: :desc)
 
     @total_concerns = BarangayConcern.count
     @pending_concerns = BarangayConcern.pending.count
