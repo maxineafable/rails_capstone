@@ -1,144 +1,551 @@
-<div class="space-y-6">
-  <div>
-    <h2 class="text-2xl font-bold">
-      Requesting: <%= @document_type.humanize %>
-    </h2>
-  </div>
+<div class="min-h-screen bg-[#F4F4F8]">
 
-  <div class="space-y-4">
-    <h3 class="text-xl font-semibold">Resident Information</h3>
+  <!-- Header -->
+  <header class="border-b border-slate-200 bg-white shadow-sm">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
 
-    <div>
-      <label class="mb-1 block font-medium">First Name</label>
-      <input
-        type="text"
-        value="<%= @profile.first_name %>"
-        readonly
-        autocomplete="off"
-        class="w-full max-w-[500px] border bg-gray-100 p-2"
-      >
-    </div>
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 shrink-0 rounded-full bg-blue-800"></div>
 
-    <div>
-      <label class="mb-1 block font-medium">Middle Name</label>
-      <input
-        type="text"
-        value="<%= @profile.middle_name %>"
-        readonly
-        autocomplete="off"
-        class="w-full max-w-[500px] border bg-gray-100 p-2"
-      >
-    </div>
-
-    <div>
-      <label class="mb-1 block font-medium">Last Name</label>
-      <input
-        type="text"
-        value="<%= @profile.last_name %>"
-        readonly
-        class="w-full max-w-[500px] border bg-gray-100 p-2"
-      >
-    </div>
-
-    <div>
-      <label class="mb-1 block font-medium">Suffix</label>
-      <input
-        type="text"
-        value="<%= @profile.suffix %>"
-        readonly
-        autocomplete="off"
-        class="w-full max-w-[500px] border bg-gray-100 p-2"
-      >
-    </div>
-
-    <div>
-      <label class="mb-1 block font-medium">Birth Date</label>
-      <input
-        type="text"
-        value="<%= @profile.birth_date.strftime("%B %d, %Y") %>"
-        readonly
-        autocomplete="off"
-        class="w-full max-w-[500px] border bg-gray-100 p-2"
-      >
-    </div>
-
-    <div>
-      <label class="mb-1 block font-medium">Sex</label>
-      <input
-        type="text"
-        value="<%= @profile.sex.humanize %>"
-        readonly
-        autocomplete="off"
-        class="w-full max-w-[500px] border bg-gray-100 p-2"
-      >
-    </div>
-
-    <div>
-      <label class="mb-1 block font-medium">Address</label>
-      <input
-        type="text"
-        value="<%= [@address.house_number, @address.street, @address.purok, @address.barangay, @address.city, @address.province].compact_blank.join(", ") %>"
-        readonly
-        autocomplete="off"
-        class="w-full max-w-[500px] border bg-gray-100 p-2"
-      >
-    </div>
-  </div>
-
-  <%= form_with model: @document_request, url: document_requests_path, local: true do |f| %>
-    <%= f.hidden_field :document_type, value: @document_type %>
-
-    <div class="space-y-4">
-      <div>
-        <%= f.label :purpose, "Purpose of Request", class: "mb-1 block font-medium" %>
-        <%= f.text_area :purpose, required: true, class: "w-full max-w-[500px] border p-2" %>
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">
+            Barangay Kalikid Sur
+          </h1>
+          <p class="text-xs text-slate-600">
+            Digital System for Registered Residents
+          </p>
+        </div>
       </div>
 
-      <% if @document_type == "certificate_of_residency" %>
-        <div>
-          <%= f.label :years_of_residency, "Number of Years in this Barangay", class: "mb-1 block font-medium" %>
-          <%= f.number_field :years_of_residency, required: true, class: "border p-2" %>
-        </div>
-      <% end %>
+      <nav class="flex flex-wrap items-center gap-1 rounded-lg bg-[#EEF3FF] p-1 text-xs font-semibold">
+        <%= link_to "Home", root_path,
+              class: "rounded-md px-5 py-2.5 text-slate-700 hover:bg-white" %>
 
-      <% if @document_type == "certificate_of_income" || @document_type == "certificate_of_low_income" %>
-        <div>
-          <%= f.label :job, "Current Occupation", class: "mb-1 block font-medium" %>
-          <%= f.text_field :job, required: true, class: "w-full max-w-[500px] border p-2" %>
-        </div>
+        <%= link_to "Requests (Kahilingan)", select_document_type_path,
+              class: "rounded-md bg-blue-800 px-5 py-2.5 text-white" %>
 
-        <div>
-          <%= f.label :monthly_income, "Average Monthly Income", class: "mb-1 block font-medium" %>
-          <%= f.number_field :monthly_income, required: true, class: "border p-2" %>
-        </div>
-      <% end %>
+        <%= link_to "Reports (Sumbong)", new_barangay_concern_path,
+              class: "rounded-md px-5 py-2.5 text-slate-700 hover:bg-white" %>
+
+        <%= link_to "Profile", profile_path,
+              class: "rounded-md px-5 py-2.5 text-slate-700 hover:bg-white" %>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl space-y-6 px-4 py-6 sm:px-6">
+
+    <!-- Document Header -->
+    <section class="flex flex-col gap-5 rounded-xl border border-slate-100 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
 
       <div>
-        <%= f.label :resident_remarks, "Additional Remarks (Optional)", class: "mb-1 block font-medium" %>
-        <%= f.text_area :resident_remarks, class: "w-full max-w-[500px] border p-2" %>
+        <p class="mb-1 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
+          Official Barangay Service
+        </p>
+
+        <h2 class="text-2xl font-bold text-blue-800">
+          <%= @document_type.humanize %>
+        </h2>
+
+        <p class="mt-1 text-xs text-slate-600">
+          Para sa trabaho, negosyo, at iba pang opisyal na pangangailangan.
+        </p>
       </div>
-    </div>
 
-    <div class="border-t pt-6">
-      <h3 class="mb-4 text-xl font-semibold">Identity Verification</h3>
-
-      <div class="space-y-4">
-        <div>
-          <%= f.label :valid_id_type, "Select ID Type Provided", class: "mb-1 block font-medium" %>
-          <%= f.select :valid_id_type,
-              DocumentRequest.valid_id_types.keys.map { |i| [i.humanize, i] },
-              { include_blank: true },
-              class: "border p-2" %>
+      <div class="flex items-center gap-3 rounded-lg bg-[#EEF3FF] p-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-800 text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 3.75h7l4.25 4.25v12.25H7a2 2 0 0 1-2-2V5.75a2 2 0 0 1 2-2Z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 3.75V8h4.25M9 12h6M9 15.5h6"/>
+          </svg>
         </div>
 
         <div>
-          <%= f.label :valid_id_image, "Upload clear photo of ID", class: "mb-1 block font-medium" %>
-          <%= f.file_field :valid_id_image, accept: "image/*", required: true %>
+          <p class="text-[10px] font-bold uppercase text-slate-600">
+            Current Registration
+          </p>
+
+          <p class="text-xs font-semibold text-slate-900">
+            Purok <%= @address.purok.presence || "—" %> • <%= @address.barangay.presence || "—" %>
+          </p>
         </div>
       </div>
+
+    </section>
+
+    <!-- Step Progress -->
+    <section class="rounded-xl border border-slate-100 bg-white px-5 py-4">
+      <div class="mx-auto flex max-w-xl items-center justify-center gap-3 sm:gap-5">
+
+        <!-- Step 1 -->
+        <div class="flex items-center gap-2">
+          <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-800 text-sm font-semibold text-white">
+            1
+          </div>
+
+          <div>
+            <p class="text-xs font-bold text-blue-800">
+              Step 1: Details
+            </p>
+            <p class="text-[10px] font-semibold text-slate-600">
+              Mga Detalye ng Kahilingan
+            </p>
+          </div>
+        </div>
+
+        <div class="h-1 flex-1 bg-blue-100">
+          <div class="h-1 w-1/2 bg-blue-800"></div>
+        </div>
+
+        <!-- Step 2 Placeholder -->
+        <div class="flex items-center gap-2 opacity-70">
+          <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-slate-700">
+            2
+          </div>
+
+          <div>
+            <p class="text-xs font-bold text-slate-700">
+              Step 2: Review
+            </p>
+            <p class="text-[10px] font-semibold text-slate-600">
+              Pagsusuri at Pagpapatunay
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Form and Requirements -->
+    <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+
+      <!-- Main Form -->
+      <section class="rounded-xl border border-slate-100 bg-white p-5 sm:p-7 lg:col-span-2">
+
+        <%= form_with model: @document_request, url: document_requests_path, local: true do |f| %>
+
+          <%= f.hidden_field :document_type, value: @document_type %>
+
+          <!-- Validation Errors -->
+          <% if @document_request.errors.any? %>
+            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              <p class="font-semibold">
+                Please correct the following errors:
+              </p>
+
+              <ul class="mt-2 list-inside list-disc">
+                <% @document_request.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <!-- Applicant Information -->
+          <section>
+            <h3 class="mb-5 text-sm font-semibold text-blue-800">
+              1. Applicant Personal Identification Details
+              <span class="text-red-600">*</span>
+            </h3>
+
+            <div class="grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-2">
+
+              <div>
+                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  Unang Pangalan (First Name) *
+                </label>
+
+                <input
+                  type="text"
+                  value="<%= @profile.first_name %>"
+                  readonly
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                >
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  Middle Name
+                </label>
+
+                <input
+                  type="text"
+                  value="<%= @profile.middle_name %>"
+                  readonly
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                >
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  Last Name *
+                </label>
+
+                <input
+                  type="text"
+                  value="<%= @profile.last_name %>"
+                  readonly
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                >
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  Suffix
+                </label>
+
+                <input
+                  type="text"
+                  value="<%= @profile.suffix %>"
+                  readonly
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                >
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  Petsa ng Kapanganakan (Date of Birth) *
+                </label>
+
+                <input
+                  type="text"
+                  value="<%= @profile.birth_date&.strftime('%m/%d/%Y') %>"
+                  readonly
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                >
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  Sex *
+                </label>
+
+                <input
+                  type="text"
+                  value="<%= @profile.sex&.humanize %>"
+                  readonly
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                >
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  Kasalukuyang Tirahan sa Kalikid Sur (Address) *
+                </label>
+
+                <input
+                  type="text"
+                  value="<%= [@address.house_number, @address.street, @address.purok, @address.barangay, @address.city, @address.province].compact_blank.join(', ') %>"
+                  readonly
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                >
+
+                <p class="mt-2 text-[10px] text-slate-600">
+                  Dapat tumugma ang iyong tirahan sa iyong rehistradong address.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Purpose -->
+          <section class="mt-7">
+            <div class="mb-2 flex items-center justify-between gap-3">
+              <h3 class="text-sm font-semibold text-blue-800">
+                2. Layunin ng Kahilingan (Purpose of Request)
+                <span class="text-red-600">*</span>
+              </h3>
+
+              <span class="shrink-0 text-[10px] font-semibold text-slate-600">
+                Required
+              </span>
+            </div>
+
+            <p class="mb-2 text-[10px] text-slate-600">
+              Mabilis na piliin:
+            </p>
+
+            <div class="mb-3 flex flex-wrap gap-1.5">
+              <% [
+                "Local Employment",
+                "Scholarship Requirement",
+                "Bank Account Opening",
+                "Government ID Application",
+                "Others"
+              ].each do |purpose| %>
+
+                <button
+                  type="button"
+                  data-purpose="<%= purpose %>"
+                  onclick="selectPurpose(this)"
+                  class="purpose-chip rounded-full border border-transparent bg-[#EEF3FF] px-3 py-1.5 text-[10px] font-semibold text-blue-800 hover:border-blue-300 hover:bg-blue-100"
+                >
+                  + <%= purpose %>
+                </button>
+
+              <% end %>
+            </div>
+
+            <%= f.text_area :purpose,
+                  required: true,
+                  rows: 3,
+                  placeholder: "Halimbawa: Aplikasyon para sa trabaho sa Makati Medical Center bilang Administrative Staff.",
+                  class: "w-full rounded-lg border border-transparent bg-[#F6F8FF] px-3 py-3 text-xs text-slate-800 placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+
+            <p class="mt-2 text-[10px] text-slate-600">
+              Maaari mong baguhin ang napiling layunin o magdagdag ng detalye sa text area.
+            </p>
+          </section>
+
+          <!-- Document-Specific Fields -->
+          <% if @document_type == "certificate_of_residency" %>
+            <section class="mt-6">
+              <h3 class="mb-3 text-sm font-semibold text-blue-800">
+                3. Residency Information
+                <span class="text-red-600">*</span>
+              </h3>
+
+              <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                Number of Years in this Barangay *
+              </label>
+
+              <%= f.number_field :years_of_residency,
+                    required: true,
+                    min: 0,
+                    class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+            </section>
+          <% end %>
+
+          <% if @document_type == "certificate_of_income" || @document_type == "certificate_of_low_income" %>
+            <section class="mt-6">
+              <h3 class="mb-3 text-sm font-semibold text-blue-800">
+                3. Income Information
+                <span class="text-red-600">*</span>
+              </h3>
+
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                <div>
+                  <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                    Current Occupation *
+                  </label>
+
+                  <%= f.text_field :job,
+                        required: true,
+                        class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                </div>
+
+                <div>
+                  <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                    Average Monthly Income *
+                  </label>
+
+                  <%= f.number_field :monthly_income,
+                        required: true,
+                        min: 0,
+                        step: "0.01",
+                        class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                </div>
+
+              </div>
+            </section>
+          <% end %>
+
+          <!-- Valid ID Upload -->
+          <section class="mt-7">
+            <h3 class="text-sm font-semibold text-blue-800">
+              <%= @document_type == "certificate_of_residency" ||
+                  @document_type == "certificate_of_income" ||
+                  @document_type == "certificate_of_low_income" ? "4" : "3" %>.
+              Katibayan ng Pagkakakilanlan (Valid Government ID Upload)
+              <span class="text-red-600">*</span>
+            </h3>
+
+            <p class="mt-1 text-xs text-slate-600">
+              Mag-upload ng malinaw na kopya o litrato ng iyong PhilSys National ID, Driver's License, UMID, o Passport.
+            </p>
+
+            <div class="mt-3 rounded-xl bg-[#F6F8FF] p-5 sm:p-7">
+
+              <div class="flex flex-col items-center text-center">
+                <div class="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 text-blue-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 16V8m0 0-3 3m3-3 3 3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 16.5a4 4 0 0 0-3.5-3.97A5 5 0 0 0 7 11a3.5 3.5 0 0 0-.5 6.96"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 19h8"/>
+                  </svg>
+                </div>
+
+                <p class="mt-3 text-xs font-semibold text-slate-800">
+                  I-drag ang file dito o pumili ng paraan ng pag-upload
+                </p>
+
+                <p class="mt-1 text-[10px] text-slate-600">
+                  Tumanggap ng JPG, PNG, o PDF kung pinapayagan ng iyong upload configuration.
+                </p>
+
+                <div class="mt-4 w-full">
+                  <%= f.file_field :valid_id_image,
+                        accept: "image/*",
+                        required: true,
+                        class: "block w-full cursor-pointer rounded-lg border border-transparent bg-blue-100 px-3 py-3 text-xs text-slate-700 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-blue-800 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-blue-900" %>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-4">
+              <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                Select ID Type Provided
+                <span class="text-red-600">*</span>
+              </label>
+
+              <%= f.select :valid_id_type,
+                    DocumentRequest.valid_id_types.keys.map { |id_type| [id_type.humanize, id_type] },
+                    { include_blank: "Select your valid ID" },
+                    required: true,
+                    class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+            </div>
+          </section>
+
+          <!-- Additional Remarks -->
+          <section class="mt-6">
+            <div class="mb-1 flex items-center justify-between gap-3">
+              <label class="block text-[10px] font-semibold text-slate-700">
+                Karagdagang Tala o Tagubilin (Additional Remarks)
+              </label>
+
+              <span class="text-[10px] text-slate-500">Optional</span>
+            </div>
+
+            <%= f.text_area :resident_remarks,
+                  rows: 2,
+                  placeholder: "Maglagay ng karagdagang impormasyon kung kinakailangan.",
+                  class: "w-full rounded-lg border border-transparent bg-[#F6F8FF] px-3 py-3 text-xs text-slate-800 placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+          </section>
+
+          <!-- Form Actions -->
+          <div class="mt-6 flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
+
+            <%= link_to "Kanselahin (Cancel)",
+                  select_document_type_path,
+                  class: "inline-flex items-center justify-center rounded-lg bg-blue-100 px-5 py-3 text-xs font-semibold text-slate-800 hover:bg-blue-200" %>
+
+            <%= f.submit "Submit Request / Ipatuloy ang Kahilingan →",
+                  class: "cursor-pointer rounded-lg bg-blue-800 px-5 py-3 text-xs font-semibold text-white shadow-sm hover:bg-blue-900" %>
+
+          </div>
+
+        <% end %>
+
+      </section>
+
+      <!-- Sidebar Information -->
+      <aside class="space-y-4">
+
+        <!-- Requirements -->
+        <section class="rounded-xl border border-slate-100 bg-white p-5">
+          <h3 class="flex items-center gap-2 text-sm font-semibold text-slate-900">
+            <span class="text-emerald-700">☷</span>
+            Mga Dapat Tandaan (Requirements)
+          </h3>
+
+          <div class="mt-4 space-y-4">
+
+            <div class="flex gap-2">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-200 text-[10px] font-bold text-emerald-800">
+                ✓
+              </span>
+
+              <p class="text-[10px] leading-relaxed text-slate-700">
+                <span class="font-semibold">Valid Government-issued ID:</span>
+                Dalhin ang orihinal na ID kapag kukunin ang sertipikasyon.
+              </p>
+            </div>
+
+            <div class="flex gap-2">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-200 text-[10px] font-bold text-emerald-800">
+                ✓
+              </span>
+
+              <p class="text-[10px] leading-relaxed text-slate-700">
+                <span class="font-semibold">Katibayan ng Paninirahan:</span>
+                Rehistradong residente ng Barangay Kalikid Sur ang dapat mag-apply.
+              </p>
+            </div>
+
+            <div class="flex gap-2">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-800">
+                ◷
+              </span>
+
+              <p class="text-[10px] leading-relaxed text-slate-700">
+                <span class="font-semibold">Standard Turnaround:</span>
+                Karaniwang 1–2 working days, depende sa pagsusuri at pag-apruba.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Reminder -->
+        <section class="rounded-xl bg-blue-100 p-4">
+          <h3 class="text-xs font-semibold text-blue-900">
+            Paalala sa Pagsumite
+          </h3>
+
+          <p class="mt-2 text-[10px] leading-relaxed text-slate-700">
+            Suriin ang iyong mga detalye bago isumite. Ang iyong kahilingan ay dadaan sa pagsusuri ng barangay staff.
+          </p>
+
+          <p class="mt-2 text-[10px] leading-relaxed text-slate-700">
+            Ang Step 2: Review ay placeholder lamang sa ngayon.
+          </p>
+        </section>
+
+        <!-- Office Hours -->
+        <section class="rounded-lg bg-[#EEF3FF] p-4">
+          <h3 class="text-[10px] font-bold uppercase text-slate-700">
+            Oras ng Tanggapan (Barangay Hall)
+          </h3>
+
+          <p class="mt-2 text-[10px] text-slate-700">
+            Lunes hanggang Biyernes: 8:00 AM – 5:00 PM
+          </p>
+        </section>
+
+      </aside>
+
     </div>
 
-    <%= f.submit "Submit Request",
-        class: "cursor-pointer bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" %>
-  <% end %>
+  </main>
 </div>
+
+<script>
+  function selectPurpose(button) {
+    const textarea = document.getElementById("document_request_purpose");
+
+    if (!textarea) return;
+
+    const purpose = button.dataset.purpose;
+
+    textarea.value = purpose;
+    textarea.focus();
+
+    document.querySelectorAll(".purpose-chip").forEach((chip) => {
+      chip.classList.remove("border-blue-800", "bg-blue-800", "text-white");
+      chip.classList.add("bg-[#EEF3FF]", "text-blue-800");
+    });
+
+    button.classList.remove("bg-[#EEF3FF]", "text-blue-800");
+    button.classList.add("border-blue-800", "bg-blue-800", "text-white");
+  }
+</script>
