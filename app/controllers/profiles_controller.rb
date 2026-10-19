@@ -25,9 +25,11 @@ class ProfilesController < ApplicationController
     ActiveRecord::Base.transaction do
       @profile.assign_attributes(profile_params)
       @address.assign_attributes(address_params)
+      current_user.assign_attributes(user_params)
 
       @profile.save!
       @address.save!
+      current_user.save!
     end
 
     redirect_to profile_path, notice: "Your profile and address have been updated successfully."
@@ -50,7 +52,11 @@ class ProfilesController < ApplicationController
     # end
 
     def profile_params
-      params.require(:profile).permit(:first_name, :middle_name, :last_name, :suffix, :birth_date, :sex)
+      params.require(:profile).permit(:first_name, :middle_name, :last_name, :suffix, :sex, :avatar)
+    end
+
+    def user_params
+      params.require(:user).permit(:email)
     end
 
     def address_params

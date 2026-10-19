@@ -1,12 +1,14 @@
 <% # app/views/devise/registrations/new.html.erb %>
 
 <div class="min-h-screen bg-[#f4f4f7] text-slate-900">
-  <header class="border-b border-slate-200 bg-white shadow-sm">
-    <div class="mx-auto flex max-w-5xl items-center gap-3 px-4 py-5 sm:px-6 sm:py-6">
-      <span class="h-10 w-10 shrink-0 rounded-full bg-[#07349b] sm:h-12 sm:w-12" aria-hidden="true"></span>
-      <div>
-        <p class="text-xl font-bold leading-tight tracking-tight text-slate-900 sm:text-2xl lg:text-[30px]">Barangay Kalikid Sur</p>
-        <p class="text-[10px] leading-tight text-slate-500 lg:text-[13px]">Digital System for Registered Residents</p>
+  <header class="sticky top-0 z-50 h-[74px] shrink-0 bg-white shadow-[0_5px_12px_rgba(15,23,42,0.18)] sm:h-[85px] lg:h-[94px]">
+    <div class="mx-auto flex h-full w-full max-w-[1100px] items-center gap-2.5 px-5 sm:px-8">
+      <div class="flex items-center gap-2.5">
+        <span class="h-8 w-8 shrink-0 rounded-full bg-[#07349e] sm:h-10 sm:w-10" aria-hidden="true"></span>
+        <span class="flex flex-col text-slate-900">
+          <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px] lg:text-[30px]">KaSurbisyo</strong>
+          <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px] lg:text-[13px]">Digital System for Registered Residents</small>
+        </span>
       </div>
     </div>
   </header>
@@ -45,8 +47,7 @@
             <div><%= p.label :first_name, "Pangalan", class: label_class %><span class="<%= hint_class %>">(First Name)</span><%= p.text_field :first_name, required: true, placeholder: "Hal. Juan", class: input_class %></div>
             <div><%= p.label :middle_name, "Gitnang Pangalan", class: label_class %><span class="<%= hint_class %>">(Middle Name)</span><%= p.text_field :middle_name, placeholder: "Hal. Santos", class: input_class %></div>
             <div><%= p.label :last_name, "Apelyido", class: label_class %><span class="<%= hint_class %>">(Last Name)</span><%= p.text_field :last_name, required: true, placeholder: "Hal. Dela Cruz", class: input_class %></div>
-            <div><%= p.label :suffix, "Karagdagan", class: label_class %><span class="<%= hint_class %>">(Suffix)</span><%= p.text_field :suffix, placeholder: "Jr., Sr., III", class: input_class %></div>
-            <div><%= p.label :birth_date, "Birth Date *", class: label_class %><%= p.date_field :birth_date, required: true, class: input_class %></div>
+            <div><%= p.label :suffix, "Karagdagan", class: label_class %><span class="<%= hint_class %>">(Suffix)</span><%= p.select :suffix, [["Sr.", "Sr."], ["Jr.", "Jr."], ["II", "II"], ["III", "III"], ["IV", "IV"], ["V", "V"]], { include_blank: "-- Select Suffix --" }, { class: input_class } %></div>
             <div><%= p.label :sex, "Sex *", class: label_class %><%= p.select :sex, [["Male", "male"], ["Female", "female"]], { include_blank: "Select an Option" }, { required: true, class: input_class } %></div>
           </div>
         <% end %>
@@ -61,8 +62,8 @@
         <%= f.fields_for :address do |a| %>
           <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 lg:grid-cols-6 lg:gap-x-5 lg:gap-y-5">
             <div class="lg:col-span-2"><%= a.label :house_number, "House / Lot / Blk No.", class: label_class %><span class="<%= hint_class %>">(Numero ng Bahay o Lote)</span><%= a.text_field :house_number, required: true, placeholder: "Hal. Blk 12 Lot 4", class: input_class %></div>
-            <div class="lg:col-span-2"><%= a.label :street, "Street / Sitio / Subd.", class: label_class %><span class="<%= hint_class %>">(Kalye o Sitio)</span><%= a.text_field :street, required: true, placeholder: "Hal. Rizal Avenue", class: input_class %></div>
-            <div class="lg:col-span-2"><%= a.label :purok, "Purok / Zone", class: label_class %><span class="<%= hint_class %>">(Piliin ang inyong Purok)</span><%= a.text_field :purok, required: true, placeholder: "-- Pumili ng Purok --", class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :street, "Street / Sitio / Subd.", class: label_class %><span class="<%= hint_class %>">(Opsyonal / Optional)</span><%= a.select :street, ["Villa Emilia Subd.", "Elizaville Subd", "Carmen Park Subd", "AGL Heights Subd", "Cristina Homes", "United Village", "Cabanatuan East", "San Fernando Village"], { include_blank: "-- Select Street / Sitio / Subd. --" }, { class: input_class } %></div>
+            <div class="lg:col-span-2"><%= a.label :purok, "Purok / Zone", class: label_class %><span class="<%= hint_class %>">(Piliin ang inyong Purok)</span><%= a.select :purok, (1..7).map { |number| ["Purok #{number}", "Purok #{number}"] }, { include_blank: "-- Pumili ng Purok --" }, { required: true, class: input_class } %></div>
             <div class="lg:col-span-2"><%= a.label :barangay, "Barangay *", class: label_class %><%= a.text_field :barangay, value: "Cabanatuan Barangay", required: true, class: input_class %></div>
             <div class="lg:col-span-2"><%= a.label :city, "City / Municipality *", class: label_class %><%= a.text_field :city, value: "Cabanatuan City", required: true, class: input_class %></div>
             <div class="lg:col-span-2"><%= a.label :province, "Province *", class: label_class %><%= a.text_field :province, value: "Nueva Ecija", required: true, class: input_class %></div>
