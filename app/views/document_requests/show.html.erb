@@ -1,169 +1,191 @@
 <%= turbo_frame_tag "remote_modal" do %>
-  <% 
-    header_title = @document_request.claimed? ? "CLAIMED" : "Document Request Details"
-    header_class = "bg-gray-50 border-b p-5"
-    title_class = "text-xl font-bold text-gray-800"
-    target_status = nil
-    submit_text = "Update Request"
-    submit_class = "w-full cursor-pointer rounded px-4 py-2 text-sm font-medium text-white transition bg-blue-600 hover:bg-blue-700"
+  <% request = @document_request %>
+  <% logs = request.status_logs.order(created_at: :asc).to_a %>
+  <% processing_log = logs.find { |log| log.status == DocumentRequest.statuses.fetch("processing") } %>
+  <% ready_log = logs.find { |log| log.status == DocumentRequest.statuses.fetch("ready_to_pickup") } %>
+  <% claimed_log = logs.find { |log| log.status == DocumentRequest.statuses.fetch("claimed") } %>
+  <% latest_remarks = logs.reverse.find { |log| log.staff_remarks.present? } %>
+  <% current_step = request.pending? ? 1 : (request.processing? || request.rejected? ? 2 : 3) %>
+  <% status_style = request.pending? ? "bg-[#ffdec2] text-amber-950" : request.processing? ? "bg-[#dce4ff] text-[#17379f]" : request.rejected? ? "bg-rose-100 text-rose-900" : "bg-emerald-200 text-emerald-900" %>
+  <% status_message = if request.pending?
+       ["Your request has been received and is waiting to be reviewed by barangay staff.", "Natanggap na ang inyong kahilingan at naghihintay ng pagsusuri ng kawani ng barangay."]
+     elsif request.processing?
+       ["Your document request is being processed by barangay staff.", "Kasalukuyang pinoproseso ng kawani ng barangay ang inyong kahilingan."]
+     elsif request.rejected?
+       ["Your request could not be approved. Please review the barangay remarks below.", "Hindi naaprubahan ang inyong kahilingan. Basahin ang tala ng barangay sa ibaba."]
+     elsif request.ready_to_pickup?
+       ["Your document is ready. Please claim it at the Barangay Hall with a valid ID.", "Handa nang kunin ang inyong dokumento sa Barangay Hall. Magdala ng valid ID."]
+     else
+       ["This document has been claimed.", "Nakuha na ang dokumentong ito."]
+     end %>
 
-    case @intent
-    when "approve"
-      header_title = "✅ Approve Request (Move to Processing)"
-      header_class = "bg-emerald-50 border-emerald-100 border-b p-5"
-      title_class = "text-xl font-bold text-emerald-800"
-      target_status = "processing"
-      submit_text = "Confirm Approval"
-      submit_class = "w-full cursor-pointer rounded px-4 py-2 text-sm font-medium text-white transition bg-emerald-600 hover:bg-emerald-700"
-    when "reject"
-      header_title = "❌ Reject Document Request"
-      header_class = "bg-rose-50 border-rose-100 border-b p-5"
-      title_class = "text-xl font-bold text-rose-800"
-      target_status = "rejected"
-      submit_text = "Confirm Rejection"
-      submit_class = "w-full cursor-pointer rounded px-4 py-2 text-sm font-medium text-white transition bg-rose-600 hover:bg-rose-700"
-    when "ready"
-      header_title = "📦 Mark Document as Ready for Pickup"
-      header_class = "bg-amber-50 border-amber-100 border-b p-5"
-      title_class = "text-xl font-bold text-amber-800"
-      target_status = "ready_to_pickup"
-      submit_text = "Mark Ready"
-      submit_class = "w-full cursor-pointer rounded px-4 py-2 text-sm font-medium text-white transition bg-amber-600 hover:bg-amber-700"
-    when "release"
-      header_title = "🤝 Release Document (Mark as Claimed)"
-      header_class = "bg-indigo-50 border-indigo-100 border-b p-5"
-      title_class = "text-xl font-bold text-indigo-800"
-      target_status = "claimed" # Sets the hidden field value seamlessly
-      submit_text = "Mark as Claimed"
-      submit_class = "w-full cursor-pointer rounded px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 hover:bg-indigo-700"
-    end
+  <% header_title = "Document Request Details" %>
+  <% target_status = nil %>
+  <% submit_text = "Update Request" %>
+  <% submit_class = "w-full cursor-pointer rounded-lg bg-[#07349e] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0b2e83]" %>
+  <% case @intent
+     when "approve"
+       header_title = "Approve Request (Move to Processing)"
+       target_status = "processing"
+       submit_text = "Confirm Approval"
+     when "reject"
+       header_title = "Reject Document Request"
+       target_status = "rejected"
+       submit_text = "Confirm Rejection"
+       submit_class = "w-full cursor-pointer rounded-lg bg-rose-700 px-4 py-3 text-sm font-semibold text-white hover:bg-rose-800"
+     when "ready"
+       header_title = "Mark Document as Ready for Pickup"
+       target_status = "ready_to_pickup"
+       submit_text = "Mark Ready"
+       submit_class = "w-full cursor-pointer rounded-lg bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
+     when "release"
+       header_title = "Release Document (Mark as Claimed)"
+       target_status = "claimed"
+       submit_text = "Mark as Claimed"
+     end %>
+  <% show_action_panel = current_user.barangay_staff? && @intent.present? %>
 
-    show_action_panel = current_user.barangay_staff? && @intent.present?
-    grid_layout_class = show_action_panel ? "grid grid-cols-1 gap-6 p-5 lg:grid-cols-3" : "grid grid-cols-1 gap-6 p-5"
-    main_column_class = show_action_panel ? "space-y-6 lg:col-span-2" : "space-y-6"
-  %>
+  <div class="fixed inset-0 z-[1200] flex items-center justify-center bg-black/70 p-3 sm:p-6" onclick="if (event.target === this) document.getElementById('remote_modal').innerHTML = ''">
+    <section class="relative max-h-[95vh] w-full max-w-[760px] overflow-y-auto rounded-2xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="document-modal-title">
+      <div class="sticky top-0 z-10 h-2 bg-gradient-to-r from-[#07349e] to-emerald-700"></div>
 
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-    <div class="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-lg bg-white shadow-lg">
+      <div class="space-y-5 px-5 py-5 sm:px-8 sm:py-7">
+        <header class="flex items-center gap-4">
+          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-xl text-[#07349e]" aria-hidden="true">▣</span>
+          <div class="min-w-0">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#07349e]">Document Request</p>
+            <h2 id="document-modal-title" class="text-xl font-semibold text-slate-900"><%= request.document_type.humanize %></h2>
+          </div>
+        </header>
 
-      <div class="<%= header_class %> flex items-center justify-between">
-        <h2 class="<%= title_class %>">
-          <%= header_title %>
-        </h2>
-
-        <%= link_to "✕", "#",
-                    class: "text-xl text-gray-500 hover:text-gray-800",
-                    data: { action: "click->remote-modal#close" } %>
-      </div>
-
-      <div class="<%= grid_layout_class %>">
-
-        <div class="<%= main_column_class %>">
-          <section>
-            <h3 class="mb-3 font-semibold text-gray-800">Request Information</h3>
-            <div class="space-y-2 rounded border p-4 text-sm bg-slate-50/50">
-              <p><strong>Resident:</strong> <%= @document_request.resident.profile.first_name %> <%= @document_request.resident.profile.last_name %></p>
-              <p><strong>Document Ticket:</strong> <code class="font-mono bg-white px-1.5 py-0.5 border rounded text-xs"><%= @document_request.tracking_number %></code></p>
-              <p><strong>Document Type:</strong> <%= @document_request.document_type.humanize %></p>
-
-              <% if @document_request.document_type == "certificate_of_income" %>
-                <p><strong>Average Monthly Income:</strong> PHP <%= @document_request.monthly_income %></p>
-                <p><strong>Job:</strong> <%= @document_request.job %></p>
-              <% end %>
-
-              <p><strong>Purpose:</strong> "<%= @document_request.purpose %>"</p>
-              <p><strong>Resident Remarks:</strong> <span class="italic text-gray-600">"<%= @document_request.resident_remarks.presence || "None" %>"</span></p>
-              <p>
-                <strong>Current Status:</strong> 
-                <% status_colors = case @document_request.status
-                   when "pending" then "bg-blue-100 text-blue-900"
-                   when "processing" then "bg-emerald-100 text-emerald-900"
-                   when "rejected" then "bg-rose-100 text-rose-900"
-                   when "ready_to_pickup" then "bg-amber-100 text-amber-900"
-                   when "claimed" then "bg-indigo-100 text-indigo-900"
-                   end %>
-                <span class="font-bold text-xs uppercase px-2 py-0.5 rounded <%= status_colors %>">
-                  <%= @document_request.status.humanize %>
-                </span>
-              </p>
+        <section class="grid gap-3 rounded-xl bg-[#eff3ff] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-semibold text-slate-600">Katayuan (Status):</span>
+            <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase <%= status_style %>">● <%= request.status.humanize %></span>
+          </div>
+          <div class="rounded-lg bg-white px-4 py-2 text-center sm:min-w-[270px]">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Reference No.</p>
+            <div class="flex items-center justify-center gap-2">
+              <span class="font-mono text-base font-bold tracking-wide text-[#07349e]"><%= request.tracking_number %></span>
+              <button type="button" onclick="navigator.clipboard.writeText('<%= j request.tracking_number %>').then(() => { this.textContent = 'Nakopya'; })" class="text-[10px] font-semibold text-[#07349e] hover:underline">▢ Kopyahin</button>
             </div>
-          </section>
+          </div>
+        </section>
 
-          <% if @document_request.valid_id_image.attached? %>
-            <section>
-              <h3 class="mb-3 font-semibold text-gray-800">Verification ID (<%= @document_request.valid_id_type.humanize %>)</h3>
-              <%= image_tag @document_request.valid_id_image, class: "max-h-80 max-w-full rounded border object-contain shadow-sm" %>
-            </section>
-          <% end %>
-
-          <section>
-            <h3 class="mb-3 font-semibold text-gray-800">Request History</h3>
-            <% if @document_request.status_logs.any? %>
-              <div class="space-y-4 border-l-2 border-gray-200 pl-4">
-                <% @document_request.status_logs.order(created_at: :asc).each do |log| %>
-                  <div class="text-sm">
-                    <p class="font-semibold text-gray-800"><%= log.human_status %></p>
-                    <p class="text-xs text-gray-400 mb-1"><%= log.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
-                    <% if log.staff_remarks.present? %>
-                      <p class="text-gray-600 bg-gray-50 border p-2 rounded italic text-xs">Remarks: "<%= log.staff_remarks %>"</p>
-                    <% end %>
-                  </div>
-                <% end %>
+        <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-label="Request progress">
+          <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm font-semibold text-slate-900">Proseso ng Kahilingan (Request Progress)</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wide <%= request.ready_to_pickup? || request.claimed? ? 'text-emerald-700' : request.rejected? ? 'text-rose-700' : request.processing? ? 'text-[#07349e]' : 'text-orange-600' %>"><%= request.claimed? ? "3 of 3 steps completed" : "Step #{current_step} of 3 · #{request.status.humanize}" %></span>
+          </div>
+          <div class="relative grid grid-cols-3 gap-1 before:absolute before:left-[16%] before:right-[16%] before:top-4 before:h-1 before:bg-[#dce4ff]">
+            <% ["Submitted", "Processing", "Ready for Pickup"].each_with_index do |step_label, index| %>
+              <% step_number = index + 1 %>
+              <% complete = step_number < current_step || request.ready_to_pickup? || request.claimed? %>
+              <% active = step_number == current_step && !request.rejected? %>
+              <% circle_style = request.rejected? && step_number == 2 ? "bg-rose-700 text-white" : complete ? "bg-emerald-700 text-white" : active ? "bg-[#07349e] text-white" : "bg-[#dce4ff] text-slate-500" %>
+              <div class="relative z-[1] flex flex-col items-center text-center">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full <%= circle_style %>"><%= complete || active ? "✓" : "○" %></span>
+                <span class="mt-1 text-[11px] font-semibold text-slate-800"><%= step_label %></span>
+                <span class="text-[10px] text-slate-500"><%= ["Natanggap", "Pinoproseso", "Handa nang kunin"][index] %></span>
+                <% step_time = index.zero? ? request.created_at : (index == 1 ? processing_log&.created_at : (claimed_log&.created_at || ready_log&.created_at)) %>
+                <% if step_time.present? %><time class="text-[10px] font-semibold text-slate-600"><%= step_time.strftime("%b %d, %Y") %></time><% end %>
               </div>
-            <% else %>
-              <p class="text-sm text-gray-500">No request history available.</p>
             <% end %>
+          </div>
+        </section>
+
+        <% if latest_remarks.present? %>
+          <section class="rounded-xl <%= request.rejected? ? 'bg-rose-100' : 'bg-emerald-100/80' %> p-4" aria-label="Remarks from barangay">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-sm font-semibold text-slate-900">▱ Remarks from Barangay (Mga Tala mula sa Barangay)</h3>
+              <time class="rounded bg-white px-2 py-1 text-[10px] font-semibold text-emerald-800"><%= latest_remarks.created_at.strftime("%B %d, %Y • %I:%M %p") %></time>
+            </div>
+            <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-800"><%= latest_remarks.staff_remarks %></p>
           </section>
-        </div>
+        <% else %>
+          <section class="flex items-start gap-3 rounded-xl bg-blue-100 p-4" aria-live="polite">
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#2445b8] font-bold text-white">i</span>
+            <div><p class="text-sm text-slate-900"><%= status_message.first %></p><p class="mt-1 text-xs text-slate-600"><%= status_message.last %></p></div>
+          </section>
+        <% end %>
 
-        <% if show_action_panel %>
+        <% if request.ready_to_pickup? %>
+          <section class="rounded-xl bg-emerald-100 p-4">
+            <p class="text-sm font-semibold text-emerald-900">Claim your document at the Barangay Hall with a valid ID.</p>
+            <p class="mt-1 text-xs text-emerald-800">Dalhin ang iyong valid ID kapag kukunin ang dokumento.</p>
+          </section>
+        <% end %>
+
+        <section class="grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl bg-[#eff3ff] p-4">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Purpose of Request (Layunin)</p>
+            <p class="mt-1 whitespace-pre-line text-sm font-semibold text-slate-900">“<%= request.purpose %>”</p>
+          </div>
+          <div class="rounded-xl bg-[#eff3ff] p-4">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Petsa at Oras ng Pagsumite</p>
+            <p class="mt-1 text-sm font-semibold text-slate-900"><%= request.created_at.strftime("%B %d, %Y") %></p>
+            <p class="text-xs text-slate-600"><%= request.created_at.in_time_zone.strftime("%I:%M %p %Z") %></p>
+          </div>
+        </section>
+
+        <% if request.document_type == "certificate_of_residency" %>
+          <section class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Years of Residency</p><p class="mt-1 text-sm font-semibold"><%= request.years_of_residency %> years</p></section>
+        <% elsif request.document_type == "certificate_of_income" %>
+          <section class="grid gap-3 sm:grid-cols-2">
+            <div class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Occupation</p><p class="mt-1 text-sm font-semibold"><%= request.job %></p></div>
+            <div class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Average Monthly Income</p><p class="mt-1 text-sm font-semibold">₱<%= number_with_precision(request.monthly_income, precision: 2) %></p></div>
+          </section>
+        <% end %>
+
+        <% if request.resident_remarks.present? %>
           <section>
-            <h3 class="mb-3 font-semibold text-gray-800">Staff Action Panel</h3>
-            <div class="rounded border p-4 bg-white shadow-sm">
-              <%= form_with model: @document_request, local: true do |f| %>
+            <h3 class="mb-2 text-sm font-semibold text-slate-900">▤ Additional Remarks (Karagdagang Tala)</h3>
+            <p class="whitespace-pre-line rounded-xl border border-slate-100 p-4 text-sm italic leading-relaxed text-slate-800">“<%= request.resident_remarks %>”</p>
+          </section>
+        <% end %>
 
-                <% if @document_request.errors.any? %>
-                  <div class="mb-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                    <p class="font-semibold">Please fix the following errors:</p>
-                    <ul class="mt-2 list-disc pl-5">
-                      <% @document_request.errors.full_messages.each do |message| %>
-                        <li><%= message %></li>
-                      <% end %>
-                    </ul>
-                  </div>
-                <% end %>
+        <% if request.valid_id_image.attached? %>
+          <section>
+            <div class="mb-2 flex flex-wrap justify-between gap-2">
+              <h3 class="text-sm font-semibold text-slate-900">▧ Attached Identification (Valid ID)</h3>
+              <span class="text-[10px] font-semibold text-slate-600"><%= request.valid_id_type.humanize %></span>
+            </div>
+            <%= link_to rails_blob_path(request.valid_id_image, disposition: "inline"), target: "_blank", rel: "noopener", class: "block overflow-hidden rounded-xl bg-slate-100" do %>
+              <%= image_tag request.valid_id_image, class: "max-h-[360px] w-full object-contain", alt: "Uploaded #{request.valid_id_type.humanize} for document request" %>
+            <% end %>
+            <p class="rounded-b-lg bg-[#eff3ff] px-3 py-2 text-[10px] text-slate-600"><%= request.valid_id_image.filename %> · <%= number_to_human_size(request.valid_id_image.byte_size) %></p>
+          </section>
+        <% end %>
 
-                <%= f.hidden_field :status, value: target_status %>
-
-                <div class="mb-4">
-                  <%= f.label :staff_remarks, @intent == "reject" ? "Reason for Rejection *" : "Staff Remarks / Collection Notes",
-                              class: "mb-1 block text-sm font-medium text-gray-700" %>
-                  
-                  <%= f.text_area :staff_remarks,
-                                  rows: 5,
-                                  required: (@intent == "reject"),
-                                  placeholder: case @intent
-                                               when "reject" then "State the specific reason for rejecting this document..."
-                                               when "release" then "Optional: Note down recipient details (e.g., 'Picked up by representative with authorization letter')..."
-                                               else "Add processing logs or guidelines..."
-                                               end,
-                                  class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" %>
-                </div>
-
-                <%= f.submit submit_text, class: submit_class %>
-              <% end %>
+        <% if current_user.barangay_staff? %>
+          <section>
+            <h3 class="mb-2 text-sm font-semibold text-slate-900">Resident Information</h3>
+            <div class="grid gap-3 rounded-xl bg-[#eff3ff] p-4 text-xs text-slate-700 sm:grid-cols-2">
+              <p><strong>Resident:</strong> <%= request.resident.profile.first_name %> <%= request.resident.profile.last_name %></p>
+              <p><strong>Email:</strong> <%= request.resident.email %></p>
+              <p><strong>Address:</strong> <%= [request.resident.address&.purok && "Purok #{request.resident.address.purok}", request.resident.address&.barangay, request.resident.address&.city].compact_blank.join(", ").presence || "Not provided" %></p>
+              <p><strong>Submitted:</strong> <%= request.created_at.strftime("%b %d, %Y at %I:%M %p") %></p>
             </div>
           </section>
         <% end %>
 
+        <% if show_action_panel %>
+          <section class="rounded-xl border border-slate-100 p-4 sm:p-5">
+            <h3 class="mb-3 text-sm font-semibold text-slate-900">Staff Action</h3>
+            <%= form_with model: request, local: true do |f| %>
+              <% if request.errors.any? %><div class="mb-3 rounded-lg bg-red-50 p-3 text-xs text-red-700"><%= request.errors.full_messages.to_sentence %></div><% end %>
+              <%= f.hidden_field :status, value: target_status %>
+              <%= f.label :staff_remarks, @intent == "reject" ? "Reason for Rejection *" : "Staff Remarks / Collection Notes", class: "mb-1 block text-xs font-semibold text-slate-700" %>
+              <%= f.text_area :staff_remarks, rows: 4, required: @intent == "reject", placeholder: @intent == "reject" ? "State the specific reason for rejecting this document..." : "Add processing notes or collection details...", class: "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-[#07349e] focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+              <%= f.submit submit_text, class: "mt-3 #{submit_class}" %>
+            <% end %>
+          </section>
+        <% end %>
       </div>
 
-      <div class="flex justify-end border-t p-4 bg-gray-50/50 rounded-b-lg">
-        <%= link_to "Close", "#",
-                    class: "rounded border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition",
-                    data: { action: "click->remote-modal#close" } %>
-      </div>
-
-    </div>
+      <footer class="sticky bottom-0 flex justify-end bg-[#eff3ff] px-5 py-4 sm:px-8">
+        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-xl bg-red-700 px-8 py-3 text-sm font-semibold text-white shadow hover:bg-red-800">Close</button>
+      </footer>
+    </section>
   </div>
 <% end %>

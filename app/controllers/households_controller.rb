@@ -9,8 +9,8 @@ class HouseholdsController < ApplicationController
   end
 
   def new
-    @household = Household.new
-    @household.household_members.build
+    @household = Household.new(date_accomplished: Date.current)
+    @household.household_members.build(citizenship: "Filipino")
   end
 
   def create

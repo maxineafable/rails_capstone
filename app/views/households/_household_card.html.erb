@@ -1,131 +1,69 @@
-<%# app/views/households/_household_card.html.erb %>
-<div id="<%= dom_id(household) %>" class="rounded-lg border bg-white shadow-sm overflow-hidden transition hover:border-gray-300">
+<% head = household.household_members.find { |member| member.relationship_to_head.to_s.casecmp("head").zero? } || household.household_members.first %>
+<% household_number = "HH-#{household.date_accomplished.year}-#{household.id.to_s.rjust(4, '0')}" %>
+<% expanded_id = "members-#{household.id}" %>
 
-  <!-- MAIN HOUSEHOLD SUMMARY TRACKING GRID -->
-  <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-6 md:items-center">
-    <div>
-      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">House Number</p>
-      <p class="font-bold text-gray-800 mt-0.5">
-        <%= household.house_number %>
-      </p>
+<tr id="<%= dom_id(household) %>" class="group hover:bg-[#f8faff]">
+  <td class="px-3 py-3 align-top lg:px-4 lg:py-4">
+    <span class="font-semibold text-[#2445b8]">● <%= household_number %></span>
+    <span class="mt-1 block pl-3 text-[9px] text-slate-400">Census Record</span>
+  </td>
+  <td class="px-3 py-3 align-top text-xs font-semibold text-slate-800 lg:py-4">
+    <%= head.present? ? [head.last_name, "#{head.first_name} #{head.middle_name}".strip].join(", ") : "No household head recorded" %>
+    <% if head.present? %><span class="mt-1 block text-[9px] font-normal text-emerald-700">Puno ng Sambahayan</span><% end %>
+  </td>
+  <td class="px-3 py-3 align-top lg:py-4"><span class="rounded border border-blue-100 bg-blue-50 px-2 py-1 text-[10px] font-medium text-blue-700">Purok <%= household.purok %></span></td>
+  <td class="px-3 py-3 align-top text-xs leading-relaxed text-slate-600 lg:py-4"><%= household.street %></td>
+  <td class="px-3 py-3 align-top lg:py-4"><span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[9px] font-semibold text-emerald-800">♟ <%= household.household_members.size %> kasapi</span></td>
+  <td class="whitespace-nowrap px-3 py-3 align-top text-xs text-slate-600 lg:py-4"><%= household.date_accomplished.strftime("%b %d, %Y") %></td>
+  <td class="px-3 py-3 align-top lg:py-4">
+    <div class="flex items-center gap-1.5">
+      <button type="button" aria-expanded="false" aria-controls="<%= expanded_id %>" onclick="const details = document.getElementById('<%= expanded_id %>'); const willOpen = details.classList.contains('hidden'); details.classList.toggle('hidden'); this.setAttribute('aria-expanded', willOpen); this.innerHTML = willOpen ? '⌃ Tignan' : '⌄ Tignan'" class="whitespace-nowrap rounded-md bg-[#2445b8] px-2.5 py-1.5 text-[10px] font-semibold text-white hover:bg-[#17379f]">⌄ Tignan</button>
+      <%= link_to "✎ Edit", edit_household_path(household), data: { turbo_frame: "remote_modal" }, class: "whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-[10px] font-semibold text-slate-700 no-underline hover:bg-slate-50" %>
     </div>
+  </td>
+</tr>
 
-    <div>
-      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Street</p>
-      <p class="text-gray-700 mt-0.5 font-medium">
-        <%= household.street %>
-      </p>
-    </div>
+<tr id="<%= expanded_id %>" class="hidden bg-[#f8faff]">
+  <td colspan="7" class="px-3 pb-4 pt-1 sm:px-4">
+    <section class="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm" aria-label="Household members">
+      <header class="flex flex-col justify-between gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:px-5">
+        <div class="flex items-center gap-3">
+          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-[#2445b8]" aria-hidden="true">▤</span>
+          <div><h3 class="text-sm font-bold text-slate-900">Mga Kasapi ng Sambahayan (Household Members)</h3><p class="text-[10px] text-slate-500">Record of Barangay Inhabitants by Household</p></div>
+        </div>
+        <%= link_to "＋ Add Member", new_household_member_path(household), data: { turbo_frame: "remote_modal" }, class: "inline-flex items-center justify-center rounded-md bg-[#3267ef] px-4 py-2 text-[10px] font-semibold text-white no-underline hover:bg-blue-700" %>
+      </header>
 
-    <div>
-      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Purok</p>
-      <p class="text-gray-700 mt-0.5 font-medium">
-        Purok <%= household.purok %>
-      </p>
-    </div>
-
-    <div>
-      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Members</p>
-      <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 mt-0.5">
-        <%= household.household_members.count %> Person(s)
-      </span>
-    </div>
-
-    <div>
-      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Date Accomplished</p>
-      <p class="text-gray-600 mt-0.5 text-sm font-medium">
-        <%= household.date_accomplished.strftime("%B %d, %Y") %>
-      </p>
-    </div>
-
-    <!-- ACTION BUTTON GROUP -->
-    <div class="flex flex-wrap gap-2 md:justify-end">
-      <%= link_to "View", household_path(household),
-                  class: "rounded border bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition" %>
-
-      <%= link_to "Edit", edit_household_path(household),
-                  data: { turbo_frame: "remote_modal" },
-                  class: "rounded border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition" %>
-
-      <button type="button"
-              onclick="document.getElementById('members-<%= household.id %>').classList.toggle('hidden')"
-              class="rounded border bg-slate-800 text-white px-3 py-1.5 text-xs font-semibold hover:bg-slate-700 transition">
-        Toggle Members
-      </button>
-    </div>
-  </div>
-
-  <!-- DROPDOWN MEMBERS DETAILS CONTAINER BLOCK -->
-  <div id="members-<%= household.id %>" class="hidden border-t bg-gray-50 p-5">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-3 mb-4 gap-2">
-      <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wide flex items-center gap-2">
-        👥 Household Family Members List
-      </h3>
-    
-      <%= link_to "➕ Add Individual Member to This House", 
-                  new_household_member_path(household), 
-                  data: { turbo_frame: "remote_modal" }, 
-                  class: "inline-flex items-center rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-500 transition" %>
-    </div>
-
-    <% if household.household_members.any? %>
-      <div class="space-y-3">
-        <% household.household_members.each do |member| %>
-          <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm relative group hover:border-gray-300 transition">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Full Name</p>
-                <p class="font-bold text-gray-800 text-sm mt-0.5">
-                  <%= [member.first_name, member.middle_name, member.last_name, member.suffix].compact_blank.join(" ") %>
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Birth Date</p>
-                <p class="text-gray-700 text-sm mt-0.5">
-                  <%= member.birth_date.strftime("%B %d, %Y") %>
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Birth Place</p>
-                <p class="text-gray-700 text-sm mt-0.5"><%= member.birth_place %></p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Sex / Gender</p>
-                <p class="text-gray-700 text-sm mt-0.5"><%= member.sex.humanize %></p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Civil Status</p>
-                <p class="text-gray-700 text-sm mt-0.5"><%= member.civil_status.humanize %></p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Citizenship</p>
-                <p class="text-gray-700 text-sm mt-0.5"><%= member.citizenship.presence || "—" %></p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Occupation</p>
-                <p class="text-gray-700 text-sm mt-0.5"><%= member.occupation.presence || "—" %></p>
-              </div>
-
-              <div class="flex items-end">
-                <%= link_to "✏️ Edit Details",
-                            edit_household_member_path(household, member),
-                            data: { turbo_frame: "remote_modal" },
-                            class: "inline-flex items-center gap-1 rounded bg-slate-100 hover:bg-slate-200 text-blue-700 font-semibold text-xs px-2.5 py-1.5 border border-slate-200 tracking-wide transition" %>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="text-center py-4 border border-dashed rounded-lg bg-white border-gray-300">
-        <p class="text-sm text-gray-500 font-medium">No household members recorded yet.</p>
-      </div>
-    <% end %>
-  </div>
-</div>
+      <% if household.household_members.any? %>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[1180px] border-collapse text-left">
+            <thead class="text-[8px] font-bold uppercase tracking-wide text-slate-500">
+              <tr>
+                <th class="px-3 py-4">Last Name</th><th class="px-3 py-4">First Name</th><th class="px-3 py-4">Middle Name</th><th class="px-3 py-4">Suffix</th><th class="px-3 py-4">Date of Birth</th><th class="px-3 py-4">Place of Birth</th><th class="px-3 py-4">Sex</th><th class="px-3 py-4">Civil Status</th><th class="px-3 py-4">Citizenship</th><th class="px-3 py-4">Occupation</th><th class="px-3 py-4">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-[10px] text-slate-700">
+              <% household.household_members.each do |member| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-3 py-4 font-medium text-slate-900"><%= member.last_name %><span class="ml-1.5 rounded bg-blue-100 px-1.5 py-1 text-[8px] font-semibold text-blue-700"><%= member.relationship_to_head.upcase %></span></td>
+                  <td class="px-3 py-4"><%= member.first_name %></td>
+                  <td class="px-3 py-4"><%= member.middle_name.presence || "—" %></td>
+                  <td class="px-3 py-4"><%= member.suffix.presence || "—" %></td>
+                  <td class="whitespace-nowrap px-3 py-4"><%= member.birth_date.strftime("%Y-%m-%d") %></td>
+                  <td class="px-3 py-4"><%= member.birth_place %></td>
+                  <td class="px-3 py-4"><span class="rounded-full px-2 py-1 text-[9px] <%= member.male? ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-800' %>"><%= member.sex.humanize %></span></td>
+                  <td class="px-3 py-4"><%= member.civil_status.humanize %></td>
+                  <td class="px-3 py-4"><%= member.citizenship.presence || "—" %></td>
+                  <td class="px-3 py-4"><%= member.occupation.presence || "—" %></td>
+                  <td class="px-3 py-4"><%= link_to "✎", edit_household_member_path(household, member), data: { turbo_frame: "remote_modal" }, class: "font-semibold text-[#2445b8] no-underline hover:text-blue-800", aria: { label: "Edit household member" } %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="px-5 py-8 text-center text-xs text-slate-500">No household members are recorded yet.</div>
+      <% end %>
+    </section>
+  </td>
+</tr>

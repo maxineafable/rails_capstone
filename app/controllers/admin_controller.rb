@@ -111,14 +111,67 @@ class AdminController < ApplicationController
   end
 
   def residents
-    # @residents = User.includes(:profile, :address).order("profiles.last_name ASC")
+    @total_households = Household.count
+    @new_household_count = Household.where(created_at: 30.days.ago..).count
+    @puroks = Household.distinct.order(:purok).pluck(:purok)
 
-    household_query = Household.includes(:household_members).order(created_at: :desc)
+    household_query = Household.left_joins(:household_members).includes(:household_members)
+
+    if params[:search].present?
+      term = "%#{ActiveRecord::Base.sanitize_sql_like(params[:search].strip.downcase)}%"
+      household_query = household_query.where(
+        "LOWER(households.house_number) LIKE :term OR " \
+        "LOWER(households.street) LIKE :term OR " \
+        "LOWER(households.purok) LIKE :term OR " \
+        "LOWER(COALESCE(household_members.first_name, '')) LIKE :term OR " \
+        "LOWER(COALESCE(household_members.last_name, '')) LIKE :term",
+        term: term
+      )
+    end
+
+    if params[:purok].present?
+      household_query = household_query.where(purok: params[:purok])
+    end
+
+    case params[:filter]
+    when "purok_1_3"
+      household_query = household_query.where(purok: ["1", "2", "3", "Purok 1", "Purok 2", "Purok 3"])
+    when "purok_4_5"
+      household_query = household_query.where(purok: ["4", "5", "Purok 4", "Purok 5"])
+    when "new"
+      household_query = household_query.where(created_at: 30.days.ago..)
+    end
+
+    household_query = household_query.distinct
+    household_query = case params[:sort]
+    when "newest" then household_query.order(created_at: :desc)
+    when "oldest" then household_query.order(created_at: :asc)
+    when "purok" then household_query.order(purok: :asc, house_number: :asc)
+    else household_query.order(house_number: :asc)
+    end
+
+    @filtered_household_count = household_query.count
     @pagy_households, @households = pagy(:offset, household_query, items: 10, page_param: :households_page)
   end
 
   def staffs
-    @staffs = User.includes(:profile, :staff).where.associated(:staff).order("staffs.position ASC")
+    query = User.joins(:staff).left_joins(:profile).includes(:profile, :staff).order("staffs.position ASC, profiles.last_name ASC")
+
+    if params[:search].present?
+      term = "%#{params[:search].strip.downcase}%"
+      matching_positions = Staff.positions.select { |position, _value| position.humanize.downcase.include?(params[:search].strip.downcase) }.values
+      query = query.where(
+        "LOWER(COALESCE(profiles.first_name, '')) LIKE :term OR " \
+        "LOWER(COALESCE(profiles.middle_name, '')) LIKE :term OR " \
+        "LOWER(COALESCE(profiles.last_name, '')) LIKE :term OR " \
+        "LOWER(users.email) LIKE :term OR staffs.position IN (:positions)",
+        term: term,
+        positions: matching_positions.presence || [-1]
+      )
+    end
+
+    @staffs = query
+    @staff_count = @staffs.count
   end
 
   private

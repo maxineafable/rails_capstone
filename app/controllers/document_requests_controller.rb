@@ -6,6 +6,23 @@ class DocumentRequestsController < ApplicationController
   def select_type
   end
 
+  def index
+    @all_document_requests = current_user.document_requests.order(created_at: :desc)
+    @total_requests = @all_document_requests.count
+    @pending_requests = @all_document_requests.pending.count
+    @processing_requests = @all_document_requests.processing.count
+    @ready_requests = @all_document_requests.ready_to_pickup.count
+
+    @document_requests = case params[:filter]
+    when "pending" then @all_document_requests.pending
+    when "processing" then @all_document_requests.processing
+    when "ready_to_pickup" then @all_document_requests.ready_to_pickup
+    when "claimed" then @all_document_requests.claimed
+    when "rejected" then @all_document_requests.rejected
+    else @all_document_requests
+    end
+  end
+
   def show
     if current_user.barangay_staff?
       @document_request = DocumentRequest.find(params[:id])
@@ -14,6 +31,10 @@ class DocumentRequestsController < ApplicationController
     end
 
     @intent = params[:intent]
+  end
+
+  def submitted
+    @document_request = current_user.document_requests.find(params[:id])
   end
 
   def new
@@ -28,15 +49,51 @@ class DocumentRequestsController < ApplicationController
     end
   end
 
+  def review
+    attributes = document_request_params
+    uploaded_id = attributes.delete(:valid_id_image)
+    @document_request = current_user.document_requests.build(attributes)
+
+    if uploaded_id.respond_to?(:tempfile)
+      blob = ActiveStorage::Blob.create_and_upload!(
+        io: uploaded_id.tempfile,
+        filename: uploaded_id.original_filename,
+        content_type: uploaded_id.content_type,
+        identify: true
+      )
+      @document_request.valid_id_image.attach(blob)
+    elsif uploaded_id.present?
+      @document_request.valid_id_image.attach(uploaded_id)
+    end
+
+    @document_type = @document_request.document_type
+    @profile = current_user.profile
+    @address = current_user.address
+
+    if @document_request.valid?
+      render :review
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def create
     @document_request = current_user.document_requests.build(document_request_params)
     @document_request.status = :pending
 
+    unless params[:accepted_declaration] == "1"
+      @document_request.errors.add(:base, "Please confirm the sworn declaration before submitting.")
+      @document_type = @document_request.document_type
+      @accepted_declaration = false
+      return render :review, status: :unprocessable_entity
+    end
+
     if @document_request.save
-      redirect_to root_path, notice: "Your document request has been submitted successfully to the Barangay Staff."
+      redirect_to submitted_document_request_path(@document_request), notice: "Your document request has been submitted successfully to the Barangay Staff."
     else
       @document_type = @document_request.document_type
-      render :new, status: :unprocessable_entity
+      @accepted_declaration = false
+      render :review, status: :unprocessable_entity
     end
   end
 
