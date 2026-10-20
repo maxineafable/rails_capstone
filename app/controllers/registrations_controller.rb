@@ -3,7 +3,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   protected
     def configure_permitted_parameters
-      profile_attributes = [ :first_name, :middle_name, :last_name, :suffix, :birth_date, :sex ]
+      profile_attributes = [ :first_name, :middle_name, :last_name, :suffix, :sex ]
 
       address_attributes = [ :house_number, :street, :purok, :barangay, :city, :province ]
 

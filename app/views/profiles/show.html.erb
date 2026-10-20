@@ -4,29 +4,25 @@
   <div class="mx-auto max-w-[1000px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-6 lg:px-6 lg:py-8">
 
     <!-- Resident Identity -->
-    <section class="flex min-h-[132px] items-center gap-4 rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 lg:min-h-[180px] lg:gap-6 lg:px-8 lg:py-7" aria-label="Resident identity">
+    <section class="flex min-h-[132px] items-center gap-4 rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 lg:min-h-[180px] lg:gap-6 lg:px-10 lg:py-7" aria-label="Resident identity">
       <div class="relative flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-full bg-[#e4ebff] text-2xl font-bold text-[#07349e] ring-4 ring-[#f5f4f7] sm:h-[82px] sm:w-[82px] lg:h-[110px] lg:w-[110px] lg:text-[36px]">
-        <%= @initials %>
+        <% if @profile.avatar.attached? %>
+          <%= image_tag @profile.avatar, alt: "#{@resident_name} profile picture", class: "h-full w-full rounded-full object-cover" %>
+        <% else %>
+          <%= @initials %>
+        <% end %>
 
-        <span class="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-emerald-700 text-[12px] text-white lg:h-8 lg:w-8 lg:text-[15px]" aria-label="Resident account">
-          <svg class="h-3.5 w-3.5 lg:h-4 lg:w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="m9.2 16.2-4-4 1.4-1.4 2.6 2.6 7.2-7.2 1.4 1.4z"/>
-          </svg>
-        </span>
       </div>
 
       <div class="min-w-0">
-        <p class="mb-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-slate-500 lg:mb-2 lg:text-[13px]">
-          Registered Resident
+        <p class="mb-1 text-[15px] font-medium uppercase tracking-[0.04em] text-slate-400 lg:mb-2 lg:text-[24px]">
+          Profile
         </p>
 
         <h1 class="break-words text-[20px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[22px] lg:text-[30px]">
           <%= @resident_name %>
         </h1>
 
-        <p class="mt-1 text-[11px] text-slate-500 lg:mt-2 lg:text-[15px]">
-          Barangay Kalikid Sur
-        </p>
       </div>
     </section>
 
@@ -73,26 +69,6 @@
           </div>
         </div>
 
-        <!-- Birth Date -->
-        <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5 lg:gap-4 lg:px-4 lg:py-4">
-          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[#07349e] lg:h-10 lg:w-10">
-            <svg class="h-3.5 w-3.5 lg:h-5 lg:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <rect x="7" y="3" width="10" height="18" rx="1.5"/>
-              <path d="M11 17h2"/>
-            </svg>
-          </span>
-
-          <div class="min-w-0">
-            <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600 lg:text-[13px]">
-              Birth Date / Petsa ng Kapanganakan
-            </p>
-
-            <p class="mt-0.5 text-[11px] font-medium lg:mt-1 lg:text-[15px]">
-              <%= @profile&.birth_date&.strftime("%B %d, %Y") || "Not provided" %>
-            </p>
-          </div>
-        </div>
-
         <!-- Email -->
         <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5 lg:gap-4 lg:px-4 lg:py-4">
           <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[#07349e] lg:h-10 lg:w-10">
@@ -109,23 +85,6 @@
 
             <p class="mt-0.5 break-all text-[11px] font-medium lg:mt-1 lg:text-[15px]">
               <%= current_user.email %>
-            </p>
-          </div>
-        </div>
-
-        <!-- Sex -->
-        <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5 lg:gap-4 lg:px-4 lg:py-4">
-          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[11px] font-bold text-[#07349e] lg:h-10 lg:w-10 lg:text-[15px]">
-            ID
-          </span>
-
-          <div class="min-w-0">
-            <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600 lg:text-[13px]">
-              Sex / Kasarian
-            </p>
-
-            <p class="mt-0.5 text-[11px] font-medium lg:mt-1 lg:text-[15px]">
-              <%= @profile&.sex&.humanize || "Not provided" %>
             </p>
           </div>
         </div>

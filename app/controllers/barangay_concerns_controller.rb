@@ -4,13 +4,21 @@ class BarangayConcernsController < ApplicationController
   before_action :ensure_turbo_frame_request, only: [ :edit ]
 
   def index
-    @barangay_concerns = current_user.barangay_concerns
+    @all_barangay_concerns = current_user.barangay_concerns.order(created_at: :desc)
 
-    @total_concerns = @barangay_concerns.count
-    @pending_concerns = @barangay_concerns.pending.count
-    @ongoing_concerns = @barangay_concerns.ongoing.count
-    @resolved_concerns = @barangay_concerns.resolved.count
-    @unactionable_concerns = @barangay_concerns.unactionable.count
+    @total_concerns = @all_barangay_concerns.count
+    @pending_concerns = @all_barangay_concerns.pending.count
+    @ongoing_concerns = @all_barangay_concerns.ongoing.count
+    @resolved_concerns = @all_barangay_concerns.resolved.count
+    @unactionable_concerns = @all_barangay_concerns.unactionable.count
+
+    @barangay_concerns = case params[:filter]
+    when "pending" then @all_barangay_concerns.pending
+    when "ongoing" then @all_barangay_concerns.ongoing
+    when "resolved" then @all_barangay_concerns.resolved
+    when "unactionable" then @all_barangay_concerns.unactionable
+    else @all_barangay_concerns
+    end
   end
 
   def show

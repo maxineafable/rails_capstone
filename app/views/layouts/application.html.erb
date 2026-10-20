@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html class="scroll-smooth m-0 p-0">
   <head>
     <title><%= content_for(:title) || "Rails Capstone" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Rails Capstone">
     <meta name="mobile-web-app-capable" content="yes">
@@ -11,14 +12,10 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
@@ -28,11 +25,15 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
          crossorigin=""></script>
+
+    <style>
+      html, body { margin: 0 !important; padding: 0 !important; }
+      body > main { margin: 0 !important; padding: 0 !important; }
+    </style>
   </head>
 
-  <body>
-    <!--<main class="container mx-auto mt-28 px-5 flex">-->
-    <main>
+  <body class="m-0 p-0">
+    <main class="m-0 p-0">
       <%= yield %>
     </main>
   </body>
