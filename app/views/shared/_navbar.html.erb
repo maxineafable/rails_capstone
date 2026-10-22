@@ -1,32 +1,69 @@
 <% active_item = local_assigns[:active] %>
-<% base_link_classes = "rounded-md px-3 py-2 lg:px-4 lg:py-3 transition-colors hover:bg-[#07349e] hover:text-white" %>
+<% active_item ||= case controller_name
+  when "dashboard" then :home
+  when "document_requests" then :requests
+  when "barangay_concerns" then :reports
+  when "profiles", "registrations" then :profile
+  when "admin" then :admin
+end %>
+<% desktop_link_classes = "rounded-md px-3 py-2 transition-colors hover:bg-[#07349e] hover:text-white lg:px-4 lg:py-3" %>
 <% active_classes = "font-semibold text-[#07349e]" %>
 <% idle_classes = "text-slate-800" %>
+<% profile_url = current_user.profile.present? ? profile_path : new_profile_path %>
 
-<header class="fixed inset-x-0 top-0 z-[1100] m-0 w-full bg-white p-0 shadow-[0_3px_10px_rgba(15,23,42,0.18)]">
-  <div class="mx-auto flex min-h-[92px] max-w-[1280px] flex-wrap items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:flex-nowrap lg:gap-6 lg:px-6 lg:py-0">
-    <%= link_to dashboard_path, class: "flex shrink-0 items-center gap-2.5 no-underline" do %>
+<header class="fixed inset-x-0 top-0 z-[1100] w-full bg-white shadow-[0_3px_10px_rgba(15,23,42,0.18)]">
+  <div class="mx-auto flex min-h-[52px] max-w-[1280px] items-center justify-between px-4 md:min-h-[92px] md:flex-wrap md:gap-3 md:px-6 md:py-2 lg:flex-nowrap lg:gap-6 lg:py-0">
+    <!-- Compact phone header -->
+    <div class="flex w-full items-center justify-between md:hidden">
+      <%= link_to dashboard_path, class: "flex h-9 w-9 items-center justify-center rounded-full bg-[#07349e]", aria: { label: "KaSurbisyo home" } do %>
+        <span class="sr-only">KaSurbisyo home</span>
+      <% end %>
+
+      <div class="flex items-center gap-3">
+        <span class="relative flex h-8 w-8 items-center justify-center text-slate-600" aria-hidden="true">
+          <svg class="h-[19px] w-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+          <span class="absolute right-0.5 top-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" aria-hidden="true"></span>
+        </span>
+        <%= link_to profile_url, class: "flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-600", aria: { label: "Impormasyon" } do %>
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0z"/></svg>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Full tablet and desktop header -->
+    <%= link_to dashboard_path, class: "hidden shrink-0 items-center gap-2.5 no-underline md:flex" do %>
       <span class="h-9 w-9 rounded-full bg-[#07349e] sm:h-10 sm:w-10 lg:h-12 lg:w-12" aria-hidden="true"></span>
       <span class="flex flex-col text-slate-900">
         <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px] lg:text-[30px]">KaSurbisyo</strong>
-        <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px] lg:text-[13px]">Digital System for Registered Residents</small>
+        <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px] lg:text-[13px]">Digital na Sistema para sa mga Rehistradong Residente</small>
       </span>
     <% end %>
 
-    <nav class="flex w-full flex-wrap items-center justify-center gap-1 rounded-lg bg-white p-1 text-[11px] font-medium sm:gap-2 lg:w-auto lg:min-w-[720px] lg:justify-between lg:px-3 lg:py-2 lg:text-[15px]" aria-label="Main navigation">
-      <%= link_to "Home", dashboard_path,
-            class: "#{base_link_classes} #{active_item == :home ? active_classes : idle_classes}" %>
-      <%= link_to "Requests (Kahilingan)", document_requests_path,
-            class: "#{base_link_classes} #{active_item == :requests ? active_classes : idle_classes}" %>
-      <%= link_to "Reports (Sumbong)", barangay_concerns_path,
-            class: "#{base_link_classes} #{active_item == :reports ? active_classes : idle_classes}" %>
-      <%= link_to "Profile", (current_user.profile.present? ? profile_path : new_profile_path),
-            class: "#{base_link_classes} #{active_item == :profile ? active_classes : idle_classes}" %>
+    <nav class="hidden w-full items-center justify-center gap-1 rounded-lg bg-white p-1 text-[11px] font-medium md:flex sm:gap-2 lg:w-auto lg:min-w-[720px] lg:justify-between lg:px-3 lg:py-2 lg:text-[15px]" aria-label="Pangunahing nabigasyon">
+      <%= link_to "Tahanan", dashboard_path, class: "#{desktop_link_classes} #{active_item == :home ? active_classes : idle_classes}" %>
+      <%= link_to "Mga Kahilingan", document_requests_path, class: "#{desktop_link_classes} #{active_item == :requests ? active_classes : idle_classes}" %>
+      <%= link_to "Mga Ulat", barangay_concerns_path, class: "#{desktop_link_classes} #{active_item == :reports ? active_classes : idle_classes}" %>
+      <%= link_to "Impormasyon", profile_url, class: "#{desktop_link_classes} #{active_item == :profile ? active_classes : idle_classes}" %>
       <% if current_user.barangay_staff? %>
-        <%= link_to "Admin", admin_dashboard_path,
-              class: "#{base_link_classes} #{active_item == :admin ? active_classes : idle_classes}" %>
+        <%= link_to "Tagapangasiwa", admin_dashboard_path, class: "#{desktop_link_classes} #{active_item == :admin ? active_classes : idle_classes}" %>
       <% end %>
     </nav>
   </div>
 </header>
-<div class="h-[92px]" aria-hidden="true"></div>
+<div class="h-[52px] md:h-[92px]" aria-hidden="true"></div>
+
+<nav id="mobile-bottom-nav" class="fixed inset-x-0 bottom-0 z-[1200] grid grid-cols-4 border-t border-slate-200 bg-white/95 px-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-3px_12px_rgba(15,23,42,0.08)] backdrop-blur md:hidden" aria-label="Nabigasyon sa mobile">
+  <% mobile_items = [
+    { key: :home, label: "Tahanan", path: dashboard_path, icon: "<path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'/>" },
+    { key: :requests, label: "Kahilingan", path: document_requests_path, icon: "<path d='M7 3h8l4 4v14H7z'/><path d='M15 3v5h5M10 13h6M10 17h6'/>" },
+    { key: :reports, label: "Suliranin", path: barangay_concerns_path, icon: "<path d='M5 21V4h14l-3 4 3 4H5'/><path d='M5 12v9'/>" },
+    { key: :profile, label: "Impormasyon", path: profile_url, icon: "<circle cx='12' cy='8' r='3.5'/><path d='M5 20a7 7 0 0 1 14 0z'/>" }
+  ] %>
+  <% mobile_items.each do |item| %>
+    <% selected = active_item == item[:key] %>
+    <%= link_to item[:path], class: "flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-lg text-[10px] font-medium no-underline #{selected ? 'text-[#174da8]' : 'text-slate-500'}", aria: { current: selected ? "page" : nil } do %>
+      <svg class="h-[19px] w-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><%= item[:icon].html_safe %></svg>
+      <span><%= item[:label] %></span>
+    <% end %>
+  <% end %>
+</nav>

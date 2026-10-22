@@ -6,11 +6,11 @@
     <!-- Header -->
     <header class="rounded-xl border border-slate-100 bg-white px-6 py-6">
       <h1 class="text-2xl font-bold tracking-tight text-slate-900">
-        Community Concern Reports Management
+        Pamamahala ng mga Ulat ng Suliranin sa Komunidad
       </h1>
 
       <p class="mt-1 text-sm text-slate-600">
-        Monitor and manage community concerns reported by residents.
+        Subaybayan at asikasuhin ang mga suliraning iniulat ng mga residente.
       </p>
     </header>
 
@@ -20,7 +20,7 @@
       <!-- Total Reports -->
       <div class="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-6">
         <div>
-          <p class="text-xs font-semibold text-slate-600">Total Reports</p>
+          <p class="text-xs font-semibold text-slate-600">Kabuuang mga Ulat</p>
 
           <p class="mt-2 text-4xl font-bold text-blue-800">
             <%= @total_concerns %>
@@ -39,7 +39,7 @@
       <!-- Pending -->
       <div class="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-6">
         <div>
-          <p class="text-xs font-semibold text-slate-600">Pending</p>
+          <p class="text-xs font-semibold text-slate-600">Naghihintay</p>
 
           <p class="mt-2 text-4xl font-bold text-amber-900">
             <%= @pending_concerns %>
@@ -58,7 +58,7 @@
       <!-- In Progress -->
       <div class="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-6">
         <div>
-          <p class="text-xs font-semibold text-slate-600">In Progress</p>
+          <p class="text-xs font-semibold text-slate-600">Isinasagawa</p>
 
           <p class="mt-2 text-4xl font-bold text-blue-800">
             <%= @ongoing_concerns %>
@@ -77,7 +77,7 @@
       <!-- Resolved -->
       <div class="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-6">
         <div>
-          <p class="text-xs font-semibold text-slate-600">Resolved</p>
+          <p class="text-xs font-semibold text-slate-600">Nalutas</p>
 
           <p class="mt-2 text-4xl font-bold text-emerald-700">
             <%= @resolved_concerns %>
@@ -106,7 +106,7 @@
         <div>
           <%= f.text_field :search,
                 value: params[:search],
-                placeholder: "⌕  Search by reference number, resident, or location...",
+                placeholder: "⌕  Maghanap gamit ang numero, residente, o lokasyon...",
                 class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-4 py-3 text-sm text-slate-800 placeholder:text-slate-500 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
         </div>
 
@@ -115,24 +115,24 @@
 
           <%= f.select :status,
                 [
-                  ["All Statuses", ""],
-                  ["Pending", "pending"],
-                  ["In Progress", "ongoing"],
-                  ["Resolved", "resolved"],
-                  ["Dismissed", "unactionable"]
+                  ["Lahat ng Kalagayan", ""],
+                  ["Naghihintay", "pending"],
+                  ["Isinasagawa", "ongoing"],
+                  ["Nalutas", "resolved"],
+                  ["Hindi maaaksyunan", "unactionable"]
                 ],
                 { selected: params[:status] },
                 class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-4 py-3 text-sm text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
 
           <%= f.select :category,
                 [
-                  ["All Categories", ""]
-                ] + BarangayConcern.categories.keys.map { |category| [category.humanize, category] },
+                  ["Lahat ng Kategorya", ""]
+                ] + BarangayConcern.categories.keys.map { |category| [tagalog_label(category), category] },
                 { selected: params[:category] },
                 class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-4 py-3 text-sm text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
 
           <%= f.select :sort_direction,
-                [["Newest First", "desc"], ["Oldest First", "asc"]],
+                [["Pinakabago", "desc"], ["Pinakaluma", "asc"]],
                 { selected: params[:sort_direction] || "desc" },
                 class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-4 py-3 text-sm text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
 
@@ -140,15 +140,15 @@
 
         <div class="flex items-center justify-between pt-1">
           <p class="text-xs text-slate-500">
-            Filter community concern reports
+            Salain ang mga ulat ng suliranin
           </p>
 
           <div class="flex items-center gap-3">
-            <%= f.submit "Apply Filters",
+            <%= f.submit "Ilapat ang Salain",
                   name: nil,
                   class: "cursor-pointer rounded-lg bg-blue-800 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-900" %>
 
-            <%= link_to "Clear Filters",
+            <%= link_to "I-clear ang mga Salain",
                   admin_barangay_concerns_path,
                   class: "text-xs font-semibold text-blue-800 hover:underline" %>
           </div>
@@ -165,14 +165,14 @@
 
           <thead class="bg-white text-[10px] uppercase tracking-wide text-slate-800">
             <tr>
-              <th class="px-4 py-5 font-bold">Reference No.</th>
-              <th class="px-4 py-5 font-bold">Category</th>
-              <th class="px-4 py-5 font-bold">Description</th>
-              <th class="px-4 py-5 font-bold">Reporter Name</th>
-              <th class="px-4 py-5 font-bold">Purok / Location</th>
-              <th class="px-4 py-5 font-bold">Date Reported</th>
-              <th class="px-4 py-5 font-bold">Status</th>
-              <th class="px-4 py-5 text-center font-bold">Actions</th>
+              <th class="px-4 py-5 font-bold">Numero ng Sanggunian</th>
+              <th class="px-4 py-5 font-bold">Kategorya</th>
+              <th class="px-4 py-5 font-bold">Paglalarawan</th>
+              <th class="px-4 py-5 font-bold">Pangalan ng Nag-ulat</th>
+              <th class="px-4 py-5 font-bold">Purok / Lokasyon</th>
+              <th class="px-4 py-5 font-bold">Petsa ng Pag-uulat</th>
+              <th class="px-4 py-5 font-bold">Kalagayan</th>
+              <th class="px-4 py-5 text-center font-bold">Mga Aksyon</th>
             </tr>
           </thead>
 
@@ -191,7 +191,7 @@
                 <!-- Category -->
                 <td class="whitespace-nowrap px-4 py-5">
                   <span class="font-bold text-slate-800">
-                    <%= concern.category.humanize %>
+                    <%= tagalog_label(concern.category) %>
                   </span>
                 </td>
 
@@ -222,7 +222,7 @@
                 <!-- Date Reported -->
                 <td class="whitespace-nowrap px-4 py-5 text-slate-600">
                   <p>
-                    <%= concern.created_at.strftime("%b %d, %Y") %>
+                    <%= tagalog_date(concern.created_at) %>
                   </p>
 
                   <p class="mt-1">
@@ -232,21 +232,14 @@
 
                 <!-- Status -->
                 <td class="whitespace-nowrap px-4 py-5">
-                  <% status_classes = {
-                    "pending" => "bg-orange-200 text-amber-900",
-                    "ongoing" => "bg-indigo-100 text-blue-800",
-                    "resolved" => "bg-emerald-300 text-emerald-800",
-                    "unactionable" => "bg-red-100 text-red-700"
-                  } %>
-
-                  <span class="inline-flex rounded-full px-3 py-1 text-[10px] font-bold <%= status_classes.fetch(concern.status, 'bg-slate-100 text-slate-700') %>">
-                    <%= concern.status.humanize %>
+                  <span class="inline-flex rounded-full px-3 py-1 text-[10px] font-bold <%= tagalog_status_class(concern.status) %>">
+                    <%= tagalog_status(concern.status) %>
                   </span>
                 </td>
 
                 <!-- Actions -->
                 <td class="px-4 py-5 text-center">
-                  <%= link_to "View",
+                  <%= link_to "Tingnan",
                         barangay_concern_path(concern),
                         class: "inline-block rounded-lg bg-blue-100 px-4 py-1.5 font-semibold text-slate-800 hover:bg-blue-200" %>
                 </td>

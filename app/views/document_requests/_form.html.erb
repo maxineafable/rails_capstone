@@ -1,7 +1,7 @@
 <%= form_with model: document_request, local: true do |f| %>
   <div>
     <%= f.label :document_type %>
-    <%= f.select :document_type, DocumentRequest.document_types.keys.map { |d| [d.humanize, d] } %>
+    <%= f.select :document_type, DocumentRequest.document_types.keys.map { |d| [tagalog_label(d), d] } %>
   </div>
 
   <%# Dynamic Input Placeholders (Toggle these via vanilla JS depending on type) %>
@@ -16,23 +16,23 @@
   </div>
 
   <br><hr><br>
-  <h3>Verification Details</h3>
+  <h3>Mga Detalye ng Pagpapatunay</h3>
 
   <div>
-    <%= f.label :valid_id_type, "Select Presented Identification Card" %>
-    <%= f.select :valid_id_type, DocumentRequest.valid_id_types.keys.map { |i| [i.humanize, i] }, { include_blank: "Choose ID type" }, { required: true } %>
+    <%= f.label :valid_id_type, "Uri ng Ipinakitang ID" %>
+    <%= f.select :valid_id_type, DocumentRequest.valid_id_types.keys.map { |i| [tagalog_label(i), i] }, { include_blank: "Pumili ng uri ng ID" }, { required: true } %>
   </div>
 
   <br>
 
   <div>
-    <%= f.label :valid_id_image, "Upload Clear Photo of Selected ID" %>
+    <%= f.label :valid_id_image, "Mag-upload ng Malinaw na Larawan ng ID" %>
     <%= f.file_field :valid_id_image, accept: 'image/*', required: true %>
   </div>
 
   <br>
 
   <div>
-    <%= f.submit "Submit Request" %>
+    <%= f.submit "Ipasa Kahilingan" %>
   </div>
 <% end %>

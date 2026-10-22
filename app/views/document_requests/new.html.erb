@@ -8,11 +8,11 @@
 
       <div>
         <p class="mb-2 text-[9px] font-semibold uppercase tracking-widest text-emerald-700 lg:mb-3 lg:text-[13px]">
-          Official Barangay Service
+Opisyal na Serbisyo ng Barangay
         </p>
 
         <h2 class="text-[23px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[27px] lg:text-[36px]">
-          <%= @document_type.humanize %>
+          <%= tagalog_label(@document_type) %>
         </h2>
 
         <p class="mt-1 text-xs leading-relaxed text-slate-600 lg:mt-2 lg:text-[16px]">
@@ -30,7 +30,7 @@
 
         <div>
           <p class="text-[8px] font-semibold uppercase text-slate-600 lg:text-[13px]">
-            Current Registration
+Kasalukuyang Rehistro
           </p>
 
           <p class="text-[10px] font-semibold text-slate-900 lg:text-[15px]">
@@ -53,7 +53,7 @@
 
           <div>
             <p class="text-xs font-bold text-blue-800">
-              Step 1: Details
+Hakbang 1: Mga Detalye
             </p>
             <p class="text-[11px] lg:text-[13px] font-semibold text-slate-600">
               Mga Detalye ng Kahilingan
@@ -73,7 +73,7 @@
 
           <div>
             <p class="text-xs font-bold text-slate-700">
-              Step 2: Review
+Hakbang 2: Pagsusuri
             </p>
             <p class="text-[11px] lg:text-[13px] font-semibold text-slate-600">
               Pagsusuri at Pagpapatunay
@@ -98,7 +98,7 @@
           <% if @document_request.errors.any? %>
             <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
               <p class="font-semibold">
-                Please correct the following errors:
+Pakisuri at ayusin ang mga sumusunod na mali:
               </p>
 
               <ul class="mt-2 list-inside list-disc">
@@ -112,7 +112,7 @@
           <!-- Applicant Information -->
           <section>
             <h3 class="mb-5 text-sm font-semibold text-blue-800">
-              1. Applicant Personal Identification Details
+              1. Personal na Impormasyon
               <span class="text-red-600">*</span>
             </h3>
 
@@ -120,7 +120,7 @@
 
               <div>
                 <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                  Unang Pangalan (First Name) *
+                  Unang Pangalan*
                 </label>
 
                 <input
@@ -134,7 +134,7 @@
 
               <div>
                 <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                  Middle Name
+                  Gitnang Pangalan
                 </label>
 
                 <input
@@ -148,7 +148,7 @@
 
               <div>
                 <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                  Last Name *
+                  Apelyido *
                 </label>
 
                 <input
@@ -176,7 +176,7 @@
 
               <div>
                 <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                  Petsa ng Kapanganakan (Date of Birth) *
+                  Petsa ng Kapanganakan*
                 </label>
 
                 <input
@@ -190,7 +190,7 @@
 
               <div>
                 <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                  Sex *
+                  Kasarian *
                 </label>
 
                 <input
@@ -227,7 +227,7 @@
           <section class="mt-7">
             <div class="mb-2 flex items-center justify-between gap-3">
               <h3 class="text-sm font-semibold text-blue-800">
-                2. Layunin ng Kahilingan (Purpose of Request)
+                2. Layunin ng Kahilingan
                 <span class="text-red-600">*</span>
               </h3>
 
@@ -302,7 +302,7 @@
 
                 <div>
                   <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                    Current Occupation *
+                    Current Hanapbuhay *
                   </label>
 
                   <%= f.text_field :job,
@@ -332,7 +332,7 @@
               <%= @document_type == "certificate_of_residency" ||
                   @document_type == "certificate_of_income" ||
                   @document_type == "certificate_of_low_income" ? "4" : "3" %>.
-              Katibayan ng Pagkakakilanlan (Valid Government ID Upload)
+              Katibayan ng Pagkakakilanlan (Mag-upload ng Balidong ID ng Pamahalaan)
               <span class="text-red-600">*</span>
             </h3>
 
@@ -356,28 +356,41 @@
                 </p>
 
                 <p class="mt-1 text-[11px] lg:text-[13px] text-slate-600">
-                  Tumanggap ng JPG, PNG, o PDF kung pinapayagan ng iyong upload configuration.
+                  JPG o PNG. Pumili ng nakatalang larawan o gamitin ang camera ng inyong telepono.
                 </p>
 
-                <div class="mt-4 w-full">
+                <div class="mt-4 grid w-full gap-2 sm:grid-cols-2">
                   <%= f.file_field :valid_id_image,
+                        id: "valid-id-gallery",
                         accept: "image/*",
-                        required: true,
-                        class: "block w-full cursor-pointer rounded-lg border border-transparent bg-blue-100 px-3 py-3 text-xs lg:text-[16px] text-slate-700 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-blue-800 file:px-3 file:py-2 file:text-xs lg:text-[16px] file:font-semibold file:text-white hover:file:bg-blue-900" %>
+                        class: "peer sr-only",
+                        data: { photo_picker: true, other_picker: "valid-id-camera", filename_target: "valid-id-filename" } %>
+                  <label for="valid-id-gallery" class="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-900 transition hover:bg-blue-200 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-400 lg:text-[14px]">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><circle cx="9" cy="10" r="1.5"/><path d="m5 17 5-4 3 2 3-3 4 4"/></svg>
+                    Pumili ng larawan
+                  </label>
+
+                  <input id="valid-id-camera" name="document_request[valid_id_camera]" type="file" accept="image/*" capture="environment" class="peer sr-only" data-photo-picker data-other-picker="valid-id-gallery" data-filename-target="valid-id-filename">
+                  <label for="valid-id-camera" class="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-900 transition hover:bg-blue-200 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-400 lg:text-[14px]">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                    Gamitin ang camera
+                  </label>
                 </div>
+                <p id="valid-id-filename" class="mt-2 min-h-4 text-[10px] text-slate-600" aria-live="polite">Wala pang napipiling larawan</p>
+                <p class="mt-1 text-[10px] font-medium text-slate-600">Kinakailangan ang kahit isang malinaw na larawan ng ID.</p>
               </div>
 
             </div>
 
             <div class="mt-4">
               <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                Select ID Type Provided
+                Pumili ng Uri ng ID
                 <span class="text-red-600">*</span>
               </label>
 
               <%= f.select :valid_id_type,
-                    DocumentRequest.valid_id_types.keys.map { |id_type| [id_type.humanize, id_type] },
-                    { include_blank: "Select your valid ID" },
+                    DocumentRequest.valid_id_types.keys.map { |id_type| [tagalog_label(id_type), id_type] },
+                    { include_blank: "Pumili ng Uri ng ID" },
                     required: true,
                     class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
             </div>
@@ -387,7 +400,7 @@
           <section class="mt-6">
             <div class="mb-1 flex items-center justify-between gap-3">
               <label class="block text-[11px] lg:text-[13px] font-semibold text-slate-700">
-                Karagdagang Tala o Tagubilin (Additional Remarks)
+                Karagdagang Impormasyon
               </label>
 
               <span class="text-[11px] lg:text-[13px] text-slate-500">Optional</span>
@@ -402,9 +415,9 @@
           <!-- Form Actions -->
           <div class="mt-6 flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
 
-            <button type="button" data-cancel-open class="inline-flex items-center justify-center rounded-lg bg-blue-100 px-5 py-3 text-xs font-semibold text-slate-800 hover:bg-blue-200">Kanselahin (Cancel)</button>
+            <button type="button" data-cancel-open class="inline-flex items-center justify-center rounded-lg bg-blue-100 px-5 py-3 text-xs font-semibold text-slate-800 hover:bg-blue-200">Kanselahin (Kanselahin)</button>
 
-            <%= f.submit "Review & Confirm Request / Suriin ang Kahilingan →",
+            <%= f.submit "Review & Confirm Kahilingan / Suriin ang Kahilingan →",
                   class: "cursor-pointer rounded-lg bg-blue-800 px-5 py-3 text-xs font-semibold text-white shadow-sm hover:bg-blue-900" %>
 
           </div>

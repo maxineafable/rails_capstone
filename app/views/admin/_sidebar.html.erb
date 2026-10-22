@@ -11,7 +11,7 @@
           Barangay Kalikid Sur
         </p>
         <p class="text-[10px] font-bold tracking-wide text-green-700">
-          ADMINISTRATION AND SERVICE SYSTEM
+          SISTEMA NG PAMAMAHALA AT SERBISYO
         </p>
       </div>
     </div>
@@ -22,50 +22,50 @@
       <%= link_to admin_dashboard_path,
           class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_dashboard_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
         <span>▦</span>
-        <span>Dashboard</span>
+        <span>Pangunahing Pahina</span>
       <% end %>
 
       <%= link_to admin_document_requests_path,
           class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_document_requests_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
         <span>▤</span>
-        <span>Document Requests</span>
+        <span>Mga Kahilingan sa Dokumento</span>
       <% end %>
 
       <%= link_to admin_barangay_concerns_path,
           class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_barangay_concerns_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
         <span>△</span>
-        <span>Concern Reports</span>
+        <span>Mga Ulat ng Suliranin</span>
       <% end %>
 
       <%= link_to admin_residents_path,
           class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_residents_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
         <span>♟</span>
-        <span>Residents</span>
+        <span>Mga Residente</span>
       <% end %>
 
       <%= link_to admin_staffs_path,
           class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_staffs_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
         <span>▣</span>
-        <span>Personnel</span>
+        <span>Mga Kawani</span>
       <% end %>
 
       <%= link_to "#",
           class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100" do %>
         <span>▥</span>
-        <span>Reports</span>
+        <span>Mga Ulat</span>
       <% end %>
 
       <%= link_to "#",
           class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100" do %>
         <span>⚙</span>
-        <span>Settings</span>
+        <span>Mga Setting</span>
       <% end %>
 
       <%= button_to destroy_user_session_path,
           method: :delete,
           class: "flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50" do %>
         <span>←</span>
-        <span>Logout</span>
+        <span>Mag-log out</span>
       <% end %>
 
     </nav>

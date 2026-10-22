@@ -52,9 +52,15 @@ class DocumentRequestsController < ApplicationController
   def review
     attributes = document_request_params
     uploaded_id = attributes.delete(:valid_id_image)
+    camera_id = attributes.delete(:valid_id_camera)
+    if uploaded_id.respond_to?(:tempfile) && uploaded_id.original_filename.blank?
+      uploaded_id = camera_id
+    elsif uploaded_id.blank?
+      uploaded_id = camera_id
+    end
     @document_request = current_user.document_requests.build(attributes)
 
-    if uploaded_id.respond_to?(:tempfile)
+    if uploaded_id.respond_to?(:tempfile) && uploaded_id.original_filename.present?
       blob = ActiveStorage::Blob.create_and_upload!(
         io: uploaded_id.tempfile,
         filename: uploaded_id.original_filename,
@@ -78,7 +84,9 @@ class DocumentRequestsController < ApplicationController
   end
 
   def create
-    @document_request = current_user.document_requests.build(document_request_params)
+    attributes = document_request_params
+    attributes.delete(:valid_id_camera)
+    @document_request = current_user.document_requests.build(attributes)
     @document_request.status = :pending
 
     unless params[:accepted_declaration] == "1"
@@ -118,6 +126,7 @@ class DocumentRequestsController < ApplicationController
         :staff_remarks,
         :valid_id_type,
         :valid_id_image,
+        :valid_id_camera,
         :years_of_residency,
         :monthly_income,
         :job

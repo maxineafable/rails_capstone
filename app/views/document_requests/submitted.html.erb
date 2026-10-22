@@ -1,7 +1,7 @@
-<% content_for :title, "Document Request Submitted | KaSurbisyo" %>
+<% content_for :title, "Naipasa na ang Kahilingan sa Dokumento | KaSurbisyo" %>
 <% request = @document_request %>
-<% status_badge = request.pending? ? "bg-[#ffdec2] text-amber-950" : request.processing? ? "bg-[#dce4ff] text-[#17379f]" : request.rejected? ? "bg-rose-100 text-rose-900" : "bg-emerald-200 text-emerald-900" %>
-<% status_text = request.pending? ? "Pending Verification / Pagsusuri" : request.status.humanize %>
+<% status_badge = tagalog_status_class(request.status) %>
+<% status_text = tagalog_status(request.status) %>
 
 <div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
   <%= render "shared/navbar", active: :requests %>
@@ -11,10 +11,10 @@
       <div class="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-emerald-300 shadow-[0_8px_28px_rgba(5,150,105,0.3)]">
         <span class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-800 text-4xl font-bold text-white" aria-hidden="true">✓</span>
       </div>
-      <h1 class="text-3xl font-bold tracking-[-0.04em] text-slate-900 sm:text-4xl">Document Request Submitted!</h1>
+      <h1 class="text-3xl font-bold tracking-[-0.04em] text-slate-900 sm:text-4xl">Naipasa na ang Kahilingan sa Dokumento!</h1>
       <p class="mt-1 text-lg font-semibold text-[#07349e] sm:text-xl">Naipadala na ang Kahilingan sa Dokumento!</p>
       <p class="mx-auto mt-2 max-w-[660px] text-sm leading-relaxed text-slate-600 sm:text-base">
-        Thank you, <%= current_user.profile&.first_name.presence || current_user.email %>. Your request has been officially recorded in the Barangay San Isidro Civic Registry. Our barangay staff will review your submitted credentials and prepare your document.
+        Salamat, <%= current_user.profile&.first_name.presence || current_user.email %>. Naitala na ang inyong kahilingan sa talaan ng barangay. Susuriin ng mga kawani ang inyong ipinasa at ihahanda ang dokumento.
       </p>
     </section>
 
@@ -23,7 +23,7 @@
         <div class="border-l-[6px] border-[#07349e]">
           <div class="ml-10 flex flex-col gap-4 bg-[#eff3ff] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-10">
             <div class="min-w-0">
-              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Official Request Tracking Number (Opisyal na Numero ng Kahilingan)</p>
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Opisyal na Numero ng Pagsubaybay</p>
               <h2 id="request-summary-title" class="mt-1 break-all font-mono text-2xl font-bold tracking-[0.08em] text-[#07349e] sm:text-[30px]"><%= request.tracking_number %></h2>
             </div>
             <button type="button" onclick="navigator.clipboard.writeText('<%= j request.tracking_number %>').then(() => { this.textContent = 'Copied'; })" class="shrink-0 rounded-lg bg-white px-4 py-3 text-xs font-semibold text-slate-800 shadow-sm hover:bg-blue-50">▢ Kopyahin (Copy)</button>
@@ -31,21 +31,21 @@
 
           <div class="grid gap-4 p-5 sm:grid-cols-2 sm:p-8">
             <div class="min-h-[94px] rounded-lg bg-[#eff3ff] p-4">
-              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">▤ Document Requested</p>
-              <p class="mt-1 text-sm font-semibold text-slate-900"><%= request.document_type.humanize %></p>
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">▤ Kahilingan sa Dokumento</p>
+              <p class="mt-1 text-sm font-semibold text-slate-900"><%= tagalog_label(request.document_type) %></p>
             </div>
             <div class="min-h-[94px] rounded-lg bg-[#eff3ff] p-4">
-              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">◷ Date &amp; Time Filed</p>
-              <p class="mt-1 text-sm font-semibold text-slate-900"><%= request.created_at.strftime("%B %d, %Y • %I:%M %p") %></p>
-              <p class="mt-1 text-[10px] font-semibold text-emerald-700">↻ Queued for Admin Processing</p>
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">◷ Petsa at Oras ng Pagpasa</p>
+              <p class="mt-1 text-sm font-semibold text-slate-900"><%= tagalog_datetime(request.created_at) %></p>
+              <p class="mt-1 text-[10px] font-semibold text-emerald-700">↻ Nakapila para Iproseso</p>
             </div>
             <div class="min-h-[94px] rounded-lg bg-[#eff3ff] p-4">
               <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">▣ Purpose (Layunin)</p>
               <p class="mt-1 text-sm font-semibold text-slate-900"><%= request.purpose %></p>
-              <% if request.job.present? %><p class="mt-1 text-xs text-slate-600">Occupation: <%= request.job %></p><% end %>
+              <% if request.job.present? %><p class="mt-1 text-xs text-slate-600">Hanapbuhay: <%= request.job %></p><% end %>
             </div>
             <div class="min-h-[94px] rounded-lg bg-[#eff3ff] p-4">
-              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">▣ Current Status</p>
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">▣ Kasalukuyang Kalagayan</p>
               <span class="mt-1 inline-flex rounded-full px-3 py-1 text-[10px] font-semibold <%= status_badge %>">● <%= status_text %></span>
             </div>
           </div>
@@ -60,13 +60,13 @@
             <ul class="mt-3 space-y-3 text-sm font-semibold leading-relaxed text-slate-700">
               <li class="flex gap-3"><span class="text-emerald-700">✓</span><span>Original Valid Government ID: Bring original PhilSys National ID, UMID, Driver's License, Voter's ID, or others for physical identity matching.</span></li>
               <li class="flex gap-3"><span class="text-emerald-700">✓</span><span>Official Reference: Show this tracking code <strong class="block text-[#07349e]"><%= request.tracking_number %></strong></span></li>
-              <li class="flex gap-3"><span class="text-emerald-700">✓</span><span>Schedule &amp; Station: Pickup hours are <strong class="text-slate-900">Monday to Friday, 8:00 AM – 5:00 PM</strong> at Barangay Hall.</span></li>
+              <li class="flex gap-3"><span class="text-emerald-700">✓</span><span>Oras at Lugar: Pickup hours are <strong class="text-slate-900">Lunes hanggang Biyernes, 8:00 AM – 5:00 PM</strong> at Barangay Hall.</span></li>
             </ul>
           </div>
         </div>
         <div class="mt-4 space-y-2 pl-0 sm:pl-14">
-          <%= link_to "Track This Request (Subaybayan ang Kahilingan)  →", document_requests_path, class: "block rounded-lg bg-[#07349e] px-4 py-4 text-center text-xs font-bold text-white no-underline hover:bg-[#0b2e83]" %>
-          <%= link_to "⌂  Back to Home Dashboard (Bumalik sa Home)", dashboard_path, class: "block rounded-lg bg-[#eff3ff] px-4 py-4 text-center text-xs font-semibold text-slate-800 no-underline hover:bg-white" %>
+          <%= link_to "Subaybayan ang Kahilingan →", document_requests_path, class: "block rounded-lg bg-[#07349e] px-4 py-4 text-center text-xs font-bold text-white no-underline hover:bg-[#0b2e83]" %>
+          <%= link_to "⌂  Bumalik sa Tahanan", dashboard_path, class: "block rounded-lg bg-[#eff3ff] px-4 py-4 text-center text-xs font-semibold text-slate-800 no-underline hover:bg-white" %>
         </div>
       </aside>
     </div>
@@ -76,31 +76,31 @@
     <div class="-mx-5 -mt-6 mb-6 h-1.5 bg-gradient-to-r from-[#2147bd] via-[#2147bd] to-emerald-600 sm:-mx-8 sm:-mt-8 lg:-mx-10 lg:-mt-10"></div>
     <div class="mx-auto grid max-w-[1300px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
       <section class="rounded-2xl bg-white/80 p-5 lg:p-6">
-        <h2 class="mb-2 text-[11px] font-bold text-blue-700">STATUTORY PROTECTION</h2>
+        <h2 class="mb-2 text-[11px] font-bold text-blue-700">PROTEKSYON SA ILALIM NG BATAS</h2>
         <p class="font-semibold text-slate-900">Republic of the Philippines • Republic Act No. 10173 (Data Privacy Act of 2012)</p>
-        <p class="mt-3">Submitted information is protected and used only for official barangay transaction processing.</p>
+        <p class="mt-3">Pinoprotektahan ang impormasyong ipinasa at ginagamit lamang para sa opisyal na transaksyon sa barangay.</p>
         <p class="mt-2 italic">Ang nakalap na impormasyon ay protektado at gagamitin lamang para sa opisyal na transaksyon ng barangay.</p>
-        <p class="mt-5 border-t border-slate-100 pt-3 font-semibold text-emerald-700">✓ Secured Civic Processing Protocol</p>
+        <p class="mt-5 border-t border-slate-100 pt-3 font-semibold text-emerald-700">✓ Ligtas na Pagproseso ng mga Transaksyon</p>
       </section>
       <section class="rounded-2xl bg-white/80 p-5 lg:p-6">
-        <h2 class="mb-2 text-[11px] font-bold text-emerald-700">GOVERNMENT EFFICIENCY</h2>
+        <h2 class="mb-2 text-[11px] font-bold text-emerald-700">MAHUSAY NA SERBISYO NG PAMAHALAAN</h2>
         <p class="font-semibold text-slate-900">Anti-Red Tape Act (ARTA / RA 11032)</p>
-        <p class="mt-3">The system supports efficient government service delivery.</p>
+        <p class="mt-3">Sinusuportahan ng sistemang ito ang maayos na paghahatid ng serbisyo ng pamahalaan.</p>
         <p class="mt-2 italic">Sumusuporta ang sistemang ito sa maagap, maayos, at mabilis na paghahatid ng serbisyo-publiko.</p>
-        <p class="mt-3 border-t border-slate-100 pt-3 font-semibold text-slate-900">CIVIC SERVICES</p>
+        <p class="mt-3 border-t border-slate-100 pt-3 font-semibold text-slate-900">MGA SERBISYO NG BARANGAY</p>
         <p class="mt-2 text-blue-700">› Barangay Clearance<br>› Certificate of Residency<br>› Certificate of Indigency</p>
       </section>
       <section class="rounded-2xl bg-white/80 p-5 lg:p-6">
-        <h2 class="mb-4 text-[11px] font-bold text-slate-900">● BARANGAY PUBLIC ASSISTANCE</h2>
-        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Address</p><p class="mb-4 text-slate-900">Barangay Hall, Kalikid Sur, Cabanatuan City, Nueva Ecija</p>
-        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Telephone</p><p class="mb-4 text-slate-900">(044) 940-1234</p>
+        <h2 class="mb-4 text-[11px] font-bold text-slate-900">● TULONG PUBLIKO NG BARANGAY</h2>
+        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Tirahan</p><p class="mb-4 text-slate-900">Barangay Hall, Kalikid Sur, Cabanatuan City, Nueva Ecija</p>
+        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Telepono</p><p class="mb-4 text-slate-900">(044) 940-1234</p>
         <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Email</p><p class="mb-4 text-blue-700">kalikidsur.cabanatuan@gmail.com</p>
-        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Office Hours</p><p class="text-slate-900">Monday to Friday, 8:00 AM – 5:00 PM</p>
+        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Oras ng Opisina</p><p class="text-slate-900">Lunes hanggang Biyernes, 8:00 AM – 5:00 PM</p>
       </section>
     </div>
     <div class="mx-auto mt-6 flex max-w-[1300px] flex-col justify-between gap-2 border-t border-blue-100 pt-4 text-[9px] sm:flex-row lg:mt-8">
-      <span>© <%= Date.current.year %> Barangay Kalikid Sur Civic Portal</span>
-      <span class="flex gap-3 font-semibold"><span>Privacy Policy</span><span>•</span><span>Terms of Use</span><span>•</span><span>Contact Us</span></span>
+      <span>© <%= Date.current.year %> Barangay Kalikid Sur Serbisyong Online ng Barangay</span>
+      <span class="flex gap-3 font-semibold"><span>Patakaran sa Pagkapribado</span><span>•</span><span>Mga Tuntunin sa Paggamit</span><span>•</span><span>Makipag-ugnayan</span></span>
     </div>
   </footer>
 </div>

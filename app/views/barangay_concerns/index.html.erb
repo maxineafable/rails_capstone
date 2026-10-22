@@ -1,4 +1,4 @@
-﻿<div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
+<div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
   <%= render "shared/navbar", active: :reports %>
 
   <main class="mx-auto max-w-[1280px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-5 lg:px-6 lg:py-7">
@@ -6,12 +6,12 @@
       <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#07349e] via-[#2457c5] to-emerald-700" aria-hidden="true"></div>
       <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
         <div>
-          <h1 id="reports-title" class="text-2xl font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[26px] lg:text-[30px]">Submitted Community Concern Reports</h1>
-          <p class="mt-1 text-[10px] font-semibold text-emerald-700 lg:text-[13px]">Talaan ng mga Naipadalang Ulat at Sumbong</p>
-          <p class="mt-2 max-w-[760px] text-[10px] leading-relaxed text-slate-600 lg:text-[13px]">Track the status of every concern you've reported to the barangay. / Subaybayan ang katayuan ng bawat sumbong na inyong isinumite.</p>
+          <h1 id="reports-title" class="text-2xl font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[26px] lg:text-[30px]">Mga Ulat ng Suliranin sa Komunidad</h1>
+          <p class="mt-1 text-[10px] font-semibold text-emerald-700 lg:text-[13px]">Talaan ng mga Ulat at Sumbong</p>
+          <p class="mt-2 max-w-[760px] text-[10px] leading-relaxed text-slate-600 lg:text-[13px]">Tingnan ang kalagayan ng bawat suliraning iniulat ninyo sa barangay.</p>
         </div>
         <%= link_to new_barangay_concern_path, class: "inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-md bg-emerald-700 px-5 py-3 text-xs font-semibold text-white no-underline shadow-sm transition hover:bg-emerald-800 sm:self-center lg:px-7 lg:py-4 lg:text-[14px]" do %>
-          File a Concern <span aria-hidden="true">→</span>
+          Mag-ulat ng Suliranin <span aria-hidden="true">→</span>
         <% end %>
       </div>
     </section>
@@ -19,26 +19,26 @@
     <section class="grid grid-cols-2 gap-3 rounded-lg bg-white p-4 shadow-sm sm:gap-4 sm:p-5 lg:grid-cols-4 lg:gap-4 lg:p-5" aria-label="Concern report summary">
       <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#dce7ff] lg:h-11 lg:w-11" aria-hidden="true"><%= image_tag "documents.svg", alt: "", class: "h-5 w-5 lg:h-6 lg:w-6" %></span>
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Total Reports (Kabuuan)</p><p class="mt-0.5 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @total_concerns %> <span class="text-[8px] font-medium text-slate-600 lg:text-[13px]">reports recorded</span></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Kabuuang mga Ulat</p><p class="mt-0.5 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @total_concerns %> <span class="text-[8px] font-medium text-slate-600 lg:text-[13px]">ulat na naitala</span></p></div>
       </div>
       <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#ffdec2] lg:h-11 lg:w-11" aria-hidden="true"><%= image_tag "pending.svg", alt: "", class: "h-5 w-5 lg:h-6 lg:w-6" %></span>
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Pending (Naka-pending)</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @pending_concerns %><span class="rounded-full bg-[#ffdec2] px-2 py-0.5 text-[8px] font-semibold text-amber-950 lg:text-[13px]">In Queue</span></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Naghihintay</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @pending_concerns %><span class="rounded-full bg-amber-100 px-2 py-0.5 text-[8px] font-semibold text-amber-900 lg:text-[13px]">Naghihintay</span></p></div>
       </div>
       <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#dce4ff] lg:h-11 lg:w-11" aria-hidden="true"><%= image_tag "Icon.svg", alt: "", class: "h-5 w-5 lg:h-6 lg:w-6" %></span>
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">In Progress (Kasalukuyang Ginagawa)</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @ongoing_concerns %><span class="rounded-full bg-[#dce4ff] px-2 py-0.5 text-[8px] font-semibold text-[#17379f] lg:text-[13px]">Dispatched</span></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Isinasagawa</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @ongoing_concerns %><span class="rounded-full bg-blue-100 px-2 py-0.5 text-[8px] font-semibold text-blue-900 lg:text-[13px]">Isinasagawa</span></p></div>
       </div>
       <div class="flex min-h-[76px] items-center gap-3 rounded-md bg-[#eff3ff] px-3 py-3 sm:px-4 lg:min-h-[88px] lg:gap-4 lg:px-5">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-200 lg:h-11 lg:w-11" aria-hidden="true"><%= image_tag "resolved.svg", alt: "", class: "h-5 w-5 lg:h-6 lg:w-6" %></span>
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Resolved (Nalutas)</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @resolved_concerns %><span class="rounded-full bg-emerald-200 px-2 py-0.5 text-[8px] font-semibold text-emerald-900 lg:text-[13px]">Closed &amp; Cleared</span></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[13px]">Nalutas</p><p class="mt-0.5 flex flex-wrap items-center gap-2 text-[23px] font-bold leading-tight text-slate-900 lg:text-[30px]"><%= @resolved_concerns %><span class="rounded-full bg-emerald-200 px-2 py-0.5 text-[8px] font-semibold text-emerald-900 lg:text-[13px]">Tapos na</span></p></div>
       </div>
     </section>
 
     <% active_filter = params[:filter].presence_in(%w[all pending ongoing resolved unactionable]) || "all" %>
     <section class="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-[#eff3ff] px-3 py-2.5 sm:px-4" aria-label="Concern report statuses">
       <nav class="flex flex-wrap items-center gap-1 text-[9px] font-semibold text-slate-700 lg:gap-3 lg:text-[13px]" aria-label="Filter concern reports">
-        <% report_filters = [["all", "All Reports (Lahat ng Ulat)", @total_concerns], ["pending", "Pending (Naka-pending)", @pending_concerns], ["ongoing", "In Progress", @ongoing_concerns], ["resolved", "Resolved (Nalutas)", @resolved_concerns]] %>
+        <% report_filters = [["all", "Lahat ng Ulat", @total_concerns], ["pending", "Naghihintay", @pending_concerns], ["ongoing", "Isinasagawa", @ongoing_concerns], ["resolved", "Nalutas", @resolved_concerns]] %>
         <% report_filters.each do |filter_key, label, count| %>
           <%= link_to barangay_concerns_path(filter: filter_key), class: "rounded-md px-3 py-2 no-underline transition #{active_filter == filter_key ? 'bg-white text-[#07349e] shadow-sm' : 'text-slate-700 hover:bg-white/70'}" do %>
             <%= label %> <span class="ml-1 rounded-full px-1.5 py-0.5 <%= filter_key == 'resolved' ? 'bg-emerald-200' : 'bg-[#dce4ff]' %>"><%= count %></span>
@@ -46,17 +46,17 @@
         <% end %>
         <% if @unactionable_concerns.positive? %>
           <%= link_to barangay_concerns_path(filter: "unactionable"), class: "rounded-md px-3 py-2 text-slate-700 no-underline hover:bg-white/70" do %>
-            Unactionable <span class="ml-1 rounded-full bg-rose-100 px-1.5 py-0.5"><%= @unactionable_concerns %></span>
+            Hindi Maaaksyunan <span class="ml-1 rounded-full bg-rose-100 px-1.5 py-0.5"><%= @unactionable_concerns %></span>
           <% end %>
         <% end %>
       </nav>
-      <p class="flex items-center gap-1 text-[9px] font-semibold text-slate-600 lg:text-[11px]"><span class="text-emerald-700" aria-hidden="true">☷</span> Ordered by: Most Recent (Pinakabago)</p>
+      <p class="flex items-center gap-1 text-[9px] font-semibold text-slate-600 lg:text-[11px]"><span class="text-emerald-700" aria-hidden="true">☷</span> Nakaayos mula sa pinakabago</p>
     </section>
 
     <% if @barangay_concerns.any? %>
-      <section class="space-y-3" aria-label="Submitted concern reports">
+      <section class="space-y-3" aria-label="Mga naipasa na ulat ng suliranin">
         <% @barangay_concerns.each do |concern| %>
-          <% category_label = { "health_and_sanitation" => "Drainage", "infrastructure" => "Roads", "peace_and_order" => "Streetlights", "waste_management" => "Garbage", "others" => "Other" }.fetch(concern.category, concern.category.humanize) %>
+          <% category_label = { "health_and_sanitation" => "Kanal at Kalinisan", "infrastructure" => "Imprastraktura", "peace_and_order" => "Kapayapaan at Kaayusan", "waste_management" => "Basura", "others" => "Iba pa" }.fetch(concern.category, concern.category.humanize) %>
           <% category_icon, category_icon_style = {
                "peace_and_order" => ["streetlight.svg", "bg-[#ffdec2]"],
                "infrastructure" => ["roads.svg", "bg-[#dce4ff]"],
@@ -64,15 +64,17 @@
                "health_and_sanitation" => ["drainage.svg", "bg-emerald-200"],
                "others" => ["others.svg", "bg-[#dce4ff]"]
              }.fetch(concern.category, ["others.svg", "bg-[#dce4ff]"]) %>
-          <% accent_style, status_style, status_label = if concern.pending?
-             ["border-amber-900", "bg-[#ffdec2] text-amber-950", "Pending (Naka-pending)"]
+          <% accent_style = if concern.pending?
+             "border-amber-900"
            elsif concern.ongoing?
-             ["border-[#2445b8]", "bg-[#dce4ff] text-[#17379f]", "In Progress (Kasalukuyang Ginagawa)"]
+             "border-[#2445b8]"
            elsif concern.resolved?
-             ["border-emerald-700", "bg-emerald-200 text-emerald-900", "Resolved (Nalutas)"]
+             "border-emerald-700"
            else
-             ["border-rose-700", "bg-rose-100 text-rose-900", "Unactionable"]
+             "border-rose-700"
            end %>
+          <% status_style = tagalog_status_class(concern.status) %>
+          <% status_label = tagalog_status(concern.status) %>
 
           <article class="overflow-hidden rounded-lg border-l-4 <%= accent_style %> bg-white shadow-sm lg:border-l-[6px]">
             <div class="flex flex-col gap-3 px-4 py-4 sm:px-5 lg:px-7 lg:py-5">
@@ -81,11 +83,11 @@
                   <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full <%= category_icon_style %> lg:h-11 lg:w-11" aria-hidden="true"><%= image_tag category_icon, alt: "", class: "h-5 w-5" %></span>
                   <div class="min-w-0">
                     <h2 class="text-sm font-semibold text-slate-900 lg:text-[20px]"><%= category_label %></h2>
-                    <p class="text-[9px] text-slate-700 lg:text-[13px]">◷ <%= concern.created_at.strftime("%B %d, %Y • %I:%M %p") %></p>
+                    <p class="text-[9px] text-slate-700 lg:text-[13px]">◷ <%= tagalog_datetime(concern.created_at) %></p>
                   </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 sm:justify-end">
-                  <div class="text-left sm:text-right"><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Reference No.</p><p class="rounded-sm bg-[#eff3ff] px-2 py-1 font-mono text-xs font-semibold tracking-wide text-slate-800 lg:text-[16px]"><%= concern.tracking_number %></p></div>
+                  <div class="text-left sm:text-right"><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Numero ng Sanggunian</p><p class="rounded-sm bg-[#eff3ff] px-2 py-1 font-mono text-xs font-semibold tracking-wide text-slate-800 lg:text-[16px]"><%= concern.tracking_number %></p></div>
                   <span class="rounded-full px-3 py-1.5 text-[8px] font-semibold <%= status_style %> lg:text-[13px]">● <%= status_label %></span>
                 </div>
               </div>
@@ -94,15 +96,15 @@
             </div>
             <div class="flex flex-col justify-between gap-2 bg-[#f7f9ff] px-4 py-2.5 text-[9px] sm:flex-row sm:items-center sm:px-5 lg:px-7 lg:text-[13px]">
               <span class="font-medium text-slate-800">♧ <%= concern.location_description %></span>
-              <%= link_to "View Details (Tingnan ang Detalye) →", barangay_concern_path(concern), data: { turbo_frame: "remote_modal" }, class: "font-semibold text-[#07349e] no-underline hover:underline" %>
+              <%= link_to "Tingnan ang Detalye →", barangay_concern_path(concern), data: { turbo_frame: "remote_modal" }, class: "font-semibold text-[#07349e] no-underline hover:underline" %>
             </div>
           </article>
         <% end %>
       </section>
     <% else %>
       <section class="rounded-lg bg-white px-5 py-10 text-center shadow-sm sm:px-8 lg:py-14">
-        <p class="text-sm font-semibold text-slate-800 lg:text-[20px]">You haven't reported any concerns yet.</p>
-        <p class="mt-2 text-xs text-slate-600 lg:text-[16px]">Use the report button above to submit a community concern.</p>
+        <p class="text-sm font-semibold text-slate-800 lg:text-[20px]">Wala ka pang naiuulat na suliranin.</p>
+        <p class="mt-2 text-xs text-slate-600 lg:text-[16px]">Gamitin ang button sa itaas upang mag-ulat ng suliranin sa komunidad.</p>
       </section>
     <% end %>
   </main>

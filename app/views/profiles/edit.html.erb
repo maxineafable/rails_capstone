@@ -1,4 +1,4 @@
-<% content_for :title, "Edit Profile | Barangay Kalikid Sur" %>
+<% content_for :title, "I-edit ang Impormasyon | Barangay Kalikid Sur" %>
 
 <div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
   <%= render "shared/navbar", active: :profile %>
@@ -6,19 +6,19 @@
   <main class="mx-auto max-w-[1000px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-6 lg:px-6 lg:py-8">
     <section class="flex flex-col justify-between gap-4 rounded-xl bg-white px-5 py-5 shadow-sm sm:flex-row sm:items-center sm:px-7 lg:px-8 lg:py-7">
       <div>
-        <p class="text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-700 lg:text-[13px]">Resident Profile</p>
-        <h1 class="mt-1 text-[20px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[22px] lg:text-[30px]">Edit Profile</h1>
-        <p class="mt-1 text-[11px] text-slate-500 lg:mt-2 lg:text-[15px]">Update your personal information, profile picture, and barangay address.</p>
+        <p class="text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-700 lg:text-[13px]">Impormasyon ng Residente</p>
+        <h1 class="mt-1 text-[20px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[22px] lg:text-[30px]">I-edit ang Impormasyon</h1>
+        <p class="mt-1 text-[11px] text-slate-500 lg:mt-2 lg:text-[15px]">I-update ang inyong personal na impormasyon, larawan, at tirahan sa barangay.</p>
       </div>
       <%= link_to profile_path, class: "inline-flex shrink-0 items-center gap-2 self-start rounded-md bg-[#eff3ff] px-4 py-2.5 text-[10px] font-semibold text-[#07349e] no-underline transition hover:bg-[#dfe8ff] sm:self-center lg:px-5 lg:py-3 lg:text-[13px]" do %>
-        <span aria-hidden="true">←</span> Back to Profile
+        <span aria-hidden="true">←</span> Bumalik sa Impormasyon
       <% end %>
     </section>
 
     <%= form_with model: @profile, url: profile_path, method: :patch, local: true, class: "space-y-4 lg:space-y-6" do |f| %>
       <% if @profile.errors.any? || @address.errors.any? || current_user.errors.any? %>
         <section class="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-red-800" role="alert">
-          <h2 class="text-sm font-semibold lg:text-[16px]">Please fix the errors below:</h2>
+          <h2 class="text-sm font-semibold lg:text-[16px]">Pak ayusin ang mga error sa ibaba:</h2>
           <ul class="mt-2 list-disc space-y-1 pl-5 text-xs lg:text-[14px]">
             <% @profile.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
             <% @address.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
@@ -29,8 +29,8 @@
 
       <section class="rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6 lg:px-8 lg:py-8" aria-labelledby="edit-personal-title">
         <div class="mb-5 lg:mb-6">
-          <h2 id="edit-personal-title" class="text-[15px] font-semibold lg:text-[20px]">Personal Details</h2>
-          <p class="mt-0.5 text-[10px] text-slate-600 lg:mt-1 lg:text-[13px]">Update your resident information and profile photo.</p>
+          <h2 id="edit-personal-title" class="text-[15px] font-semibold lg:text-[20px]">Personal na Impormasyon</h2>
+          <p class="mt-0.5 text-[10px] text-slate-600 lg:mt-1 lg:text-[13px]">I-update ang inyong impormasyon at larawan.</p>
         </div>
 
         <div class="mb-6 flex flex-col gap-4 rounded-lg bg-[#eff3ff] p-4 sm:flex-row sm:items-center lg:p-5">
@@ -42,9 +42,9 @@
             <% end %>
           </div>
           <div class="min-w-0">
-            <%= f.label :avatar, "Profile picture", class: "mb-1 block text-[11px] font-semibold text-slate-800 lg:text-[14px]" %>
+            <%= f.label :avatar, "Larawan sa profile", class: "mb-1 block text-[11px] font-semibold text-slate-800 lg:text-[14px]" %>
             <%= f.file_field :avatar, accept: "image/png,image/jpeg,image/webp", class: "block w-full text-xs text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-[#07349e] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-[#0b2e83] lg:text-[14px]" %>
-            <p class="mt-2 text-[10px] text-slate-500 lg:text-[13px]">Choose a JPG, PNG, or WebP image. Maximum size: 5 MB.</p>
+            <p class="mt-2 text-[10px] text-slate-500 lg:text-[13px]">Pumili ng JPG, PNG, o WebP na larawan. Hanggang 5 MB ang laki.</p>
           </div>
         </div>
 
@@ -67,10 +67,10 @@
           </div>
           <div>
             <%= f.label :sex, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
-            <%= f.select :sex, Profile.sexes.keys.map { |sex| [sex.humanize, sex] }, { include_blank: "Select Sex" }, { required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" } %>
+            <%= f.select :sex, Profile.sexes.keys.map { |sex| [tagalog_label(sex), sex] }, { include_blank: "Pumili ng kasarian" }, { required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" } %>
           </div>
           <div>
-            <%= label_tag "user_email", "Email Address", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= label_tag "user_email", "Email", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
             <%= email_field_tag "user[email]", current_user.email, required: true, autocomplete: "email", class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
         </div>
@@ -78,8 +78,8 @@
 
       <section class="rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6 lg:px-8 lg:py-8" aria-labelledby="edit-address-title">
         <div class="mb-5 lg:mb-6">
-          <h2 id="edit-address-title" class="text-[15px] font-semibold lg:text-[20px]">Barangay Address</h2>
-          <p class="mt-0.5 text-[10px] text-slate-600 lg:mt-1 lg:text-[13px]">Keep your registered address up to date.</p>
+          <h2 id="edit-address-title" class="text-[15px] font-semibold lg:text-[20px]">Tirahan sa Barangay</h2>
+          <p class="mt-0.5 text-[10px] text-slate-600 lg:mt-1 lg:text-[13px]">Panatilihing bago ang inyong rehistradong tirahan.</p>
         </div>
 
         <%= fields_for :address, @address do |a| %>
@@ -113,8 +113,8 @@
       </section>
 
       <div class="flex flex-col-reverse gap-3 pb-2 sm:flex-row sm:justify-end">
-        <%= link_to "Cancel", profile_path, class: "rounded-md bg-white px-5 py-3 text-center text-xs font-semibold text-slate-700 no-underline shadow-sm transition hover:bg-slate-50 lg:text-[14px]" %>
-        <%= f.submit "Save Changes", class: "cursor-pointer rounded-md bg-[#07349e] px-5 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0b2e83] lg:text-[14px]" %>
+        <%= link_to "Kanselahin", profile_path, class: "rounded-md bg-white px-5 py-3 text-center text-xs font-semibold text-slate-700 no-underline shadow-sm transition hover:bg-slate-50 lg:text-[14px]" %>
+        <%= f.submit "I-save ang mga Pagbabago", class: "cursor-pointer rounded-md bg-[#07349e] px-5 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0b2e83] lg:text-[14px]" %>
       </div>
     <% end %>
   </main>

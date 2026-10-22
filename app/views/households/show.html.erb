@@ -72,10 +72,10 @@
 
         <div>
           <p class="text-xs font-medium uppercase text-gray-500">
-            Date Accomplished
+            Date Nakumpleto
           </p>
           <p class="mt-1 text-gray-800">
-            <%= @household.date_accomplished.strftime("%B %d, %Y") %>
+            <%= tagalog_date(@household.date_accomplished) %>
           </p>
         </div>
 
@@ -94,7 +94,7 @@
         </h3>
 
         <p class="mt-1 text-sm text-gray-500">
-          Registered residents living in this household.
+          Rehistradong residents living in this household.
         </p>
       </div>
 
@@ -116,7 +116,7 @@
 
                 <div class="lg:col-span-2">
                   <p class="text-xs font-medium uppercase text-gray-500">
-                    Full Name
+                    Buong Pangalan
                   </p>
                   <p class="mt-1 font-medium text-gray-800">
                     <%= [
@@ -133,7 +133,7 @@
                     Birth Date
                   </p>
                   <p class="mt-1 text-gray-800">
-                    <%= member.birth_date.strftime("%B %d, %Y") %>
+                    <%= tagalog_date(member.birth_date) %>
                   </p>
                 </div>
 
@@ -157,7 +157,7 @@
 
                 <div>
                   <p class="text-xs font-medium uppercase text-gray-500">
-                    Civil Status
+                    Katayuang Sibil
                   </p>
                   <p class="mt-1 text-gray-800">
                     <%= member.civil_status.humanize %>
@@ -166,7 +166,7 @@
 
                 <div>
                   <p class="text-xs font-medium uppercase text-gray-500">
-                    Citizenship
+                    Pagkamamamayan
                   </p>
                   <p class="mt-1 text-gray-800">
                     <%= member.citizenship.presence || "—" %>
@@ -175,7 +175,7 @@
 
                 <div>
                   <p class="text-xs font-medium uppercase text-gray-500">
-                    Occupation
+                    Hanapbuhay
                   </p>
                   <p class="mt-1 text-gray-800">
                     <%= member.occupation.presence || "None / Unemployed" %>
