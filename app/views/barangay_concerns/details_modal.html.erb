@@ -1,0 +1,119 @@
+<%= turbo_frame_tag "remote_modal" do %>
+  <% concern = @barangay_concern %>
+  <% logs = concern.status_logs.order(created_at: :asc).to_a %>
+  <% in_progress_log = logs.find { |log| log.status == BarangayConcern.statuses.fetch("ongoing") } %>
+  <% resolved_log = logs.find { |log| log.status == BarangayConcern.statuses.fetch("resolved") } %>
+  <% latest_remarks = logs.reverse.find { |log| log.staff_remarks.present? } %>
+  <% category_label = { "peace_and_order" => "Streetlights", "infrastructure" => "Roads", "waste_management" => "Garbage", "health_and_sanitation" => "Drainage", "others" => "Other" }.fetch(concern.category, concern.category.humanize) %>
+  <% current_step = concern.resolved? ? 3 : (concern.ongoing? || concern.unactionable? ? 2 : 1) %>
+  <% status_style = concern.pending? ? "bg-[#ffdec2] text-amber-950" : concern.ongoing? ? "bg-[#dce4ff] text-[#17379f]" : concern.resolved? ? "bg-emerald-200 text-emerald-900" : "bg-rose-100 text-rose-900" %>
+  <% status_message = if concern.pending?
+       ["Your report has been received and is waiting to be reviewed by barangay staff.", "Natanggap na ang inyong ulat at kasalukuyang naghihintay ng pagsusuri ng kawani ng barangay."]
+     elsif concern.ongoing?
+       ["Your report is being handled by barangay staff.", "Kasalukuyang inaaksyunan ng kawani ng barangay ang inyong ulat."]
+     elsif concern.resolved?
+       ["Your report has been resolved.", "Nalutas na ang inyong ulat ng barangay."]
+     else
+       ["This report cannot be acted on. Please contact the barangay for more information.", "Hindi maaksyunan ang ulat na ito. Makipag-ugnayan sa barangay para sa karagdagang impormasyon."]
+     end %>
+
+  <div class="fixed inset-0 z-[1200] flex items-center justify-center bg-black/70 p-3 sm:p-6" onclick="if (event.target === this) document.getElementById('remote_modal').innerHTML = ''">
+    <section class="relative max-h-[95vh] w-full max-w-[760px] overflow-y-auto rounded-2xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
+      <div class="sticky top-0 z-10 h-2 bg-gradient-to-r from-[#07349e] to-emerald-700"></div>
+      <div class="space-y-5 px-5 py-5 sm:px-8 sm:py-7">
+        <header class="flex items-center gap-4">
+          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-xl font-bold text-[#07349e]" aria-hidden="true"><%= { "peace_and_order" => "☼", "infrastructure" => "▤", "waste_management" => "▣", "health_and_sanitation" => "⌁", "others" => "⋯" }.fetch(concern.category, "⋯") %></span>
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#07349e]">Report Category</p>
+            <h2 id="report-modal-title" class="text-xl font-semibold text-slate-900"><%= category_label %></h2>
+          </div>
+        </header>
+
+        <section class="grid gap-3 rounded-xl bg-[#eff3ff] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-semibold text-slate-600">Katayuan (Status):</span>
+            <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase <%= status_style %>">● <%= concern.status.humanize %></span>
+          </div>
+          <div class="rounded-lg bg-white px-4 py-2 text-center sm:min-w-[270px]">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Reference No.</p>
+            <div class="flex items-center justify-center gap-2">
+              <span class="font-mono text-base font-bold tracking-wide text-[#07349e]"><%= concern.tracking_number %></span>
+              <button type="button" onclick="navigator.clipboard.writeText('<%= j concern.tracking_number %>').then(() => { this.textContent = 'Nakopya'; })" class="text-[10px] font-semibold text-[#07349e] hover:underline">▢ Kopyahin</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-label="Report resolution progress">
+          <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm font-semibold text-slate-900">Proseso ng Paglutas (Resolution Progress)</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wide <%= concern.resolved? ? 'text-emerald-700' : concern.ongoing? ? 'text-[#07349e]' : concern.unactionable? ? 'text-rose-700' : 'text-orange-600' %>"><%= concern.resolved? ? "3 of 3 steps completed" : "Step #{current_step} of 3 · #{concern.status.humanize}" %></span>
+          </div>
+          <div class="relative grid grid-cols-3 gap-1 before:absolute before:left-[16%] before:right-[16%] before:top-4 before:h-1 before:bg-[#dce4ff]">
+            <% ["Submitted", "In Progress", "Resolved"].each_with_index do |step_label, index| %>
+              <% step_number = index + 1 %>
+              <% complete = concern.resolved? || step_number < current_step || (step_number == 1) %>
+              <% active = step_number == current_step && !concern.unactionable? %>
+              <% circle_style = concern.unactionable? && step_number == 2 ? "bg-rose-700 text-white" : complete ? "bg-emerald-700 text-white" : active ? "bg-[#07349e] text-white" : "bg-[#dce4ff] text-slate-500" %>
+              <div class="relative z-[1] flex flex-col items-center text-center">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full <%= circle_style %>"><%= complete || active ? "✓" : "○" %></span>
+                <span class="mt-1 text-[11px] font-semibold text-slate-800"><%= step_label %></span>
+                <span class="text-[10px] text-slate-500"><%= ["Naisumite", "Ginagawa", "Nalutas"][index] %></span>
+                <% step_time = index.zero? ? concern.created_at : (index == 1 ? in_progress_log&.created_at : resolved_log&.created_at) %>
+                <% if step_time.present? %><time class="text-[10px] font-semibold text-slate-600"><%= step_time.strftime("%b %d, %Y") %></time><% end %>
+              </div>
+            <% end %>
+          </div>
+        </section>
+
+        <% if latest_remarks.present? %>
+          <section class="rounded-xl bg-emerald-100/80 p-4" aria-label="Remarks from barangay">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-sm font-semibold text-slate-900">▱ Remarks from Barangay (Mga Tala mula sa Barangay)</h3>
+              <time class="rounded bg-white px-2 py-1 text-[10px] font-semibold text-emerald-800"><%= latest_remarks.created_at.strftime("%B %d, %Y • %I:%M %p") %></time>
+            </div>
+            <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-800"><%= latest_remarks.staff_remarks %></p>
+          </section>
+        <% else %>
+          <section class="flex items-start gap-3 rounded-xl bg-blue-100 p-4" aria-live="polite">
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#2445b8] font-bold text-white">i</span>
+            <div><p class="text-sm text-slate-900"><%= status_message.first %></p><p class="mt-1 text-xs text-slate-600"><%= status_message.last %></p></div>
+          </section>
+        <% end %>
+
+        <section class="grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl bg-[#eff3ff] p-4">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">⌖ Lugar ng Insidente (Location)</p>
+            <p class="mt-1 text-sm font-semibold text-slate-900"><%= concern.location_description %></p>
+          </div>
+          <div class="rounded-xl bg-[#eff3ff] p-4">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">◷ Petsa at Oras ng Pagsumite</p>
+            <p class="mt-1 text-sm font-semibold text-slate-900"><%= concern.created_at.strftime("%B %d, %Y") %></p>
+            <p class="text-xs text-slate-600"><%= concern.created_at.in_time_zone.strftime("%I:%M %p %Z") %> (Isinumite online via Resident Portal)</p>
+          </div>
+        </section>
+
+        <section>
+          <h3 class="mb-2 text-sm font-semibold text-slate-900">▤ Buong Pahayag ng Reklamo (Report Narrative)</h3>
+          <p class="rounded-xl border border-slate-100 p-4 text-sm leading-relaxed text-slate-800"><%= concern.reason %></p>
+        </section>
+
+        <% if concern.evidence_image.attached? %>
+          <section>
+            <div class="mb-2 flex flex-wrap justify-between gap-2">
+              <h3 class="text-sm font-semibold text-slate-900">▧ Katibayang Larawan (Attached Photo Proof)</h3>
+              <span class="text-[10px] font-semibold text-slate-600">1 Larawan (Original Resolution)</span>
+            </div>
+            <%= link_to rails_blob_path(concern.evidence_image, disposition: "inline"), target: "_blank", rel: "noopener", class: "block overflow-hidden rounded-t-xl bg-slate-100" do %>
+              <%= image_tag concern.evidence_image, class: "max-h-[360px] w-full object-cover", alt: "Photo evidence for report #{concern.tracking_number}" %>
+            <% end %>
+            <div class="flex justify-between gap-2 rounded-b-lg bg-[#eff3ff] px-3 py-2 text-[10px] text-slate-600"><span class="truncate"><%= concern.evidence_image.filename %></span><span class="shrink-0"><%= number_to_human_size(concern.evidence_image.byte_size) %> • <%= concern.evidence_image.content_type&.split("/")&.last&.upcase %></span></div>
+          </section>
+        <% end %>
+      </div>
+
+      <footer class="sticky bottom-0 flex justify-end bg-[#eff3ff] px-5 py-4 sm:px-8">
+        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-xl bg-red-700 px-8 py-3 text-sm font-semibold text-white shadow hover:bg-red-800">Close</button>
+      </footer>
+    </section>
+  </div>
+<% end %>

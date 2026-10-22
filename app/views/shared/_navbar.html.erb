@@ -13,10 +13,10 @@
       </span>
     <% end %>
 
-    <nav class="flex w-full flex-wrap items-center justify-center gap-1 rounded-lg bg-[#eff3ff] p-1 text-[11px] font-medium sm:gap-2 lg:w-auto lg:min-w-[720px] lg:justify-between lg:px-3 lg:py-2 lg:text-[15px]" aria-label="Main navigation">
+    <nav class="flex w-full flex-wrap items-center justify-center gap-1 rounded-lg bg-white p-1 text-[11px] font-medium sm:gap-2 lg:w-auto lg:min-w-[720px] lg:justify-between lg:px-3 lg:py-2 lg:text-[15px]" aria-label="Main navigation">
       <%= link_to "Home", dashboard_path,
             class: "#{base_link_classes} #{active_item == :home ? active_classes : idle_classes}" %>
-      <%= link_to "Requests (Kahilingan)", select_document_type_path,
+      <%= link_to "Requests (Kahilingan)", document_requests_path,
             class: "#{base_link_classes} #{active_item == :requests ? active_classes : idle_classes}" %>
       <%= link_to "Reports (Sumbong)", barangay_concerns_path,
             class: "#{base_link_classes} #{active_item == :reports ? active_classes : idle_classes}" %>

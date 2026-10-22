@@ -1,54 +1,21 @@
-<div class="min-h-screen bg-[#F4F4F8]">
+<div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
+  <%= render "shared/navbar", active: :requests %>
 
-  <!-- Header -->
-  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
-    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
-
-      <div class="flex items-center gap-3">
-        <div class="h-10 w-10 shrink-0 rounded-full bg-blue-800"></div>
-
-        <div>
-          <h1 class="text-xl font-bold text-slate-900">
-            Barangay Kalikid Sur
-          </h1>
-          <p class="text-xs text-slate-600">
-            Digital System for Registered Residents
-          </p>
-        </div>
-      </div>
-
-      <nav class="flex flex-wrap items-center gap-1 rounded-lg bg-[#EEF3FF] p-1 text-xs font-semibold">
-        <%= link_to "Home", root_path,
-              class: "rounded-md px-5 py-2.5 text-slate-700 hover:bg-white" %>
-
-        <%= link_to "Requests (Kahilingan)", select_document_type_path,
-              class: "rounded-md bg-blue-800 px-5 py-2.5 text-white" %>
-
-        <%= link_to "Reports (Sumbong)", new_barangay_concern_path,
-              class: "rounded-md px-5 py-2.5 text-slate-700 hover:bg-white" %>
-
-        <%= link_to "Profile", profile_path,
-              class: "rounded-md px-5 py-2.5 text-slate-700 hover:bg-white" %>
-      </nav>
-
-    </div>
-  </header>
-
-  <main class="mx-auto max-w-5xl space-y-6 px-4 py-6 sm:px-6">
+  <main class="mx-auto max-w-[1280px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-6 lg:px-6 lg:py-8">
 
     <!-- Document Header -->
     <section class="flex flex-col gap-5 rounded-xl border border-slate-100 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
 
       <div>
-        <p class="mb-1 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
+        <p class="mb-2 text-[9px] font-semibold uppercase tracking-widest text-emerald-700 lg:mb-3 lg:text-[13px]">
           Official Barangay Service
         </p>
 
-        <h2 class="text-2xl font-bold text-blue-800">
+        <h2 class="text-[23px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[27px] lg:text-[36px]">
           <%= @document_type.humanize %>
         </h2>
 
-        <p class="mt-1 text-xs text-slate-600">
+        <p class="mt-1 text-xs leading-relaxed text-slate-600 lg:mt-2 lg:text-[16px]">
           Para sa trabaho, negosyo, at iba pang opisyal na pangangailangan.
         </p>
       </div>
@@ -62,11 +29,11 @@
         </div>
 
         <div>
-          <p class="text-[10px] font-bold uppercase text-slate-600">
+          <p class="text-[8px] font-semibold uppercase text-slate-600 lg:text-[13px]">
             Current Registration
           </p>
 
-          <p class="text-xs font-semibold text-slate-900">
+          <p class="text-[10px] font-semibold text-slate-900 lg:text-[15px]">
             Purok <%= @address.purok.presence || "—" %> • <%= @address.barangay.presence || "—" %>
           </p>
         </div>
@@ -88,7 +55,7 @@
             <p class="text-xs font-bold text-blue-800">
               Step 1: Details
             </p>
-            <p class="text-[10px] font-semibold text-slate-600">
+            <p class="text-[11px] lg:text-[13px] font-semibold text-slate-600">
               Mga Detalye ng Kahilingan
             </p>
           </div>
@@ -108,7 +75,7 @@
             <p class="text-xs font-bold text-slate-700">
               Step 2: Review
             </p>
-            <p class="text-[10px] font-semibold text-slate-600">
+            <p class="text-[11px] lg:text-[13px] font-semibold text-slate-600">
               Pagsusuri at Pagpapatunay
             </p>
           </div>
@@ -123,7 +90,7 @@
       <!-- Main Form -->
       <section class="rounded-xl border border-slate-100 bg-white p-5 sm:p-7 lg:col-span-2">
 
-        <%= form_with model: @document_request, url: document_requests_path, local: true do |f| %>
+        <%= form_with model: @document_request, url: review_document_requests_path, local: true, data: { turbo: false } do |f| %>
 
           <%= f.hidden_field :document_type, value: @document_type %>
 
@@ -152,7 +119,7 @@
             <div class="grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-2">
 
               <div>
-                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                   Unang Pangalan (First Name) *
                 </label>
 
@@ -161,12 +128,12 @@
                   value="<%= @profile.first_name %>"
                   readonly
                   autocomplete="off"
-                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800"
                 >
               </div>
 
               <div>
-                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                   Middle Name
                 </label>
 
@@ -175,12 +142,12 @@
                   value="<%= @profile.middle_name %>"
                   readonly
                   autocomplete="off"
-                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800"
                 >
               </div>
 
               <div>
-                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                   Last Name *
                 </label>
 
@@ -189,12 +156,12 @@
                   value="<%= @profile.last_name %>"
                   readonly
                   autocomplete="off"
-                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800"
                 >
               </div>
 
               <div>
-                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                   Suffix
                 </label>
 
@@ -203,12 +170,12 @@
                   value="<%= @profile.suffix %>"
                   readonly
                   autocomplete="off"
-                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800"
                 >
               </div>
 
               <div>
-                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                   Petsa ng Kapanganakan (Date of Birth) *
                 </label>
 
@@ -217,12 +184,12 @@
                   value="<%= @profile.birth_date&.strftime('%m/%d/%Y') %>"
                   readonly
                   autocomplete="off"
-                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800"
                 >
               </div>
 
               <div>
-                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                   Sex *
                 </label>
 
@@ -231,12 +198,12 @@
                   value="<%= @profile.sex&.humanize %>"
                   readonly
                   autocomplete="off"
-                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800"
                 >
               </div>
 
               <div class="sm:col-span-2">
-                <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                   Kasalukuyang Tirahan sa Kalikid Sur (Address) *
                 </label>
 
@@ -245,10 +212,10 @@
                   value="<%= [@address.house_number, @address.street, @address.purok, @address.barangay, @address.city, @address.province].compact_blank.join(', ') %>"
                   readonly
                   autocomplete="off"
-                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800"
+                  class="w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800"
                 >
 
-                <p class="mt-2 text-[10px] text-slate-600">
+                <p class="mt-2 text-[11px] lg:text-[13px] text-slate-600">
                   Dapat tumugma ang iyong tirahan sa iyong rehistradong address.
                 </p>
               </div>
@@ -264,12 +231,12 @@
                 <span class="text-red-600">*</span>
               </h3>
 
-              <span class="shrink-0 text-[10px] font-semibold text-slate-600">
+              <span class="shrink-0 text-[11px] lg:text-[13px] font-semibold text-slate-600">
                 Required
               </span>
             </div>
 
-            <p class="mb-2 text-[10px] text-slate-600">
+            <p class="mb-2 text-[11px] lg:text-[13px] text-slate-600">
               Mabilis na piliin:
             </p>
 
@@ -286,7 +253,7 @@
                   type="button"
                   data-purpose="<%= purpose %>"
                   onclick="selectPurpose(this)"
-                  class="purpose-chip rounded-full border border-transparent bg-[#EEF3FF] px-3 py-1.5 text-[10px] font-semibold text-blue-800 hover:border-blue-300 hover:bg-blue-100"
+                  class="purpose-chip rounded-full border border-transparent bg-[#EEF3FF] px-3 py-1.5 text-[11px] lg:text-[13px] font-semibold text-blue-800 hover:border-blue-300 hover:bg-blue-100"
                 >
                   + <%= purpose %>
                 </button>
@@ -298,9 +265,9 @@
                   required: true,
                   rows: 3,
                   placeholder: "Halimbawa: Aplikasyon para sa trabaho sa Makati Medical Center bilang Administrative Staff.",
-                  class: "w-full rounded-lg border border-transparent bg-[#F6F8FF] px-3 py-3 text-xs text-slate-800 placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                  class: "w-full rounded-lg border border-transparent bg-[#F6F8FF] px-3 py-3 text-xs lg:text-[16px] text-slate-800 placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
 
-            <p class="mt-2 text-[10px] text-slate-600">
+            <p class="mt-2 text-[11px] lg:text-[13px] text-slate-600">
               Maaari mong baguhin ang napiling layunin o magdagdag ng detalye sa text area.
             </p>
           </section>
@@ -313,14 +280,14 @@
                 <span class="text-red-600">*</span>
               </h3>
 
-              <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+              <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                 Number of Years in this Barangay *
               </label>
 
               <%= f.number_field :years_of_residency,
                     required: true,
                     min: 0,
-                    class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                    class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
             </section>
           <% end %>
 
@@ -334,17 +301,17 @@
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
                 <div>
-                  <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                     Current Occupation *
                   </label>
 
                   <%= f.text_field :job,
                         required: true,
-                        class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                        class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
                 </div>
 
                 <div>
-                  <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+                  <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                     Average Monthly Income *
                   </label>
 
@@ -352,7 +319,7 @@
                         required: true,
                         min: 0,
                         step: "0.01",
-                        class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                        class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
                 </div>
 
               </div>
@@ -369,7 +336,7 @@
               <span class="text-red-600">*</span>
             </h3>
 
-            <p class="mt-1 text-xs text-slate-600">
+            <p class="mt-1 text-xs lg:text-[16px] text-slate-600">
               Mag-upload ng malinaw na kopya o litrato ng iyong PhilSys National ID, Driver's License, UMID, o Passport.
             </p>
 
@@ -388,7 +355,7 @@
                   I-drag ang file dito o pumili ng paraan ng pag-upload
                 </p>
 
-                <p class="mt-1 text-[10px] text-slate-600">
+                <p class="mt-1 text-[11px] lg:text-[13px] text-slate-600">
                   Tumanggap ng JPG, PNG, o PDF kung pinapayagan ng iyong upload configuration.
                 </p>
 
@@ -396,14 +363,14 @@
                   <%= f.file_field :valid_id_image,
                         accept: "image/*",
                         required: true,
-                        class: "block w-full cursor-pointer rounded-lg border border-transparent bg-blue-100 px-3 py-3 text-xs text-slate-700 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-blue-800 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-blue-900" %>
+                        class: "block w-full cursor-pointer rounded-lg border border-transparent bg-blue-100 px-3 py-3 text-xs lg:text-[16px] text-slate-700 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-blue-800 file:px-3 file:py-2 file:text-xs lg:text-[16px] file:font-semibold file:text-white hover:file:bg-blue-900" %>
                 </div>
               </div>
 
             </div>
 
             <div class="mt-4">
-              <label class="mb-1 block text-[10px] font-semibold text-slate-700">
+              <label class="mb-1 block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                 Select ID Type Provided
                 <span class="text-red-600">*</span>
               </label>
@@ -412,34 +379,32 @@
                     DocumentRequest.valid_id_types.keys.map { |id_type| [id_type.humanize, id_type] },
                     { include_blank: "Select your valid ID" },
                     required: true,
-                    class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                    class: "w-full rounded-lg border border-transparent bg-[#EEF3FF] px-3 py-2.5 text-xs lg:text-[16px] text-slate-800 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
             </div>
           </section>
 
           <!-- Additional Remarks -->
           <section class="mt-6">
             <div class="mb-1 flex items-center justify-between gap-3">
-              <label class="block text-[10px] font-semibold text-slate-700">
+              <label class="block text-[11px] lg:text-[13px] font-semibold text-slate-700">
                 Karagdagang Tala o Tagubilin (Additional Remarks)
               </label>
 
-              <span class="text-[10px] text-slate-500">Optional</span>
+              <span class="text-[11px] lg:text-[13px] text-slate-500">Optional</span>
             </div>
 
             <%= f.text_area :resident_remarks,
                   rows: 2,
                   placeholder: "Maglagay ng karagdagang impormasyon kung kinakailangan.",
-                  class: "w-full rounded-lg border border-transparent bg-[#F6F8FF] px-3 py-3 text-xs text-slate-800 placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+                  class: "w-full rounded-lg border border-transparent bg-[#F6F8FF] px-3 py-3 text-xs lg:text-[16px] text-slate-800 placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
           </section>
 
           <!-- Form Actions -->
           <div class="mt-6 flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
 
-            <%= link_to "Kanselahin (Cancel)",
-                  select_document_type_path,
-                  class: "inline-flex items-center justify-center rounded-lg bg-blue-100 px-5 py-3 text-xs font-semibold text-slate-800 hover:bg-blue-200" %>
+            <button type="button" data-cancel-open class="inline-flex items-center justify-center rounded-lg bg-blue-100 px-5 py-3 text-xs font-semibold text-slate-800 hover:bg-blue-200">Kanselahin (Cancel)</button>
 
-            <%= f.submit "Submit Request / Ipatuloy ang Kahilingan →",
+            <%= f.submit "Review & Confirm Request / Suriin ang Kahilingan →",
                   class: "cursor-pointer rounded-lg bg-blue-800 px-5 py-3 text-xs font-semibold text-white shadow-sm hover:bg-blue-900" %>
 
           </div>
@@ -461,33 +426,33 @@
           <div class="mt-4 space-y-4">
 
             <div class="flex gap-2">
-              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-200 text-[10px] font-bold text-emerald-800">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-200 text-[11px] lg:text-[13px] font-bold text-emerald-800">
                 ✓
               </span>
 
-              <p class="text-[10px] leading-relaxed text-slate-700">
+              <p class="text-[11px] lg:text-[13px] leading-relaxed text-slate-700">
                 <span class="font-semibold">Valid Government-issued ID:</span>
                 Dalhin ang orihinal na ID kapag kukunin ang sertipikasyon.
               </p>
             </div>
 
             <div class="flex gap-2">
-              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-200 text-[10px] font-bold text-emerald-800">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-200 text-[11px] lg:text-[13px] font-bold text-emerald-800">
                 ✓
               </span>
 
-              <p class="text-[10px] leading-relaxed text-slate-700">
+              <p class="text-[11px] lg:text-[13px] leading-relaxed text-slate-700">
                 <span class="font-semibold">Katibayan ng Paninirahan:</span>
                 Rehistradong residente ng Barangay Kalikid Sur ang dapat mag-apply.
               </p>
             </div>
 
             <div class="flex gap-2">
-              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-800">
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] lg:text-[13px] font-bold text-blue-800">
                 ◷
               </span>
 
-              <p class="text-[10px] leading-relaxed text-slate-700">
+              <p class="text-[11px] lg:text-[13px] leading-relaxed text-slate-700">
                 <span class="font-semibold">Standard Turnaround:</span>
                 Karaniwang 1–2 working days, depende sa pagsusuri at pag-apruba.
               </p>
@@ -502,22 +467,22 @@
             Paalala sa Pagsumite
           </h3>
 
-          <p class="mt-2 text-[10px] leading-relaxed text-slate-700">
+          <p class="mt-2 text-[11px] lg:text-[13px] leading-relaxed text-slate-700">
             Suriin ang iyong mga detalye bago isumite. Ang iyong kahilingan ay dadaan sa pagsusuri ng barangay staff.
           </p>
 
-          <p class="mt-2 text-[10px] leading-relaxed text-slate-700">
-            Ang Step 2: Review ay placeholder lamang sa ngayon.
+          <p class="mt-2 text-[11px] lg:text-[13px] leading-relaxed text-slate-700">
+            Review your information before confirming the request.
           </p>
         </section>
 
         <!-- Office Hours -->
         <section class="rounded-lg bg-[#EEF3FF] p-4">
-          <h3 class="text-[10px] font-bold uppercase text-slate-700">
+          <h3 class="text-[11px] lg:text-[13px] font-bold uppercase text-slate-700">
             Oras ng Tanggapan (Barangay Hall)
           </h3>
 
-          <p class="mt-2 text-[10px] text-slate-700">
+          <p class="mt-2 text-[11px] lg:text-[13px] text-slate-700">
             Lunes hanggang Biyernes: 8:00 AM – 5:00 PM
           </p>
         </section>
@@ -527,6 +492,7 @@
     </div>
 
   </main>
+  <%= render "cancel_confirmation_modal" %>
 </div>
 
 <script>

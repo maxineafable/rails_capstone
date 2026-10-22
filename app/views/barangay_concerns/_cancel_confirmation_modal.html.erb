@@ -1,0 +1,46 @@
+<div id="concern-cancel-modal" class="fixed inset-0 z-[1200] hidden items-center justify-center bg-black/75 px-4 py-6" role="presentation" onclick="if (event.target === this) closeConcernCancelModal()">
+  <section class="w-full max-w-[520px] rounded-2xl bg-white px-7 py-9 text-center shadow-2xl sm:px-10 sm:py-10" role="alertdialog" aria-modal="true" aria-labelledby="concern-cancel-title" aria-describedby="concern-cancel-description">
+    <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-700" aria-hidden="true">
+      <svg class="h-9 w-9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 21h22L12 2Zm1 14h-2V9h2v7Zm0 3h-2v-2h2v2Z"/></svg>
+    </div>
+    <h2 id="concern-cancel-title" class="font-serif text-[27px] font-bold leading-tight text-slate-900 sm:text-[30px]">Cancel this report?</h2>
+    <p class="mt-1 font-serif text-base text-slate-600">Ikansela ang ulat na ito?</p>
+    <p id="concern-cancel-description" class="mt-5 text-sm font-semibold text-slate-800">Your entered information will be discarded and not saved.</p>
+    <p class="mt-1 text-xs text-slate-600 sm:text-sm">Mawawala at hindi maitatala ang mga impormasyong inilagay sa ulat.</p>
+    <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <button type="button" data-concern-cancel-close class="rounded-lg bg-[#eff3ff] px-4 py-3.5 text-sm font-semibold text-[#07349e] hover:bg-[#e1eaff]">No, Continue</button>
+      <%= link_to "Yes, Cancel", root_path, class: "rounded-lg bg-red-700 px-4 py-3.5 text-sm font-semibold text-white no-underline shadow-md hover:bg-red-800" %>
+    </div>
+  </section>
+</div>
+
+<script>
+  (() => {
+    const initializeConcernCancelModal = () => {
+      const modal = document.getElementById("concern-cancel-modal");
+      const trigger = document.querySelector("[data-concern-cancel-open]");
+      if (!modal || !trigger || modal.dataset.initialized) return;
+      modal.dataset.initialized = "true";
+
+      window.closeConcernCancelModal = () => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      };
+
+      trigger.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        modal.querySelector("[data-concern-cancel-close]").focus();
+      });
+
+      modal.querySelector("[data-concern-cancel-close]").addEventListener("click", window.closeConcernCancelModal);
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.classList.contains("hidden")) window.closeConcernCancelModal();
+      });
+    };
+
+    document.addEventListener("turbo:load", initializeConcernCancelModal);
+    document.addEventListener("DOMContentLoaded", initializeConcernCancelModal);
+    initializeConcernCancelModal();
+  })();
+</script>

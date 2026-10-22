@@ -5,13 +5,17 @@ Rails.application.routes.draw do
   resource :profile, only: [ :show, :create, :edit, :update ]
 
   get "document_requests/new", to: "document_requests#select_type", as: :select_document_type
-  resources :document_requests, only: [ :create, :show, :update ] do
+  resources :document_requests, only: [ :index, :create, :show, :update ] do
+    get :submitted, on: :member
     collection do
       get ":document_type/new", to: "document_requests#new", as: :new_type
+      post :review
     end
   end
 
-  resources :barangay_concerns
+  resources :barangay_concerns do
+    get :submitted, on: :member
+  end
 
   get "/admin", to: "admin#index", as: :admin_dashboard
   get "/admin/document_requests", to: "admin#document_requests", as: :admin_document_requests

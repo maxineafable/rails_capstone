@@ -28,7 +28,15 @@ class BarangayConcernsController < ApplicationController
       @barangay_concern = current_user.barangay_concerns.find(params[:id])
     end
 
+    if turbo_frame_request? && turbo_frame_request_id == "remote_modal"
+      render :details_modal
+    end
+
     # @status_logs = @barangay_concern.status_logs.order(created_at: :asc)
+  end
+
+  def submitted
+    @barangay_concern = current_user.barangay_concerns.find(params[:id])
   end
 
   def edit
@@ -46,7 +54,7 @@ class BarangayConcernsController < ApplicationController
     @barangay_concern.status = :pending
 
     if @barangay_concern.save
-      redirect_to root_path, notice: "Your concern has been safely filed and reported to the Barangay Officials."
+      redirect_to submitted_barangay_concern_path(@barangay_concern), notice: "Your concern has been safely filed and reported to the Barangay Officials."
     else
       render :new, status: :unprocessable_entity
     end
