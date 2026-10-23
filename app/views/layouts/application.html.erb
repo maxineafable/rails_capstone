@@ -33,7 +33,7 @@
   </head>
 
   <body class="m-0 p-0">
-    <main class="m-0 p-0">
+    <main class="m-0 p-0 <%= 'pb-20 md:pb-0' if user_signed_in? %>">
       <%= yield %>
     </main>
   </body>

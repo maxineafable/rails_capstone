@@ -6,7 +6,7 @@
   <% claimed_log = logs.find { |log| log.status == DocumentRequest.statuses.fetch("claimed") } %>
   <% latest_remarks = logs.reverse.find { |log| log.staff_remarks.present? } %>
   <% current_step = request.pending? ? 1 : (request.processing? || request.rejected? ? 2 : 3) %>
-  <% status_style = request.pending? ? "bg-[#ffdec2] text-amber-950" : request.processing? ? "bg-[#dce4ff] text-[#17379f]" : request.rejected? ? "bg-rose-100 text-rose-900" : "bg-emerald-200 text-emerald-900" %>
+  <% status_style = tagalog_status_class(request.status) %>
   <% status_message = if request.pending?
        ["Your request has been received and is waiting to be reviewed by barangay staff.", "Natanggap na ang inyong kahilingan at naghihintay ng pagsusuri ng kawani ng barangay."]
      elsif request.processing?
@@ -19,29 +19,29 @@
        ["This document has been claimed.", "Nakuha na ang dokumentong ito."]
      end %>
 
-  <% header_title = "Document Request Details" %>
+  <% header_title = "Mga Detalye ng Kahilingan sa Dokumento" %>
   <% target_status = nil %>
-  <% submit_text = "Update Request" %>
+  <% submit_text = "I-update ang Kahilingan" %>
   <% submit_class = "w-full cursor-pointer rounded-lg bg-[#07349e] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0b2e83]" %>
   <% case @intent
      when "approve"
-       header_title = "Approve Request (Move to Processing)"
+       header_title = "Aprubahan ang Kahilingan (Simulan ang Pagproseso)"
        target_status = "processing"
-       submit_text = "Confirm Approval"
+       submit_text = "Kumpirmahin ang Pag-apruba"
      when "reject"
-       header_title = "Reject Document Request"
+       header_title = "Tanggihan ang Kahilingan sa Dokumento"
        target_status = "rejected"
-       submit_text = "Confirm Rejection"
+       submit_text = "Kumpirmahin ang Pagtanggi"
        submit_class = "w-full cursor-pointer rounded-lg bg-rose-700 px-4 py-3 text-sm font-semibold text-white hover:bg-rose-800"
      when "ready"
-       header_title = "Mark Document as Ready for Pickup"
+       header_title = "Markahan bilang Handa nang Kunin"
        target_status = "ready_to_pickup"
-       submit_text = "Mark Ready"
+       submit_text = "Markahan bilang Handa nang Kunin"
        submit_class = "w-full cursor-pointer rounded-lg bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
      when "release"
-       header_title = "Release Document (Mark as Claimed)"
+       header_title = "Markahan bilang Nakuha na"
        target_status = "claimed"
-       submit_text = "Mark as Claimed"
+       submit_text = "Markahan bilang Nakuha na"
      end %>
   <% show_action_panel = current_user.barangay_staff? && @intent.present? %>
 
@@ -53,18 +53,18 @@
         <header class="flex items-center gap-4">
           <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-xl text-[#07349e]" aria-hidden="true">▣</span>
           <div class="min-w-0">
-            <p class="text-[10px] font-bold uppercase tracking-wide text-[#07349e]">Document Request</p>
-            <h2 id="document-modal-title" class="text-xl font-semibold text-slate-900"><%= request.document_type.humanize %></h2>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#07349e]">Kahilingan sa Dokumento</p>
+            <h2 id="document-modal-title" class="text-xl font-semibold text-slate-900"><%= tagalog_label(request.document_type) %></h2>
           </div>
         </header>
 
         <section class="grid gap-3 rounded-xl bg-[#eff3ff] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
           <div class="flex flex-wrap items-center gap-2">
-            <span class="text-xs font-semibold text-slate-600">Katayuan (Status):</span>
-            <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase <%= status_style %>">● <%= request.status.humanize %></span>
+            <span class="text-xs font-semibold text-slate-600">Kalagayan:</span>
+            <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase <%= status_style %>">● <%= tagalog_status(request.status) %></span>
           </div>
           <div class="rounded-lg bg-white px-4 py-2 text-center sm:min-w-[270px]">
-            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Reference No.</p>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Numero ng Sanggunian</p>
             <div class="flex items-center justify-center gap-2">
               <span class="font-mono text-base font-bold tracking-wide text-[#07349e]"><%= request.tracking_number %></span>
               <button type="button" onclick="navigator.clipboard.writeText('<%= j request.tracking_number %>').then(() => { this.textContent = 'Nakopya'; })" class="text-[10px] font-semibold text-[#07349e] hover:underline">▢ Kopyahin</button>
@@ -72,13 +72,13 @@
           </div>
         </section>
 
-        <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-label="Request progress">
+        <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-label="Pag-usad ng kahilingan">
           <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
-            <h3 class="text-sm font-semibold text-slate-900">Proseso ng Kahilingan (Request Progress)</h3>
-            <span class="text-[10px] font-bold uppercase tracking-wide <%= request.ready_to_pickup? || request.claimed? ? 'text-emerald-700' : request.rejected? ? 'text-rose-700' : request.processing? ? 'text-[#07349e]' : 'text-orange-600' %>"><%= request.claimed? ? "3 of 3 steps completed" : "Step #{current_step} of 3 · #{request.status.humanize}" %></span>
+            <h3 class="text-sm font-semibold text-slate-900">Pag-usad ng Kahilingan</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wide <%= request.ready_to_pickup? || request.claimed? ? 'text-emerald-700' : request.rejected? ? 'text-rose-700' : request.processing? ? 'text-[#07349e]' : 'text-orange-600' %>"><%= request.claimed? ? "Tapos na ang 3 sa 3 hakbang" : "Hakbang #{current_step} sa 3 · #{tagalog_status(request.status)}" %></span>
           </div>
           <div class="relative grid grid-cols-3 gap-1 before:absolute before:left-[16%] before:right-[16%] before:top-4 before:h-1 before:bg-[#dce4ff]">
-            <% ["Submitted", "Processing", "Ready for Pickup"].each_with_index do |step_label, index| %>
+            <% ["Naipasa", "Pinoproseso", "Handa nang Kunin"].each_with_index do |step_label, index| %>
               <% step_number = index + 1 %>
               <% complete = step_number < current_step || request.ready_to_pickup? || request.claimed? %>
               <% active = step_number == current_step && !request.rejected? %>
@@ -88,7 +88,7 @@
                 <span class="mt-1 text-[11px] font-semibold text-slate-800"><%= step_label %></span>
                 <span class="text-[10px] text-slate-500"><%= ["Natanggap", "Pinoproseso", "Handa nang kunin"][index] %></span>
                 <% step_time = index.zero? ? request.created_at : (index == 1 ? processing_log&.created_at : (claimed_log&.created_at || ready_log&.created_at)) %>
-                <% if step_time.present? %><time class="text-[10px] font-semibold text-slate-600"><%= step_time.strftime("%b %d, %Y") %></time><% end %>
+                <% if step_time.present? %><time class="text-[10px] font-semibold text-slate-600"><%= tagalog_date(step_time) %></time><% end %>
               </div>
             <% end %>
           </div>
@@ -98,7 +98,7 @@
           <section class="rounded-xl <%= request.rejected? ? 'bg-rose-100' : 'bg-emerald-100/80' %> p-4" aria-label="Remarks from barangay">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h3 class="text-sm font-semibold text-slate-900">▱ Remarks from Barangay (Mga Tala mula sa Barangay)</h3>
-              <time class="rounded bg-white px-2 py-1 text-[10px] font-semibold text-emerald-800"><%= latest_remarks.created_at.strftime("%B %d, %Y • %I:%M %p") %></time>
+              <time class="rounded bg-white px-2 py-1 text-[10px] font-semibold text-emerald-800"><%= tagalog_datetime(latest_remarks.created_at) %></time>
             </div>
             <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-800"><%= latest_remarks.staff_remarks %></p>
           </section>
@@ -111,29 +111,29 @@
 
         <% if request.ready_to_pickup? %>
           <section class="rounded-xl bg-emerald-100 p-4">
-            <p class="text-sm font-semibold text-emerald-900">Claim your document at the Barangay Hall with a valid ID.</p>
+            <p class="text-sm font-semibold text-emerald-900">Kunin ang dokumento sa Barangay Hall at magdala ng balidong ID.</p>
             <p class="mt-1 text-xs text-emerald-800">Dalhin ang iyong valid ID kapag kukunin ang dokumento.</p>
           </section>
         <% end %>
 
         <section class="grid gap-3 sm:grid-cols-2">
           <div class="rounded-xl bg-[#eff3ff] p-4">
-            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Purpose of Request (Layunin)</p>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Layunin ng Kahilingan</p>
             <p class="mt-1 whitespace-pre-line text-sm font-semibold text-slate-900">“<%= request.purpose %>”</p>
           </div>
           <div class="rounded-xl bg-[#eff3ff] p-4">
             <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Petsa at Oras ng Pagsumite</p>
-            <p class="mt-1 text-sm font-semibold text-slate-900"><%= request.created_at.strftime("%B %d, %Y") %></p>
+            <p class="mt-1 text-sm font-semibold text-slate-900"><%= tagalog_date(request.created_at) %></p>
             <p class="text-xs text-slate-600"><%= request.created_at.in_time_zone.strftime("%I:%M %p %Z") %></p>
           </div>
         </section>
 
         <% if request.document_type == "certificate_of_residency" %>
-          <section class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Years of Residency</p><p class="mt-1 text-sm font-semibold"><%= request.years_of_residency %> years</p></section>
+          <section class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Tagal ng Paninirahan</p><p class="mt-1 text-sm font-semibold"><%= request.years_of_residency %> taon</p></section>
         <% elsif request.document_type == "certificate_of_income" %>
           <section class="grid gap-3 sm:grid-cols-2">
-            <div class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Occupation</p><p class="mt-1 text-sm font-semibold"><%= request.job %></p></div>
-            <div class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Average Monthly Income</p><p class="mt-1 text-sm font-semibold">₱<%= number_with_precision(request.monthly_income, precision: 2) %></p></div>
+            <div class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Hanapbuhay</p><p class="mt-1 text-sm font-semibold"><%= request.job %></p></div>
+            <div class="rounded-xl bg-[#eff3ff] p-4"><p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Karaniwang Kita Buwan-buwan</p><p class="mt-1 text-sm font-semibold">₱<%= number_with_precision(request.monthly_income, precision: 2) %></p></div>
           </section>
         <% end %>
 
@@ -147,11 +147,11 @@
         <% if request.valid_id_image.attached? %>
           <section>
             <div class="mb-2 flex flex-wrap justify-between gap-2">
-              <h3 class="text-sm font-semibold text-slate-900">▧ Attached Identification (Valid ID)</h3>
-              <span class="text-[10px] font-semibold text-slate-600"><%= request.valid_id_type.humanize %></span>
+              <h3 class="text-sm font-semibold text-slate-900">▧ Kalakip na Pagkakakilanlan (Balidong ID)</h3>
+              <span class="text-[10px] font-semibold text-slate-600"><%= tagalog_label(request.valid_id_type) %></span>
             </div>
             <%= link_to rails_blob_path(request.valid_id_image, disposition: "inline"), target: "_blank", rel: "noopener", class: "block overflow-hidden rounded-xl bg-slate-100" do %>
-              <%= image_tag request.valid_id_image, class: "max-h-[360px] w-full object-contain", alt: "Uploaded #{request.valid_id_type.humanize} for document request" %>
+              <%= image_tag request.valid_id_image, class: "max-h-[360px] w-full object-contain", alt: "In-upload na #{tagalog_label(request.valid_id_type)} para sa kahilingan sa dokumento" %>
             <% end %>
             <p class="rounded-b-lg bg-[#eff3ff] px-3 py-2 text-[10px] text-slate-600"><%= request.valid_id_image.filename %> · <%= number_to_human_size(request.valid_id_image.byte_size) %></p>
           </section>
@@ -161,10 +161,10 @@
           <section>
             <h3 class="mb-2 text-sm font-semibold text-slate-900">Resident Information</h3>
             <div class="grid gap-3 rounded-xl bg-[#eff3ff] p-4 text-xs text-slate-700 sm:grid-cols-2">
-              <p><strong>Resident:</strong> <%= request.resident.profile.first_name %> <%= request.resident.profile.last_name %></p>
+              <p><strong>Residente:</strong> <%= request.resident.profile.first_name %> <%= request.resident.profile.last_name %></p>
               <p><strong>Email:</strong> <%= request.resident.email %></p>
               <p><strong>Address:</strong> <%= [request.resident.address&.purok && "Purok #{request.resident.address.purok}", request.resident.address&.barangay, request.resident.address&.city].compact_blank.join(", ").presence || "Not provided" %></p>
-              <p><strong>Submitted:</strong> <%= request.created_at.strftime("%b %d, %Y at %I:%M %p") %></p>
+              <p><strong>Naipasa:</strong> <%= tagalog_datetime(request.created_at) %></p>
             </div>
           </section>
         <% end %>
@@ -184,7 +184,7 @@
       </div>
 
       <footer class="sticky bottom-0 flex justify-end bg-[#eff3ff] px-5 py-4 sm:px-8">
-        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-xl bg-red-700 px-8 py-3 text-sm font-semibold text-white shadow hover:bg-red-800">Close</button>
+        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-xl bg-red-700 px-8 py-3 text-sm font-semibold text-white shadow hover:bg-red-800">Isara</button>
       </footer>
     </section>
   </div>

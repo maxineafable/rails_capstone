@@ -6,11 +6,11 @@
     <!-- Welcome Header -->
     <header class="rounded-xl border border-slate-200 bg-white p-5">
       <span class="inline-block rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase text-blue-800">
-        Administrator Access
+        Pag-access ng Tagapangasiwa
       </span>
 
       <h1 class="mt-2 text-2xl font-bold text-slate-900">
-        Welcome, <span class="text-blue-800">Administrator</span>
+        Maligayang pagdating, <span class="text-blue-800">Tagapangasiwa</span>
       </h1>
 
       <p class="mt-1 text-sm text-slate-500">
@@ -22,56 +22,56 @@
     <section class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
       
       <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-xs font-semibold uppercase text-slate-500">Pending Requests</p>
+        <p class="text-xs font-semibold uppercase text-slate-500">Mga Kahilingang Naghihintay</p>
         <div class="mt-4 flex items-end justify-between">
           <p class="text-3xl font-bold text-slate-900"><%= @pending_docs_count %></p>
           <span class="rounded-lg bg-amber-50 px-3 py-2 text-amber-700">Docs</span>
         </div>
         <p class="mt-3 border-t border-slate-100 pt-2 text-xs text-amber-700">
-          Awaiting review
+          Naghihintay
         </p>
       </div>
 
       <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-xs font-semibold uppercase text-slate-500">Active Concerns</p>
+        <p class="text-xs font-semibold uppercase text-slate-500">Mga Aktibong Suliranin</p>
         <div class="mt-4 flex items-end justify-between">
           <p class="text-3xl font-bold text-slate-900"><%= @ongoing_concerns_count %></p>
-          <span class="rounded-lg bg-rose-50 px-3 py-2 text-rose-700">Cases</span>
+          <span class="rounded-lg bg-rose-50 px-3 py-2 text-rose-700">Mga Kaso</span>
         </div>
         <p class="mt-3 border-t border-slate-100 pt-2 text-xs text-blue-700">
-          Currently in progress
+          Kasalukuyang inaaksyunan
         </p>
       </div>
 
       <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-xs font-semibold uppercase text-slate-500">Requests Done This Week</p>
+        <p class="text-xs font-semibold uppercase text-slate-500">Mga Natapos na Kahilingan Ngayong Linggo</p>
         <div class="mt-4 flex items-end justify-between">
           <p class="text-3xl font-bold text-emerald-700"><%= @docs_done_this_week %></p>
           <span class="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">Done</span>
         </div>
         <p class="mt-3 border-t border-slate-100 pt-2 text-xs text-emerald-700">
-          Ready for pickup
+          Handa nang kunin
         </p>
       </div>
 
       <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-xs font-semibold uppercase text-slate-500">Concerns Resolved This Week</p>
+        <p class="text-xs font-semibold uppercase text-slate-500">Mga Nalutas na Suliranin Ngayong Linggo</p>
         <div class="mt-4 flex items-end justify-between">
           <p class="text-3xl font-bold text-emerald-700"><%= @concerns_resolved_this_week %></p>
-          <span class="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">Closed</span>
+          <span class="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">Sarado</span>
         </div>
         <p class="mt-3 border-t border-slate-100 pt-2 text-xs text-emerald-700">
-          Resolved cases
+          Mga nalutas na kaso
         </p>
       </div>
 
       <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-xs font-semibold uppercase text-slate-500">Total Residents</p>
+        <p class="text-xs font-semibold uppercase text-slate-500">Kabuuang Residente</p>
         <p class="mt-4 text-3xl font-bold text-slate-900">
           <%= number_with_delimiter(@total_residents_count) %>
         </p>
         <p class="mt-3 border-t border-slate-100 pt-2 text-xs text-blue-800">
-          Registered residents
+          Mga rehistradong residente
         </p>
       </div>
 
@@ -82,7 +82,7 @@
       <div class="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 class="font-semibold text-slate-900">
-            Requests & Reports Activity (Past 7 Days)
+            Aktibidad ng mga Kahilingan at Ulat (Nakaraang 7 Araw)
           </h2>
           <p class="mt-1 text-sm text-slate-500">
             Ulat at Kahilingan sa Nakaraang 7 Araw
@@ -92,12 +92,12 @@
         <div class="flex flex-wrap gap-4 text-xs text-slate-600">
           <span class="flex items-center gap-2">
             <span class="h-3 w-3 rounded-sm bg-blue-800"></span>
-            Document Requests
+            Mga Kahilingan sa Dokumento
           </span>
 
           <span class="flex items-center gap-2">
             <span class="h-1 w-4 rounded bg-emerald-700"></span>
-            Concern Reports
+            Mga Ulat ng Suliranin
           </span>
         </div>
       </div>
@@ -105,18 +105,18 @@
       <!-- Hardcoded sample summary -->
       <div class="mt-4 grid grid-cols-1 gap-3 rounded-lg bg-blue-50 p-4 text-center sm:grid-cols-3">
         <div>
-          <p class="text-xs font-semibold uppercase text-slate-500">7-Day Requests Total</p>
+          <p class="text-xs font-semibold uppercase text-slate-500">Kabuuang Kahilingan sa loob ng 7 Araw</p>
           <p class="mt-1 text-lg font-bold text-blue-800">224</p>
         </div>
 
         <div>
-          <p class="text-xs font-semibold uppercase text-slate-500">7-Day Concerns Total</p>
+          <p class="text-xs font-semibold uppercase text-slate-500">Kabuuang Ulat sa loob ng 7 Araw</p>
           <p class="mt-1 text-lg font-bold text-emerald-700">59</p>
         </div>
 
         <div>
-          <p class="text-xs font-semibold uppercase text-slate-500">Busiest Day</p>
-          <p class="mt-1 font-semibold text-slate-900">Monday</p>
+          <p class="text-xs font-semibold uppercase text-slate-500">Pinakaabalang Araw</p>
+          <p class="mt-1 font-semibold text-slate-900">Lunes</p>
         </div>
       </div>
 
@@ -141,7 +141,7 @@
             <text x="40" y="179">0</text>
           </g>
 
-          <!-- Request bars -->
+          <!-- Kahilingan bars -->
           <g fill="#2445b8">
             <rect x="75" y="105" width="28" height="70" rx="4" />
             <rect x="165" y="133" width="28" height="42" rx="4" />
@@ -152,7 +152,7 @@
             <rect x="615" y="70" width="28" height="105" rx="4" />
           </g>
 
-          <!-- Request values -->
+          <!-- Kahilingan values -->
           <g fill="#1d4ed8" font-size="11" font-weight="600" text-anchor="middle">
             <text x="89" y="98">28</text>
             <text x="179" y="126">16</text>
@@ -202,7 +202,7 @@
 
       <div class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 class="font-semibold text-slate-900">Recent Activity</h2>
+          <h2 class="font-semibold text-slate-900">Mga Kamakailang Gawain</h2>
           <p class="mt-1 text-sm text-slate-500">
             Kamakailang Aktibidad sa Barangay Portal
           </p>
@@ -213,19 +213,19 @@
           <%= link_to admin_dashboard_path(filter: "all"),
               data: { turbo: true, preserve_scroll: true },
               class: "rounded-md px-3 py-2 font-semibold transition #{active_filter == 'all' ? 'bg-blue-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}" do %>
-            All Activity (<%= @document_requests.size + @barangay_concerns.size %>)
+            Lahat ng Gawain (<%= @document_requests.size + @barangay_concerns.size %>)
           <% end %>
 
           <%= link_to admin_dashboard_path(filter: "documents"),
               data: { turbo: true, preserve_scroll: true },
               class: "rounded-md px-3 py-2 font-semibold transition #{active_filter == 'documents' ? 'bg-blue-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}" do %>
-            Document Requests (<%= @document_requests.size %>)
+            Mga Kahilingan sa Dokumento (<%= @document_requests.size %>)
           <% end %>
 
           <%= link_to admin_dashboard_path(filter: "concerns"),
               data: { turbo: true, preserve_scroll: true },
               class: "rounded-md px-3 py-2 font-semibold transition #{active_filter == 'concerns' ? 'bg-blue-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}" do %>
-            Concern Reports (<%= @barangay_concerns.size %>)
+            Mga Ulat ng Suliranin (<%= @barangay_concerns.size %>)
           <% end %>
         </div>
 
@@ -237,13 +237,13 @@
           <table class="w-full min-w-[850px] text-left text-sm">
             <thead class="bg-blue-50 text-xs uppercase text-slate-600">
               <tr>
-                <th class="px-4 py-3">Docket No.</th>
-                <th class="px-4 py-3">Type / Transaction</th>
-                <th class="px-4 py-3">Resident Name</th>
-                <th class="px-4 py-3">Purok / Location</th>
-                <th class="px-4 py-3">Date & Time</th>
-                <th class="px-4 py-3">Status</th>
-                <th class="px-4 py-3">Action</th>
+                <th class="px-4 py-3">Numero ng Talaan</th>
+                <th class="px-4 py-3">Uri / Transaksyon</th>
+                <th class="px-4 py-3">Pangalan ng Residente</th>
+                <th class="px-4 py-3">Purok / Lokasyon</th>
+                <th class="px-4 py-3">Petsa at Oras</th>
+                <th class="px-4 py-3">Kalagayan</th>
+                <th class="px-4 py-3">Aksyon</th>
               </tr>
             </thead>
 
@@ -258,11 +258,11 @@
 
                   <td class="px-4 py-4">
                     <p class="font-semibold text-slate-800">
-                      <%= is_document ? activity.document_type.humanize : activity.category.humanize %>
+                      <%= tagalog_label(is_document ? activity.document_type : activity.category) %>
                     </p>
 
                     <p class="mt-1 text-xs text-slate-500">
-                      <%= is_document ? "Document Request" : "Concern Report" %>
+                      <%= is_document ? "Kahilingan sa Dokumento" : "Ulat ng Suliranin" %>
                     </p>
                   </td>
 
@@ -284,26 +284,15 @@
                   </td>
 
                   <td class="px-4 py-4">
-                    <% status_color = case activity.status
-                      when "pending"
-                        "bg-amber-100 text-amber-800"
-                      when "ongoing", "processing"
-                        "bg-blue-100 text-blue-800"
-                      when "ready_to_pickup", "resolved"
-                        "bg-emerald-100 text-emerald-800"
-                      when "rejected", "unactionable"
-                        "bg-rose-100 text-rose-800"
-                      else
-                        "bg-slate-100 text-slate-700"
-                      end %>
+                    <% status_color = tagalog_status_class(activity.status) %>
 
                     <span class="inline-block rounded-full px-3 py-1 text-xs font-semibold <%= status_color %>">
-                      <%= activity.status.humanize %>
+                      <%= tagalog_status(activity.status) %>
                     </span>
                   </td>
 
                   <td class="px-4 py-4">
-                    <%= link_to "View",
+                    <%= link_to "Tingnan",
                         is_document ? document_request_path(activity) : barangay_concern_path(activity),
                         class: "font-semibold text-blue-800 hover:underline" %>
                   </td>
@@ -314,7 +303,7 @@
         </div>
       <% else %>
         <p class="p-6 text-sm text-slate-500">
-          No recent activity has been recorded.
+          Wala pang naitatalang gawain.
         </p>
       <% end %>
 
@@ -323,9 +312,9 @@
       <div class="flex flex-col gap-3 border-t border-slate-200 bg-slate-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
 
         <p class="text-sm text-slate-500">
-          Showing
+          Ipinapakita ang
           <%= @pagy.from || 0 %>–<%= @pagy.to || 0 %>
-          of <%= @pagy.count %> activities
+          sa kabuuang <%= @pagy.count %> gawain
         </p>
 
         <div>

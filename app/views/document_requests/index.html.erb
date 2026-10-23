@@ -6,39 +6,39 @@
       <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#07349e] via-[#2457c5] to-emerald-700" aria-hidden="true"></div>
       <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
         <div>
-          <h1 id="requests-title" class="text-[23px] font-bold leading-tight tracking-[-0.04em] text-slate-900 sm:text-[27px] lg:text-[30px]">Submitted Document Requests</h1>
-          <p class="mt-1 text-[10px] font-semibold text-emerald-700 lg:text-[13px]">Talaan ng mga Naipadalang Kahilingan sa Dokumento</p>
-          <p class="mt-2 max-w-[760px] text-xs leading-relaxed text-slate-600 lg:text-[15px]">Track the status of every document you’ve requested from the barangay. / Subaybayan ang katayuan ng bawat dokumentong inyong hiniling.</p>
+          <h1 id="requests-title" class="text-[23px] font-bold leading-tight tracking-[-0.04em] text-slate-900 sm:text-[27px] lg:text-[30px]">Mga Kahilingan sa Dokumento</h1>
+          <p class="mt-1 text-[10px] font-semibold text-emerald-700 lg:text-[13px]">Talaan ng mga Kahilingan sa Dokumento</p>
+          <p class="mt-2 max-w-[760px] text-xs leading-relaxed text-slate-600 lg:text-[15px]">Subaybayan ang katayuan ng bawat dokumentong inyong hiniling.</p>
         </div>
         <%= link_to select_document_type_path, class: "inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-md bg-emerald-700 px-5 py-3 text-xs font-semibold text-white no-underline shadow-sm transition hover:bg-emerald-800 sm:self-center lg:px-7 lg:py-4 lg:text-[14px]" do %>
-          Request a Document <span aria-hidden="true">→</span>
+          Humiling ng Dokumento <span aria-hidden="true">→</span>
         <% end %>
       </div>
     </section>
 
     <section class="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4" aria-label="Document request summary">
       <div class="flex min-h-[92px] items-center justify-between gap-2 rounded-xl bg-white p-4 shadow-sm sm:px-5 lg:min-h-[132px] lg:px-6">
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Total Requests (Kabuuan)</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @total_requests %></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Kabuuang Kahilingan</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @total_requests %></p></div>
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#dce7ff] lg:h-12 lg:w-12"><%= image_tag "documents.svg", alt: "", class: "h-5 w-5 lg:h-6 lg:w-6" %></span>
       </div>
       <div class="flex min-h-[92px] items-center justify-between gap-2 rounded-xl bg-white p-4 shadow-sm sm:px-5 lg:min-h-[132px] lg:px-6">
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Pending Review (Naka-pending)</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @pending_requests %></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Naghihintay</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @pending_requests %></p></div>
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#ffdec2] lg:h-12 lg:w-12"><%= image_tag "pending.svg", alt: "", class: "h-5 w-5 lg:h-6 lg:w-6" %></span>
       </div>
       <div class="flex min-h-[92px] items-center justify-between gap-2 rounded-xl bg-white p-4 shadow-sm sm:px-5 lg:min-h-[132px] lg:px-6">
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">In Progress (Kasalukuyang Ginagawa)</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @processing_requests %></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Pinoproseso</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @processing_requests %></p></div>
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 lg:h-12 lg:w-12"><%= image_tag "Icon.svg", alt: "", class: "h-5 w-5 lg:h-6 lg:w-6" %></span>
       </div>
       <div class="flex min-h-[92px] items-center justify-between gap-2 rounded-xl bg-white p-4 shadow-sm sm:px-5 lg:min-h-[132px] lg:px-6">
-        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Ready for Pickup (Handa na)</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @ready_requests %></p></div>
+        <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600 lg:text-[11px]">Handa nang Kunin</p><p class="mt-1 text-[26px] font-bold leading-tight text-slate-900 lg:text-[34px]"><%= @ready_requests %></p></div>
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-200 text-xl font-bold text-emerald-800 lg:h-12 lg:w-12" aria-hidden="true">✓</span>
       </div>
     </section>
 
     <% active_filter = params[:filter].presence_in(%w[all pending processing ready_to_pickup claimed rejected]) || "all" %>
-    <section class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-2 py-2 shadow-sm sm:px-3" aria-label="Request status filters">
+    <section class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-2 py-2 shadow-sm sm:px-3" aria-label="Kahilingan status filters">
       <nav class="flex flex-wrap items-center gap-1 text-[9px] font-semibold text-slate-700 lg:gap-2 lg:text-[13px]" aria-label="Filter document requests">
-        <% filters = [["all", "All Requests (Lahat ng Kahilingan)", @total_requests], ["pending", "Pending Review", @pending_requests], ["processing", "In Progress", @processing_requests], ["ready_to_pickup", "Ready for Pickup", @ready_requests]] %>
+        <% filters = [["all", "Lahat ng Kahilingan", @total_requests], ["pending", "Naghihintay", @pending_requests], ["processing", "Pinoproseso", @processing_requests], ["ready_to_pickup", "Handa nang Kunin", @ready_requests]] %>
         <% filters.each do |filter_key, label, count| %>
           <%= link_to document_requests_path(filter: filter_key), class: "rounded-lg px-3 py-2 no-underline transition #{active_filter == filter_key ? 'bg-[#dce7ff] text-[#07349e]' : 'text-slate-700 hover:bg-slate-50'}" do %>
             <%= label %> <span class="ml-1 rounded-full bg-white px-1.5 py-0.5"><%= count %></span>
@@ -49,19 +49,21 @@
     </section>
 
     <% if @document_requests.any? %>
-      <section class="space-y-3" aria-label="Submitted document requests">
+      <section class="space-y-3" aria-label="Mga naipasa na kahilingan sa dokumento">
         <% @document_requests.each do |request| %>
           <% accent_style, status_style, status_label, note = if request.pending?
-            ["border-amber-900", "bg-[#ffdec2] text-amber-950", "Pending Review (Naka-pending)", "Waiting for review by barangay staff"]
+            ["border-amber-900", "bg-[#ffdec2] text-amber-950", "Naghihintay ng Pagsusuri", "Naghihintay ng pagsusuri ng kawani ng barangay"]
           elsif request.processing?
-            ["border-[#07349e]", "bg-[#dce4ff] text-[#17379f]", "In Progress (Kasalukuyang Ginagawa)", "Your document is being prepared"]
+            ["border-[#07349e]", "bg-[#dce4ff] text-[#17379f]", "Pinoproseso", "Inihahanda ang inyong dokumento"]
           elsif request.ready_to_pickup?
-            ["border-emerald-700", "bg-emerald-200 text-emerald-900", "Ready for Pickup (Handa nang Kunin)", "Claim at the Barangay Hall with a valid ID"]
+            ["border-emerald-700", "bg-emerald-200 text-emerald-900", "Handa nang Kunin", "Kunin sa Barangay Hall at magdala ng balidong ID"]
           elsif request.claimed?
-            ["border-emerald-700", "bg-emerald-200 text-emerald-900", "Claimed (Nakuha na)", "This document has been claimed"]
+            ["border-emerald-700", "bg-emerald-200 text-emerald-900", "Nakuha na", "Nakuha na ang dokumentong ito"]
           else
-            ["border-rose-700", "bg-rose-100 text-rose-900", "Rejected (Hindi Naaprubahan)", "Please view details for the staff’s remarks"]
+            ["border-rose-700", "bg-rose-100 text-rose-900", "Tinanggihan", "Tingnan ang detalye para sa tala ng kawani’s remarks"]
           end %>
+          <% status_style = tagalog_status_class(request.status) %>
+          <% status_label = tagalog_status(request.status) %>
 
           <article class="overflow-hidden rounded-xl border-l-4 <%= accent_style %> bg-white shadow-sm lg:border-l-[6px]">
             <div class="flex flex-col gap-3 px-4 py-4 sm:px-5 lg:px-7 lg:py-5">
@@ -70,11 +72,11 @@
                   <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg <%= request.ready_to_pickup? || request.claimed? ? 'bg-emerald-100 text-emerald-800' : request.processing? ? 'bg-indigo-100 text-indigo-800' : 'bg-[#ffeadb] text-amber-900' %>" aria-hidden="true"><%= image_tag request.ready_to_pickup? || request.claimed? ? "resolved.svg" : request.processing? ? "Icon.svg" : "documents.svg", alt: "", class: "h-5 w-5" %></span>
                   <div class="min-w-0">
                     <h2 class="text-sm font-semibold text-slate-900 lg:text-[18px]"><%= request.document_type.humanize %></h2>
-                    <p class="text-[9px] text-slate-700 lg:text-[13px]">◷ <%= request.created_at.strftime("%B %d, %Y • %I:%M %p") %></p>
+                    <p class="text-[9px] text-slate-700 lg:text-[13px]">◷ <%= tagalog_datetime(request.created_at) %></p>
                   </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 sm:justify-end">
-                  <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600">Reference No.</p><p class="rounded-md bg-[#eff3ff] px-2 py-1 font-mono text-[10px] font-semibold tracking-wide text-slate-800 lg:text-[13px]"><%= request.tracking_number %></p></div>
+                  <div><p class="text-[8px] font-bold uppercase tracking-wide text-slate-600">Numero ng Sanggunian</p><p class="rounded-md bg-[#eff3ff] px-2 py-1 font-mono text-[10px] font-semibold tracking-wide text-slate-800 lg:text-[13px]"><%= request.tracking_number %></p></div>
                   <span class="rounded-full px-3 py-1.5 text-[8px] font-semibold <%= status_style %> lg:text-[11px]">● <%= status_label %></span>
                 </div>
               </div>
@@ -82,7 +84,7 @@
             </div>
             <div class="flex flex-col justify-between gap-2 bg-[#f7f9ff] px-4 py-2.5 text-[9px] sm:flex-row sm:items-center sm:px-5 lg:px-7 lg:text-[12px]">
               <span class="font-medium <%= request.ready_to_pickup? ? 'text-emerald-700' : 'text-slate-600' %>"><%= request.ready_to_pickup? ? "▦ #{note}" : "ⓘ #{note}" %></span>
-              <%= link_to "View Details (Tingnan ang Detalye) →", document_request_path(request), data: { turbo_frame: "remote_modal" }, class: "font-semibold text-[#07349e] no-underline hover:underline" %>
+              <%= link_to "Tingnan ang Detalye →", document_request_path(request), data: { turbo_frame: "remote_modal" }, class: "font-semibold text-[#07349e] no-underline hover:underline" %>
             </div>
           </article>
         <% end %>
@@ -90,8 +92,8 @@
     <% else %>
       <section class="rounded-xl bg-white px-5 py-10 text-center shadow-sm sm:px-8 lg:py-14">
         <p class="text-sm font-semibold text-slate-800 lg:text-[20px]">You haven’t submitted any document requests yet.</p>
-        <p class="mt-2 text-xs text-slate-600 lg:text-[16px]">Choose Request a Document above to get started.</p>
-        <%= link_to "Request a Document →", select_document_type_path, class: "mt-4 inline-flex rounded-md bg-emerald-700 px-5 py-3 text-xs font-semibold text-white no-underline hover:bg-emerald-800" %>
+        <p class="mt-2 text-xs text-slate-600 lg:text-[16px]">Pindutin ang “Humiling ng Dokumento” sa itaas upang magsimula.</p>
+        <%= link_to "Humiling ng Dokumento →", select_document_type_path, class: "mt-4 inline-flex rounded-md bg-emerald-700 px-5 py-3 text-xs font-semibold text-white no-underline hover:bg-emerald-800" %>
       </section>
     <% end %>
   </main>

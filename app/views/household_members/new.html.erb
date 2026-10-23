@@ -9,7 +9,7 @@
       <div class="sticky top-0 z-10 flex items-center justify-between border-b bg-gray-50 p-5">
         <div>
           <h2 class="text-xl font-bold text-gray-800">
-            Add New Household Member
+            Magdagdag ng Sambahayan Member
           </h2>
           <p class="mt-0.5 text-xs text-gray-500 font-medium">
             Household #<%= @household.house_number %> · <%= @household.street %> · Purok <%= @household.purok %>
@@ -30,7 +30,7 @@
 
           <% if @household_member.errors.any? %>
             <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-              <h4 class="font-semibold">Please fix the following errors:</h4>
+              <h4 class="font-semibold">Pak ayusin ang mga sumusunod na error:</h4>
               <ul class="mt-2 list-disc pl-5">
                 <% @household_member.errors.full_messages.each do |msg| %>
                   <li><%= msg %></li>
@@ -42,22 +42,22 @@
           <!-- PERSONAL DATA GROUP -->
           <div class="space-y-4">
             <h3 class="text-md font-semibold text-gray-800 border-b pb-2">
-              Personal Information
+              Personal na Impormasyon
             </h3>
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <%= f.label :first_name, "First Name *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :first_name, "Pangalan *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.text_field :first_name, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
 
               <div>
-                <%= f.label :middle_name, "Middle Name", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :middle_name, "Gitnang Pangalan", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.text_field :middle_name, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
 
               <div>
-                <%= f.label :last_name, "Last Name *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :last_name, "Apelyido *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.text_field :last_name, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
 
@@ -68,7 +68,7 @@
             </div>
           </div>
 
-          <!-- RESIDENT ACCOUNT DETAILS LAYOUT MATRIX -->
+          <!-- ACCOUNT NG RESIDENTE DETAILS LAYOUT MATRIX -->
           <div class="mt-8 space-y-4">
             <h3 class="text-md font-semibold text-gray-800 border-b pb-2">
               Resident Details
@@ -76,37 +76,37 @@
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <%= f.label :birth_date, "Birth Date *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :birth_date, "Petsa ng Kapanganakan *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.date_field :birth_date, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
 
               <div>
-                <%= f.label :birth_place, "Birth Place *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :birth_place, "Lugar ng Kapanganakan *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.text_field :birth_place, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
 
               <div>
-                <%= f.label :sex, "Sex *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.select :sex, HouseholdMember.sexes.keys.map { |s| [s.humanize, s] }, { include_blank: "Select" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
+                <%= f.label :sex, "Kasarian *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.select :sex, HouseholdMember.sexes.keys.map { |s| [tagalog_label(s), s] }, { include_blank: "Pumili" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
               </div>
 
               <div>
-                <%= f.label :civil_status, "Civil Status *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.select :civil_status, HouseholdMember.civil_statuses.keys.map { |c| [c.humanize, c] }, { include_blank: "Select" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
+                <%= f.label :civil_status, "Katayuang Sibil *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.select :civil_status, HouseholdMember.civil_statuses.keys.map { |c| [tagalog_label(c), c] }, { include_blank: "Pumili" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
               </div>
 
               <div>
-                <%= f.label :citizenship, "Citizenship", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :citizenship, "Pagkamamamayan", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.text_field :citizenship, value: f.object.citizenship || "Filipino", class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
 
               <div>
-                <%= f.label :occupation, "Occupation", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :occupation, "Hanapbuhay", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.text_field :occupation, placeholder: "Driver, Teacher, None", class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
 
               <div class="sm:col-span-2">
-                <%= f.label :relationship_to_head, "Relationship To Head", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
+                <%= f.label :relationship_to_head, "Ugnayan sa Pinuno", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
                 <%= f.text_field :relationship_to_head, placeholder: "Child, Grandchild, Spouse", class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
               </div>
             </div>
@@ -114,11 +114,11 @@
 
           <!-- BOTTOM STICKY BUTTON BAR ACTION LAYOUT -->
           <div class="mt-8 flex items-center justify-end gap-3 border-t pt-4">
-            <%= link_to "Cancel", admin_residents_path,
+            <%= link_to "Kanselahin", admin_residents_path,
                         class: "rounded-lg border bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition",
                         data: { action: "click->remote-modal#close" } %>
 
-            <%= f.submit "Save Member",
+            <%= f.submit "I-save ang Kasapi",
                          class: "cursor-pointer rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition" %>
           </div>
 

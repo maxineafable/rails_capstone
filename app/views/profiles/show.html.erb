@@ -16,7 +16,7 @@
 
       <div class="min-w-0">
         <p class="mb-1 text-[15px] font-medium uppercase tracking-[0.04em] text-slate-400 lg:mb-2 lg:text-[24px]">
-          Profile
+          Impormasyon
         </p>
 
         <h1 class="break-words text-[20px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[22px] lg:text-[30px]">
@@ -26,12 +26,12 @@
       </div>
     </section>
 
-    <!-- Personal Details -->
+    <!-- Personal na Impormasyon -->
     <section class="rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6 lg:px-8 lg:py-8" aria-labelledby="personal-details-title">
       <div class="mb-4 flex items-center justify-between gap-3 lg:mb-6">
         <div>
           <h2 id="personal-details-title" class="text-[15px] font-semibold lg:text-[20px]">
-            Personal Details
+            Personal na Impormasyon
           </h2>
 
           <p class="mt-0.5 text-[10px] text-slate-600 lg:mt-1 lg:text-[13px]">
@@ -43,7 +43,7 @@
           <svg class="h-3 w-3 lg:h-4 lg:w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="m14 5 5 5M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16z"/>
           </svg>
-          Edit / Baguhin
+          Baguhin
         <% end %>
       </div>
 
@@ -60,7 +60,7 @@
 
           <div class="min-w-0">
             <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600 lg:text-[13px]">
-              Permanent Address / Tirahan
+              Tirahan
             </p>
 
             <p class="mt-0.5 break-words text-[11px] font-medium lg:mt-1 lg:text-[15px]">
@@ -80,7 +80,7 @@
 
           <div class="min-w-0">
             <p class="text-[9px] font-semibold uppercase tracking-wide text-slate-600 lg:text-[13px]">
-              Email Address / Koreo Elektroniko
+              Email
             </p>
 
             <p class="mt-0.5 break-all text-[11px] font-medium lg:mt-1 lg:text-[15px]">
@@ -106,32 +106,32 @@
 
           <div>
             <h2 id="security-title" class="text-[12px] font-semibold lg:text-[20px]">
-              Security / Seguridad
+              Seguridad
             </h2>
 
             <p class="text-[9px] text-slate-600 lg:text-[13px]">
-              Account Protection
+              Proteksyon ng Account
             </p>
           </div>
         </div>
 
         <div class="rounded-md bg-[#eff3ff] p-2.5 lg:p-4">
           <h3 class="text-[10px] font-semibold lg:text-[15px]">
-            Change Password / Palitan ang Password
+            Palitan ang Password
           </h3>
 
           <p class="mt-1 text-[10px] leading-relaxed text-slate-600 lg:mt-2 lg:text-[13px]">
-            Keep your civic portal account safe by using a strong, unique password.
+            Panatilihing ligtas ang inyong account sa pamamagitan ng matibay at natatanging password.
           </p>
         </div>
 
         <%= link_to edit_user_registration_path, class: "mt-4 flex items-center justify-between rounded-md bg-[#dfe8ff] px-2.5 py-2 text-[10px] font-semibold text-[#07349e] no-underline hover:bg-[#d3dfff] lg:mt-5 lg:px-4 lg:py-3 lg:text-[13px]" do %>
-          <span>⚿ Update Password</span>
+          <span>⚿ Palitan ang Password</span>
           <span aria-hidden="true">›</span>
         <% end %>
       </section>
 
-      <!-- Resident Account -->
+      <!-- Account ng Residente -->
       <section class="rounded-xl bg-white p-5 shadow-sm lg:p-8" aria-labelledby="account-title">
         <div class="mb-3 flex items-center gap-2 lg:mb-5 lg:gap-3">
           <span class="flex h-7 w-7 items-center justify-center rounded-md bg-[#d8ffef] text-[12px] text-emerald-700 lg:h-10 lg:w-10 lg:text-[16px]" aria-hidden="true">
@@ -140,7 +140,7 @@
 
           <div>
             <h2 id="account-title" class="text-[12px] font-semibold lg:text-[20px]">
-              Resident Account
+              Account ng Residente
             </h2>
 
             <p class="text-[9px] text-slate-600 lg:text-[13px]">
@@ -150,11 +150,11 @@
         </div>
 
         <p class="text-[10px] font-semibold lg:text-[15px]">
-          Profile Completion
+          Impormasyon Completion
         </p>
 
         <p class="mt-1 text-[10px] leading-relaxed text-slate-600 lg:mt-2 lg:text-[13px]">
-          Keep your resident details up to date to help the barangay process your requests.
+          Panatilihing bago ang inyong impormasyon upang mapadali ang pagproseso ng mga kahilingan sa barangay.
         </p>
       </section>
 
@@ -164,7 +164,7 @@
     <div class="flex justify-end pb-2 pt-0.5">
       <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "inline-flex items-center gap-1.5 rounded-md bg-red-700 px-4 py-2.5 text-[10px] font-semibold text-white no-underline hover:bg-red-800 lg:px-6 lg:py-3.5 lg:text-[13px]" do %>
         <span aria-hidden="true">⇥</span>
-        Log Out / Mag-logout
+        Mag-log out
       <% end %>
     </div>
 

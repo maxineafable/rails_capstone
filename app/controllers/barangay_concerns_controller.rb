@@ -50,7 +50,17 @@ class BarangayConcernsController < ApplicationController
   end
 
   def create
-    @barangay_concern = current_user.barangay_concerns.build(barangay_concern_params)
+    attributes = barangay_concern_params
+    gallery_image = attributes.delete(:evidence_image)
+    camera_image = attributes.delete(:evidence_camera)
+    uploaded_image = gallery_image
+    if !uploaded_image.respond_to?(:tempfile) || uploaded_image.original_filename.blank?
+      uploaded_image = camera_image
+    end
+    @barangay_concern = current_user.barangay_concerns.build(attributes)
+    if uploaded_image.respond_to?(:tempfile) && uploaded_image.original_filename.present?
+      @barangay_concern.evidence_image.attach(uploaded_image)
+    end
     @barangay_concern.status = :pending
 
     if @barangay_concern.save
@@ -72,7 +82,7 @@ class BarangayConcernsController < ApplicationController
 
   private
     def barangay_concern_params
-      params.require(:barangay_concern).permit(:category, :reason, :resident_remarks, :evidence_image, :location_description, :latitude, :longitude)
+      params.require(:barangay_concern).permit(:category, :reason, :resident_remarks, :evidence_image, :evidence_camera, :location_description, :latitude, :longitude)
     end
 
     def admin_barangay_concern_params

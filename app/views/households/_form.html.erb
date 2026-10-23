@@ -2,10 +2,10 @@
   <header class="flex shrink-0 items-start justify-between gap-5 border-b border-slate-100 bg-white px-5 py-5 sm:px-8 lg:px-10">
     <div>
       <p class="text-[10px] font-bold uppercase tracking-[0.08em] text-[#07349e] lg:text-[11px]">Talaan ng Populasyon at Sambahayan (RBI Form A) <span class="mx-1 text-slate-300">•</span> <span class="normal-case tracking-normal text-slate-600">Barangay Kalikid Sur</span></p>
-      <h1 class="mt-2 text-[25px] font-bold leading-tight tracking-[-0.04em] text-slate-900 sm:text-[28px]">Add New Household</h1>
-      <p class="mt-1 text-xs text-slate-500">Create a household record and register its household head.</p>
+      <h1 class="mt-2 text-[25px] font-bold leading-tight tracking-[-0.04em] text-slate-900 sm:text-[28px]">Magdagdag ng Sambahayan</h1>
+      <p class="mt-1 text-xs text-slate-500">Gumawa ng talaan ng sambahayan at ilagay ang pinuno nito.</p>
     </div>
-    <button type="button" onclick="const drawer = this.closest('[data-household-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="shrink-0 rounded-lg p-2 text-2xl leading-none text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="Close Add Household form">×</button>
+    <button type="button" onclick="const drawer = this.closest('[data-household-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="shrink-0 rounded-lg p-2 text-2xl leading-none text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="Isara ang pormularyo ng pagdaragdag ng sambahayan">×</button>
   </header>
 
   <%= f.hidden_field :date_accomplished, value: household.date_accomplished || Date.current %>
@@ -13,7 +13,7 @@
   <div class="min-h-0 flex-1 space-y-4 overflow-y-auto bg-white px-5 py-4 sm:px-8 lg:px-10">
     <% if household.errors.any? %>
       <section class="rounded-lg border border-red-200 bg-red-50 p-4 text-xs text-red-800" role="alert">
-        <h2 class="font-semibold">Please review the following:</h2>
+        <h2 class="font-semibold">Pakisuri ang sumusunod:</h2>
         <ul class="mt-1 list-inside list-disc"><% household.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
       </section>
     <% end %>
@@ -21,8 +21,8 @@
     <section class="flex gap-3 rounded-xl bg-[#eff3ff] p-4 sm:p-5">
       <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#2445b8] text-lg text-white" aria-hidden="true">♙</span>
       <div>
-        <h2 class="text-xs font-bold text-[#07349e] lg:text-[14px]">Creating a new household — this person will be the Household Head</h2>
-        <span class="mt-1 inline-flex rounded-full bg-[#17379f] px-2.5 py-1 text-[8px] font-bold uppercase tracking-wide text-white">Auto-assigned Head</span>
+        <h2 class="text-xs font-bold text-[#07349e] lg:text-[14px]">Gumagawa ng bagong sambahayan — ang taong ito ang magiging pinuno nito</h2>
+        <span class="mt-1 inline-flex rounded-full bg-[#17379f] px-2.5 py-1 text-[8px] font-bold uppercase tracking-wide text-white">Awtomatikong Itinalagang Pinuno</span>
         <p class="mt-1 max-w-2xl text-[11px] leading-relaxed text-slate-600 lg:text-[13px]">Bilang unang miyembro, awtomatikong itatalaga bilang Puno ng Sambahayan (Head of Household) alinsunod sa DILG RBI Memo Circular.</p>
       </div>
     </section>
@@ -31,29 +31,29 @@
     <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-labelledby="household-head-title">
       <div class="mb-4 flex items-center gap-2">
         <span class="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-[11px] font-bold text-[#07349e]">1</span>
-        <h2 id="household-head-title" class="text-sm font-bold text-slate-900">Who is this person? <span class="font-normal text-slate-500">(Sino ang taong ito?)</span></h2>
+        <h2 id="household-head-title" class="text-sm font-bold text-slate-900">Sino ang taong ito?</h2>
       </div>
       <%= m.hidden_field :relationship_to_head, value: "Head" %>
       <div class="grid gap-x-4 gap-y-3 sm:grid-cols-2">
           <div>
-            <%= m.label :last_name, "Last Name (Apelyido) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.label :last_name, "Apelyido (Apelyido) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.text_field :last_name, required: true, placeholder: "Hal. Dela Cruz", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
-            <p class="mt-1 text-[9px] font-medium text-slate-500">Family surname as listed in PSA</p>
+            <p class="mt-1 text-[9px] font-medium text-slate-500">Apelyido ng pamilya ayon sa tala ng PSA</p>
           </div>
           <div>
-            <%= m.label :first_name, "First Name (Pangalan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.label :first_name, "Pangalan (Pangalan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.text_field :first_name, required: true, placeholder: "Hal. Juan", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
-            <p class="mt-1 text-[9px] font-medium text-slate-500">Given name</p>
+            <p class="mt-1 text-[9px] font-medium text-slate-500">Pangalan</p>
           </div>
           <div>
-            <%= m.label :middle_name, "Middle Name (Gitnang Pangalan)", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.label :middle_name, "Gitnang Pangalan", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.text_field :middle_name, placeholder: "Hal. Santos", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
             <p class="mt-1 text-[9px] font-medium text-slate-500">Mother’s maiden surname</p>
           </div>
           <div>
             <%= m.label :suffix, "Suffix (Ext.)", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.text_field :suffix, placeholder: "Hal. Jr., Sr., III", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
-            <p class="mt-1 text-[9px] font-medium text-slate-500">Leave blank if none</p>
+            <p class="mt-1 text-[9px] font-medium text-slate-500">Iwanang blangko kung wala</p>
           </div>
       </div>
     </section>
@@ -61,21 +61,21 @@
     <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-labelledby="household-address-title">
       <div class="mb-4 flex items-center gap-2">
         <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700" aria-hidden="true">⌖</span>
-        <h2 id="household-address-title" class="text-sm font-bold text-slate-900">Where do they live? <span class="font-normal text-slate-500">(Saan nakatira ang sambahayan?)</span></h2>
+        <h2 id="household-address-title" class="text-sm font-bold text-slate-900">Saan nakatira ang sambahayan?</h2>
       </div>
       <div class="grid gap-x-4 gap-y-3 sm:grid-cols-2">
         <div>
-          <%= f.label :purok, "Purok / Zone *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+          <%= f.label :purok, "Purok / Lugar *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
           <%= f.select :purok, (1..7).map { |number| ["Purok #{number}", number.to_s] }, { include_blank: "Pumili ng Purok..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %>
-          <p class="mt-1 text-[9px] font-medium text-slate-500">Barangay administrative zone</p>
+          <p class="mt-1 text-[9px] font-medium text-slate-500">Lugar sa barangay</p>
         </div>
         <div>
-          <%= f.label :street, "Subdivision / Street *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+          <%= f.label :street, "Subdibisyon / Kalye *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
           <%= f.text_field :street, required: true, placeholder: "e.g. Maharlika Highway, Rosal St.", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
-          <p class="mt-1 text-[9px] font-medium text-slate-500">Subdivision / Kalye / Sitio</p>
+          <p class="mt-1 text-[9px] font-medium text-slate-500">Subdibisyon / Kalye / Sitio</p>
         </div>
         <div>
-          <%= f.label :house_number, "House / Lot Number *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+          <%= f.label :house_number, "Numero ng Bahay / Lote *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
           <%= f.text_field :house_number, required: true, placeholder: "e.g. Block 2, Lot 14", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
         </div>
       </div>
@@ -84,31 +84,31 @@
     <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-labelledby="household-member-details-title">
       <div class="mb-4 flex items-center gap-2">
         <span class="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-[11px] font-bold text-[#07349e]">2</span>
-        <h2 id="household-member-details-title" class="text-sm font-bold text-slate-900">A bit more about them <span class="font-normal text-slate-500">(Iba pang mahalagang impormasyon)</span></h2>
+        <h2 id="household-member-details-title" class="text-sm font-bold text-slate-900">Dagdag na impormasyon <span class="font-normal text-slate-500">(Iba pang mahalagang impormasyon)</span></h2>
       </div>
       <div class="grid gap-x-4 gap-y-3 sm:grid-cols-2">
           <div>
-            <%= m.label :birth_date, "Date of Birth (Petsa ng Kapanganakan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.label :birth_date, "Petsa ng Kapanganakan (Petsa ng Kapanganakan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.date_field :birth_date, required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
           </div>
           <div>
-            <%= m.label :birth_place, "Place of Birth (Lugar ng Kapanganakan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.label :birth_place, "Lugar ng Kapanganakan (Lugar ng Kapanganakan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.text_field :birth_place, required: true, placeholder: "e.g. Cabanatuan City", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
           </div>
           <div>
             <%= m.label :sex, "Sex (Kasarian) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
-            <%= m.select :sex, HouseholdMember.sexes.keys.map { |sex| [sex.humanize, sex] }, { include_blank: "Pumili ng kasarian..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %>
+            <%= m.select :sex, HouseholdMember.sexes.keys.map { |sex| [tagalog_label(sex), sex] }, { include_blank: "Pumili ng kasarian..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %>
           </div>
           <div>
-            <%= m.label :civil_status, "Civil Status (Katayuan sa Buhay) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
-            <%= m.select :civil_status, HouseholdMember.civil_statuses.keys.map { |status| [status.humanize, status] }, { include_blank: "Pumili ng katayuan..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %>
+            <%= m.label :civil_status, "Katayuang Sibil (Katayuan sa Buhay) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.select :civil_status, HouseholdMember.civil_statuses.keys.map { |status| [tagalog_label(status), status] }, { include_blank: "Pumili ng katayuan..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %>
           </div>
           <div>
-            <%= m.label :citizenship, "Citizenship (Pagkamamamayan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.label :citizenship, "Pagkamamamayan (Pagkamamamayan) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.text_field :citizenship, required: true, placeholder: "Filipino", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %>
           </div>
           <div>
-            <%= m.label :occupation, "Occupation (Hanapbuhay / Trabaho) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
+            <%= m.label :occupation, "Hanapbuhay (Hanapbuhay / Trabaho) *", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %>
             <%= m.select :occupation, ["Carpenter", "Driver", "Farmer", "Government Employee", "Household Worker", "Private Employee", "Self-employed", "Student", "Unemployed", "Other"], { include_blank: "Pumili ng hanapbuhay..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %>
           </div>
       </div>
@@ -117,12 +117,12 @@
 
     <div class="flex items-start gap-2 rounded-lg bg-[#e7efff] px-4 py-3 text-[10px] font-medium leading-relaxed text-slate-700 lg:text-[11px]">
       <span class="mt-0.5 text-emerald-700" aria-hidden="true">⛨</span>
-      <p>Entered records adhere strictly to Republic Act 10173 (Data Privacy Act of 2012) and DILG Barangay Community-Based Registry Guidelines.</p>
+      <p>Sumusunod ang mga tala sa Republic Act 10173 (Batas sa Pagkapribado ng Datos) at mga alituntunin ng DILG para sa talaan ng barangay.</p>
     </div>
   </div>
 
   <footer class="flex shrink-0 items-center justify-between gap-3 border-t border-slate-100 bg-white px-5 py-4 sm:px-8 lg:px-10">
-    <button type="button" onclick="const drawer = this.closest('[data-household-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="rounded-lg bg-red-700 px-6 py-3 text-xs font-semibold text-white transition hover:bg-red-800 lg:min-w-[160px] lg:text-[13px]">Cancel</button>
+    <button type="button" onclick="const drawer = this.closest('[data-household-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="rounded-lg bg-red-700 px-6 py-3 text-xs font-semibold text-white transition hover:bg-red-800 lg:min-w-[160px] lg:text-[13px]">Kanselahin</button>
     <%= f.submit "⊙ Create Household", class: "cursor-pointer rounded-lg bg-[#2445b8] px-6 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#17379f] lg:min-w-[205px] lg:text-[13px]" %>
   </footer>
 <% end %>

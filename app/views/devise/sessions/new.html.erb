@@ -1,4 +1,4 @@
-<% content_for :title, "Log in | KaSurbisyo" %>
+<% content_for :title, "Mag-log in | KaSurbisyo" %>
 
 <div class="flex min-h-screen flex-col bg-[#f5f4f7] font-sans text-slate-900">
   <header class="h-[104px] shrink-0 bg-white shadow-[0_5px_12px_rgba(15,23,42,0.18)] sm:h-[124px] lg:h-[153px]">
@@ -7,7 +7,7 @@
         <span class="h-10 w-10 shrink-0 rounded-full bg-[#07349e] sm:h-12 sm:w-12 lg:h-14 lg:w-14" aria-hidden="true"></span>
         <span class="flex flex-col text-slate-900">
           <strong class="text-xl font-bold leading-tight tracking-[-0.04em] sm:text-2xl lg:text-[30px]">Barangay Kalikid Sur</strong>
-          <small class="mt-0.5 text-[10px] text-slate-600 sm:text-xs lg:text-[13px]">Digital System for Registered Residents</small>
+          <small class="mt-0.5 text-[10px] text-slate-600 sm:text-xs lg:text-[13px]">Digital na Sistema para sa mga Rehistradong Residente</small>
         </span>
       </div>
     </div>
@@ -17,9 +17,9 @@
     <section class="w-full max-w-[440px] rounded-xl bg-white px-5 pb-6 pt-7 shadow-[0_5px_18px_rgba(15,23,42,0.25)] sm:px-7 sm:pb-7 sm:pt-8 lg:px-[26px] lg:pb-11 lg:pt-12" aria-labelledby="login-title">
       <div class="mx-auto mb-4 h-[76px] w-[76px] rounded-full bg-white shadow-[0_2px_5px_rgba(15,23,42,0.2)] sm:h-[90px] sm:w-[90px] lg:mb-4 lg:h-[112px] lg:w-[112px]" aria-hidden="true"></div>
 
-      <h1 id="login-title" class="mb-3 text-center text-[24px] font-bold leading-tight tracking-[-0.04em] sm:text-[27px] lg:text-[30px]">Welcome!</h1>
+      <h1 id="login-title" class="mb-3 text-center text-[24px] font-bold leading-tight tracking-[-0.04em] sm:text-[27px] lg:text-[30px]">Maligayang pagdating!</h1>
       <p class="mb-3 rounded-full bg-[#dce4ff] px-2 py-1 text-center text-[9px] font-bold tracking-[0.04em] text-[#07349e] sm:text-[11px] lg:py-1.5 lg:text-[12px]">KALIKID SUR, CABANATUAN CITY, NUEVA ECIJA</p>
-      <p class="mb-6 text-center text-[11px] leading-[1.5] text-slate-600 sm:text-xs lg:mb-7 lg:text-[13px]">Access barangay clearance, certificates, indigency,<br class="hidden sm:block"> and community assistance online.</p>
+      <p class="mb-6 text-center text-[11px] leading-[1.5] text-slate-600 sm:text-xs lg:mb-7 lg:text-[13px]">Humiling ng barangay clearance, mga sertipiko, at tulong mula sa barangay online.</p>
 
       <% if flash[:alert].present? || resource.errors.any? %>
         <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
@@ -49,18 +49,18 @@
 
         <div class="mb-3 flex min-h-5 items-center justify-between lg:mb-4">
           <% if devise_mapping.rememberable? %>
-            <label class="flex items-center gap-1.5 text-[10px] text-slate-600 lg:gap-2 lg:text-[13px]"><%= f.check_box :remember_me, class: "h-3.5 w-3.5 accent-[#1550a8]" %><span>Remember me</span></label>
+            <label class="flex items-center gap-1.5 text-[10px] text-slate-600 lg:gap-2 lg:text-[13px]"><%= f.check_box :remember_me, class: "h-3.5 w-3.5 accent-[#1550a8]" %><span>Tandaan ako</span></label>
           <% end %>
           <% if devise_mapping.recoverable? %>
-            <%= link_to "Forgot Password?", new_password_path(resource_name), class: "ml-auto text-[10px] font-semibold text-[#07349e] no-underline lg:text-[13px]" %>
+            <%= link_to "Nakalimutan ang password?", new_password_path(resource_name), class: "ml-auto text-[10px] font-semibold text-[#07349e] no-underline lg:text-[13px]" %>
           <% end %>
         </div>
 
-        <%= f.submit "↳  Sign In", class: "h-10 w-full cursor-pointer rounded-lg border-0 bg-[#174da8] text-xs font-semibold text-white hover:bg-[#0d408f] sm:h-11 lg:h-[48px] lg:text-[16px]" %>
+        <%= f.submit "Mag-log in", class: "h-10 w-full cursor-pointer rounded-lg border-0 bg-[#174da8] text-xs font-semibold text-white hover:bg-[#0d408f] sm:h-11 lg:h-[48px] lg:text-[16px]" %>
       <% end %>
 
       <% if devise_mapping.registerable? %>
-        <p class="mt-5 rounded-lg bg-[#e5ecff] px-2.5 py-2.5 text-center text-[10px] text-slate-800 sm:mt-6 sm:text-xs lg:mt-10 lg:py-3 lg:text-[16px]">Don't have an online resident account yet?<%= link_to " Register", new_registration_path(resource_name), class: "font-bold text-[#07349e] no-underline" %></p>
+        <p class="mt-5 rounded-lg bg-[#e5ecff] px-2.5 py-2.5 text-center text-[10px] text-slate-800 sm:mt-6 sm:text-xs lg:mt-10 lg:py-3 lg:text-[16px]">Wala pang online na account bilang residente?<%= link_to " Gumawa ng account", new_registration_path(resource_name), class: "font-bold text-[#07349e] no-underline" %></p>
       <% end %>
     </section>
   </main>
@@ -69,35 +69,35 @@
     <div class="-mx-5 -mt-6 mb-6 h-1.5 bg-gradient-to-r from-[#2147bd] via-[#2147bd] to-emerald-600 sm:-mx-8 sm:-mt-8 lg:-mx-10 lg:-mt-10"></div>
     <div class="mx-auto grid max-w-[1300px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
       <section class="rounded-2xl bg-white/80 p-5 lg:p-6">
-        <h2 class="mb-2 text-[11px] font-bold text-blue-700 lg:text-[13px]">STATUTORY PROTECTION</h2>
+        <h2 class="mb-2 text-[11px] font-bold text-blue-700 lg:text-[13px]">PROTEKSYON SA ILALIM NG BATAS</h2>
         <p class="mb-3 font-semibold text-slate-900">Republic of the Philippines • Republic Act No. 10173 (Data Privacy Act of 2012)</p>
-        <p>Submitted information is protected and used only for official barangay transaction processing.</p>
+        <p>Pinoprotektahan ang impormasyong ipinasa at ginagamit lamang para sa opisyal na transaksyon sa barangay.</p>
         <p class="mt-2 italic">Ang nakalap na impormasyon ay protektado at gagamitin lamang para sa opisyal na transaksyon ng barangay.</p>
-        <p class="mt-5 border-t border-slate-100 pt-3 font-semibold text-emerald-700">Secured Civic Processing Protocol</p>
+        <p class="mt-5 border-t border-slate-100 pt-3 font-semibold text-emerald-700">Ligtas na Pagproseso ng mga Transaksyon</p>
       </section>
       <section class="rounded-2xl bg-white/80 p-5 lg:p-6">
-        <h2 class="mb-2 text-[11px] font-bold text-emerald-700 lg:text-[13px]">GOVERNMENT EFFICIENCY</h2>
+        <h2 class="mb-2 text-[11px] font-bold text-emerald-700 lg:text-[13px]">MAHUSAY NA SERBISYO NG PAMAHALAAN</h2>
         <p class="mb-3 font-semibold text-slate-900">Anti-Red Tape Act (ARTA / RA 11032)</p>
-        <p>The system supports efficient government service delivery.</p>
+        <p>Sinusuportahan ng sistemang ito ang maayos na paghahatid ng serbisyo ng pamahalaan.</p>
         <p class="mt-2 italic">Sumusuporta ang sistemang ito sa maagap, maayos, at mabilis na paghahatid ng serbisyo-publiko.</p>
-        <p class="mt-3 border-t border-slate-100 pt-3 font-semibold text-slate-900">CIVIC SERVICES</p>
+        <p class="mt-3 border-t border-slate-100 pt-3 font-semibold text-slate-900">MGA SERBISYO NG BARANGAY</p>
         <p class="mt-2 text-blue-700">› Barangay Clearance<br>› Certificate of Residency<br>› Certificate of Indigency</p>
       </section>
       <section class="rounded-2xl bg-white/80 p-5 lg:p-6">
-        <h2 class="mb-4 text-[11px] font-bold text-slate-900 lg:text-[13px]">BARANGAY PUBLIC ASSISTANCE</h2>
-        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Address</p>
+        <h2 class="mb-4 text-[11px] font-bold text-slate-900 lg:text-[13px]">TULONG PUBLIKO NG BARANGAY</h2>
+        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Tirahan</p>
         <p class="mb-4 text-slate-900">Barangay Hall, Kalikid Sur, Cabanatuan City, Nueva Ecija</p>
-        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Telephone</p>
+        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Telepono</p>
         <p class="mb-4 text-slate-900">(044) 940-1234</p>
         <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Email</p>
         <p class="mb-4 text-blue-700">kalikidsur.cabanatuan@gmail.com</p>
-        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Office Hours</p>
-        <p class="text-slate-900">Monday to Friday, 8:00 AM – 5:00 PM</p>
+        <p class="mb-1 text-[9px] font-semibold uppercase text-slate-400">Oras ng Opisina</p>
+        <p class="text-slate-900">Lunes hanggang Biyernes, 8:00 AM – 5:00 PM</p>
       </section>
     </div>
     <div class="mx-auto mt-6 flex max-w-[1300px] flex-col justify-between gap-2 border-t border-blue-100 pt-4 text-[8px] sm:flex-row lg:mt-8 lg:text-[11px]">
-      <span>© <%= Date.current.year %> Barangay Kalikid Sur Civic Portal</span>
-      <span class="flex gap-3 font-semibold"><span>Privacy Policy</span><span>•</span><span>Terms of Use</span><span>•</span><span>Contact Us</span></span>
+      <span>© <%= Date.current.year %> Barangay Kalikid Sur Serbisyong Online ng Barangay</span>
+      <span class="flex gap-3 font-semibold"><span>Patakaran sa Pagkapribado</span><span>•</span><span>Mga Tuntunin sa Paggamit</span><span>•</span><span>Makipag-ugnayan</span></span>
     </div>
   </footer>
 </div>
@@ -118,8 +118,8 @@
         const missingEmail = !email.value.trim();
         const missingPassword = !password.value;
 
-        emailError.textContent = missingEmail ? "Please enter your email address." : "";
-        passwordError.textContent = missingPassword ? "Please enter your password." : "";
+        emailError.textContent = missingEmail ? "Ilagay ang inyong email." : "";
+        passwordError.textContent = missingPassword ? "Ilagay ang inyong password." : "";
         emailError.classList.toggle("hidden", !missingEmail);
         passwordError.classList.toggle("hidden", !missingPassword);
         email.setAttribute("aria-invalid", String(missingEmail));

@@ -6,7 +6,7 @@
   <% latest_remarks = logs.reverse.find { |log| log.staff_remarks.present? } %>
   <% category_label = { "peace_and_order" => "Streetlights", "infrastructure" => "Roads", "waste_management" => "Garbage", "health_and_sanitation" => "Drainage", "others" => "Other" }.fetch(concern.category, concern.category.humanize) %>
   <% current_step = concern.resolved? ? 3 : (concern.ongoing? || concern.unactionable? ? 2 : 1) %>
-  <% status_style = concern.pending? ? "bg-[#ffdec2] text-amber-950" : concern.ongoing? ? "bg-[#dce4ff] text-[#17379f]" : concern.resolved? ? "bg-emerald-200 text-emerald-900" : "bg-rose-100 text-rose-900" %>
+  <% status_style = tagalog_status_class(concern.status) %>
   <% status_message = if concern.pending?
        ["Your report has been received and is waiting to be reviewed by barangay staff.", "Natanggap na ang inyong ulat at kasalukuyang naghihintay ng pagsusuri ng kawani ng barangay."]
      elsif concern.ongoing?
@@ -22,20 +22,20 @@
       <div class="sticky top-0 z-10 h-2 bg-gradient-to-r from-[#07349e] to-emerald-700"></div>
       <div class="space-y-5 px-5 py-5 sm:px-8 sm:py-7">
         <header class="flex items-center gap-4">
-          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-xl font-bold text-[#07349e]" aria-hidden="true"><%= { "peace_and_order" => "☼", "infrastructure" => "▤", "waste_management" => "▣", "health_and_sanitation" => "⌁", "others" => "⋯" }.fetch(concern.category, "⋯") %></span>
+          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100" aria-hidden="true"><%= image_tag({ "peace_and_order" => "streetlight.svg", "infrastructure" => "roads.svg", "waste_management" => "garbage.svg", "health_and_sanitation" => "drainage.svg", "others" => "others.svg" }.fetch(concern.category, "others.svg"), alt: "", class: "h-7 w-7 object-contain") %></span>
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-wide text-[#07349e]">Report Category</p>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#07349e]">Kategorya ng Ulat</p>
             <h2 id="report-modal-title" class="text-xl font-semibold text-slate-900"><%= category_label %></h2>
           </div>
         </header>
 
         <section class="grid gap-3 rounded-xl bg-[#eff3ff] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
           <div class="flex flex-wrap items-center gap-2">
-            <span class="text-xs font-semibold text-slate-600">Katayuan (Status):</span>
-            <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase <%= status_style %>">● <%= concern.status.humanize %></span>
+            <span class="text-xs font-semibold text-slate-600">Kalagayan:</span>
+            <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase <%= status_style %>">● <%= tagalog_status(concern.status) %></span>
           </div>
           <div class="rounded-lg bg-white px-4 py-2 text-center sm:min-w-[270px]">
-            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Reference No.</p>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Numero ng Sanggunian</p>
             <div class="flex items-center justify-center gap-2">
               <span class="font-mono text-base font-bold tracking-wide text-[#07349e]"><%= concern.tracking_number %></span>
               <button type="button" onclick="navigator.clipboard.writeText('<%= j concern.tracking_number %>').then(() => { this.textContent = 'Nakopya'; })" class="text-[10px] font-semibold text-[#07349e] hover:underline">▢ Kopyahin</button>
@@ -45,11 +45,11 @@
 
         <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-label="Report resolution progress">
           <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
-            <h3 class="text-sm font-semibold text-slate-900">Proseso ng Paglutas (Resolution Progress)</h3>
-            <span class="text-[10px] font-bold uppercase tracking-wide <%= concern.resolved? ? 'text-emerald-700' : concern.ongoing? ? 'text-[#07349e]' : concern.unactionable? ? 'text-rose-700' : 'text-orange-600' %>"><%= concern.resolved? ? "3 of 3 steps completed" : "Step #{current_step} of 3 · #{concern.status.humanize}" %></span>
+            <h3 class="text-sm font-semibold text-slate-900">Pag-usad ng Paglutas</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wide <%= concern.resolved? ? 'text-emerald-700' : concern.ongoing? ? 'text-[#07349e]' : concern.unactionable? ? 'text-rose-700' : 'text-orange-600' %>"><%= concern.resolved? ? "3 sa 3 hakbang ang natapos" : "Hakbang #{current_step} sa 3 · #{tagalog_status(concern.status)}" %></span>
           </div>
           <div class="relative grid grid-cols-3 gap-1 before:absolute before:left-[16%] before:right-[16%] before:top-4 before:h-1 before:bg-[#dce4ff]">
-            <% ["Submitted", "In Progress", "Resolved"].each_with_index do |step_label, index| %>
+            <% ["Naipasa", "Isinasagawa", "Nalutas"].each_with_index do |step_label, index| %>
               <% step_number = index + 1 %>
               <% complete = concern.resolved? || step_number < current_step || (step_number == 1) %>
               <% active = step_number == current_step && !concern.unactionable? %>
@@ -59,7 +59,7 @@
                 <span class="mt-1 text-[11px] font-semibold text-slate-800"><%= step_label %></span>
                 <span class="text-[10px] text-slate-500"><%= ["Naisumite", "Ginagawa", "Nalutas"][index] %></span>
                 <% step_time = index.zero? ? concern.created_at : (index == 1 ? in_progress_log&.created_at : resolved_log&.created_at) %>
-                <% if step_time.present? %><time class="text-[10px] font-semibold text-slate-600"><%= step_time.strftime("%b %d, %Y") %></time><% end %>
+                <% if step_time.present? %><time class="text-[10px] font-semibold text-slate-600"><%= tagalog_date(step_time) %></time><% end %>
               </div>
             <% end %>
           </div>
@@ -69,7 +69,7 @@
           <section class="rounded-xl bg-emerald-100/80 p-4" aria-label="Remarks from barangay">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h3 class="text-sm font-semibold text-slate-900">▱ Remarks from Barangay (Mga Tala mula sa Barangay)</h3>
-              <time class="rounded bg-white px-2 py-1 text-[10px] font-semibold text-emerald-800"><%= latest_remarks.created_at.strftime("%B %d, %Y • %I:%M %p") %></time>
+              <time class="rounded bg-white px-2 py-1 text-[10px] font-semibold text-emerald-800"><%= tagalog_datetime(latest_remarks.created_at) %></time>
             </div>
             <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-800"><%= latest_remarks.staff_remarks %></p>
           </section>
@@ -87,7 +87,7 @@
           </div>
           <div class="rounded-xl bg-[#eff3ff] p-4">
             <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">◷ Petsa at Oras ng Pagsumite</p>
-            <p class="mt-1 text-sm font-semibold text-slate-900"><%= concern.created_at.strftime("%B %d, %Y") %></p>
+            <p class="mt-1 text-sm font-semibold text-slate-900"><%= tagalog_date(concern.created_at) %></p>
             <p class="text-xs text-slate-600"><%= concern.created_at.in_time_zone.strftime("%I:%M %p %Z") %> (Isinumite online via Resident Portal)</p>
           </div>
         </section>
@@ -100,7 +100,7 @@
         <% if concern.evidence_image.attached? %>
           <section>
             <div class="mb-2 flex flex-wrap justify-between gap-2">
-              <h3 class="text-sm font-semibold text-slate-900">▧ Katibayang Larawan (Attached Photo Proof)</h3>
+              <h3 class="text-sm font-semibold text-slate-900">▧ Larawang Kalakip na Katibayan</h3>
               <span class="text-[10px] font-semibold text-slate-600">1 Larawan (Original Resolution)</span>
             </div>
             <%= link_to rails_blob_path(concern.evidence_image, disposition: "inline"), target: "_blank", rel: "noopener", class: "block overflow-hidden rounded-t-xl bg-slate-100" do %>
@@ -112,7 +112,7 @@
       </div>
 
       <footer class="sticky bottom-0 flex justify-end bg-[#eff3ff] px-5 py-4 sm:px-8">
-        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-xl bg-red-700 px-8 py-3 text-sm font-semibold text-white shadow hover:bg-red-800">Close</button>
+        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-xl bg-red-700 px-8 py-3 text-sm font-semibold text-white shadow hover:bg-red-800">Isara</button>
       </footer>
     </section>
   </div>

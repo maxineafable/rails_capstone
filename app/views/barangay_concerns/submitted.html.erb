@@ -6,20 +6,20 @@
       <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-300 shadow-[0_8px_24px_rgba(5,150,105,0.25)] lg:h-24 lg:w-24">
         <span class="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-4xl font-bold text-white lg:h-16 lg:w-16" aria-hidden="true">✓</span>
       </div>
-      <h1 id="submission-title" class="mt-4 text-[30px] font-bold leading-tight tracking-[-0.04em] text-slate-900 lg:text-[40px]">Report Submitted!</h1>
-      <p class="mt-1 text-lg font-semibold text-[#07349e] lg:text-[21px]">Your report has been sent!</p>
-      <p class="mt-2 text-sm text-slate-600 lg:text-[18px]">Naipadala na ang Inyong Ulat sa Tanggapan <span class="mx-1">•</span> <span class="text-xs text-slate-500">(Your Report Has Been Officially Received)</span></p>
+      <h1 id="submission-title" class="mt-4 text-[30px] font-bold leading-tight tracking-[-0.04em] text-slate-900 lg:text-[40px]">Naipasa na ang Ulat!</h1>
+      <p class="mt-1 text-lg font-semibold text-[#07349e] lg:text-[21px]">Naipadala na ang inyong ulat!</p>
+      <p class="mt-2 text-sm text-slate-600 lg:text-[18px]">Natanggap na ng tanggapan ang inyong ulat.</p>
     </section>
 
     <section class="mx-auto mt-8 max-w-[768px] overflow-hidden rounded-xl bg-white shadow-md" aria-label="Report reference details">
       <div class="border-l-[6px] border-[#2445b8] px-6 py-7 sm:px-8 lg:px-9 lg:py-10">
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Official Report Reference Number (Opisyal na Numero ng Referensiya)</p>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Opisyal na Numero ng Ulat</p>
             <p class="mt-1 font-mono text-[25px] font-bold leading-tight tracking-wide text-[#07349e] sm:text-[28px] lg:text-[32px]"><%= @barangay_concern.tracking_number %></p>
           </div>
-          <button type="button" onclick="navigator.clipboard.writeText('<%= j @barangay_concern.tracking_number %>').then(() => { this.textContent = '✓ Copied (Nakopya)'; })" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#e7efff] px-4 py-3 text-xs font-semibold text-slate-800 hover:bg-[#dce7ff]" aria-label="Copy reference number">
-            <span aria-hidden="true">▢</span> Copy (Kopyahin)
+          <button type="button" onclick="navigator.clipboard.writeText('<%= j @barangay_concern.tracking_number %>').then(() => { this.textContent = '✓ Copied (Nakopya)'; })" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#e7efff] px-4 py-3 text-xs font-semibold text-slate-800 hover:bg-[#dce7ff]" aria-label="Kopyahin ang numero ng sanggunian">
+            <span aria-hidden="true">▢</span> Kopyahin
           </button>
         </div>
 
@@ -36,16 +36,16 @@
           <div class="flex items-start gap-4">
             <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-200 text-xl text-emerald-800" aria-hidden="true">◷</span>
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Date &amp; Time Logged (Petsa at Oras)</p>
-              <p class="mt-1 text-sm font-semibold text-slate-900 lg:text-[16px]"><%= l(@barangay_concern.created_at, format: :long) %></p>
-              <p class="mt-0.5 text-xs text-slate-600"><%= @barangay_concern.created_at.in_time_zone.strftime("%I:%M %p %Z") %> <span>• Digital Docket Log</span></p>
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Petsa at Oras ng Pagsumite</p>
+              <p class="mt-1 text-sm font-semibold text-slate-900 lg:text-[16px]"><%= tagalog_datetime(@barangay_concern.created_at) %></p>
+              <p class="mt-0.5 text-xs text-slate-600"><%= @barangay_concern.created_at.in_time_zone.strftime("%I:%M %p %Z") %> <span>• Talaan ng Pagsumite</span></p>
             </div>
           </div>
 
           <div class="flex items-start gap-4 sm:col-span-2">
             <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-xl text-[#07349e]" aria-hidden="true">♙</span>
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Reported Location (Lokasyon)</p>
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Lokasyon ng Ulat</p>
               <p class="mt-1 text-sm font-semibold text-slate-900 lg:text-[16px]"><%= @barangay_concern.location_description %></p>
               <% if current_user.address.present? %>
                 <p class="mt-0.5 text-xs text-slate-600"><%= [current_user.address.purok.presence && "Purok #{current_user.address.purok}", current_user.address.barangay].compact.join(", ") %></p>
@@ -57,8 +57,8 @@
     </section>
 
     <nav class="mx-auto mt-8 flex max-w-[700px] flex-col justify-center gap-3 sm:flex-row" aria-label="After submission">
-      <%= link_to "← Back to Home (Bumalik sa Home)", dashboard_path, class: "inline-flex items-center justify-center rounded-lg bg-[#e7efff] px-5 py-3 text-sm font-semibold text-slate-800 no-underline hover:bg-[#dce7ff]" %>
-      <%= link_to "⌁ Track This Report (Subaybayan ang Ulat)", barangay_concerns_path, class: "inline-flex items-center justify-center rounded-lg bg-[#2445b8] px-5 py-3 text-sm font-semibold text-white no-underline hover:bg-[#17379f]" %>
+      <%= link_to "← Bumalik sa Tahanan", dashboard_path, class: "inline-flex items-center justify-center rounded-lg bg-[#e7efff] px-5 py-3 text-sm font-semibold text-slate-800 no-underline hover:bg-[#dce7ff]" %>
+      <%= link_to "⌁ Subaybayan ang Ulat", barangay_concerns_path, class: "inline-flex items-center justify-center rounded-lg bg-[#2445b8] px-5 py-3 text-sm font-semibold text-white no-underline hover:bg-[#17379f]" %>
     </nav>
   </main>
 
@@ -68,22 +68,22 @@
       <section class="rounded-xl bg-white/80 p-5">
         <h2 class="text-xs font-bold uppercase tracking-wide text-[#07349e]">Statutory Protection</h2>
         <p class="mt-1 text-xs font-semibold">Republic of the Philippines • Republic Act No. 10173 (Data Privacy Act of 2012)</p>
-        <p class="mt-4 border-t border-slate-100 pt-4 text-xs leading-relaxed text-slate-600">Submitted information is protected and used only for official barangay transaction processing.</p>
+        <p class="mt-4 border-t border-slate-100 pt-4 text-xs leading-relaxed text-slate-600">Pinoprotektahan ang impormasyong ipinasa at ginagamit lamang para sa opisyal na transaksyon sa barangay.</p>
       </section>
       <section class="rounded-xl bg-white/80 p-5">
         <h2 class="text-xs font-bold uppercase tracking-wide text-emerald-700">Government Efficiency</h2>
         <p class="mt-1 text-xs font-semibold">Anti-Red Tape Act (ARTA / RA 11032)</p>
-        <p class="mt-4 border-t border-slate-100 pt-4 text-xs leading-relaxed text-slate-600">The system supports efficient government service delivery.</p>
-        <h3 class="mt-4 text-xs font-bold uppercase text-slate-800">Civic Services</h3>
+        <p class="mt-4 border-t border-slate-100 pt-4 text-xs leading-relaxed text-slate-600">Sinusuportahan ng sistemang ito ang maayos na paghahatid ng serbisyo ng pamahalaan.</p>
+        <h3 class="mt-4 text-xs font-bold uppercase text-slate-800">Civic Mga Serbisyo</h3>
         <ul class="mt-2 space-y-1 text-xs text-[#07349e]"><li>› Barangay Clearance</li><li>› Certificate of Residency</li><li>› Certificate of Indigency</li></ul>
       </section>
       <section class="rounded-xl bg-white/80 p-5">
         <h2 class="text-xs font-bold uppercase tracking-wide text-slate-900">● Barangay Public Assistance</h2>
-        <p class="mt-4 text-xs font-semibold">Address</p><p class="text-xs text-slate-700">Barangay Hall, Kalikid Sur, Cabanatuan City, Nueva Ecija</p>
-        <p class="mt-3 text-xs font-semibold">Telephone</p><p class="text-xs text-slate-700">(044) 940-1234</p>
-        <p class="mt-3 text-xs font-semibold">Office Hours</p><p class="text-xs text-slate-700">Monday to Friday, 8:00 AM – 5:00 PM</p>
+        <p class="mt-4 text-xs font-semibold">Tirahan</p><p class="text-xs text-slate-700">Barangay Hall, Kalikid Sur, Cabanatuan City, Nueva Ecija</p>
+        <p class="mt-3 text-xs font-semibold">Telepono</p><p class="text-xs text-slate-700">(044) 940-1234</p>
+        <p class="mt-3 text-xs font-semibold">Oras ng Opisina</p><p class="text-xs text-slate-700">Lunes hanggang Biyernes, 8:00 AM – 5:00 PM</p>
       </section>
     </div>
-    <div class="mx-5 flex flex-col justify-between gap-3 border-t border-blue-100 py-5 text-xs text-slate-600 sm:mx-10 sm:flex-row"><span>© <%= Date.current.year %> Barangay Kalikid Sur Civic Portal</span><span class="flex gap-5"><span>Privacy Policy</span><span>Terms of Use</span><span>Contact Us</span></span></div>
+    <div class="mx-5 flex flex-col justify-between gap-3 border-t border-blue-100 py-5 text-xs text-slate-600 sm:mx-10 sm:flex-row"><span>© <%= Date.current.year %> Barangay Kalikid Sur Serbisyong Online ng Barangay</span><span class="flex gap-5"><span>Patakaran sa Pagkapribado</span><span>Mga Tuntunin sa Paggamit</span><span>Makipag-ugnayan</span></span></div>
   </footer>
 </div>

@@ -1,4 +1,4 @@
-<% content_for :title, "Update Password | Barangay Kalikid Sur" %>
+<% content_for :title, "Palitan ang Password | Barangay Kalikid Sur" %>
 
 <div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
   <%= render "shared/navbar", active: :profile %>
@@ -6,19 +6,19 @@
   <main class="mx-auto max-w-[1000px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-6 lg:px-6 lg:py-8">
     <section class="flex flex-col justify-between gap-4 rounded-xl bg-white px-5 py-5 shadow-sm sm:flex-row sm:items-center sm:px-7 lg:px-8 lg:py-7">
       <div>
-        <p class="text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-700 lg:text-[13px]">Resident Profile</p>
-        <h1 class="mt-1 text-[20px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[22px] lg:text-[30px]">Update Password</h1>
-        <p class="mt-1 text-[11px] text-slate-500 lg:mt-2 lg:text-[15px]">Manage your sign-in details and keep your account secure.</p>
+        <p class="text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-700 lg:text-[13px]">Impormasyon ng Residente</p>
+        <h1 class="mt-1 text-[20px] font-bold leading-tight tracking-[-0.04em] text-[#07349e] sm:text-[22px] lg:text-[30px]">Palitan ang Password</h1>
+        <p class="mt-1 text-[11px] text-slate-500 lg:mt-2 lg:text-[15px]">Pamahalaan ang detalye ng pag-log in at panatilihing ligtas ang inyong account.</p>
       </div>
       <%= link_to profile_path, class: "inline-flex shrink-0 items-center gap-2 self-start rounded-md bg-[#eff3ff] px-4 py-2.5 text-[10px] font-semibold text-[#07349e] no-underline transition hover:bg-[#dfe8ff] sm:self-center lg:px-5 lg:py-3 lg:text-[13px]" do %>
-        <span aria-hidden="true">←</span> Back to Profile
+        <span aria-hidden="true">←</span> Bumalik sa Impormasyon
       <% end %>
     </section>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-4 lg:space-y-6" }) do |f| %>
       <% if resource.errors.any? %>
         <section class="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-red-800" role="alert">
-          <h2 class="text-sm font-semibold lg:text-[16px]">Please fix the errors below:</h2>
+          <h2 class="text-sm font-semibold lg:text-[16px]">Pak ayusin ang mga error sa ibaba:</h2>
           <ul class="mt-2 list-disc space-y-1 pl-5 text-xs lg:text-[14px]">
             <% resource.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
           </ul>
@@ -31,59 +31,59 @@
             <svg class="h-4 w-4 lg:h-5 lg:w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 0 0-5 5v3H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-2V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/></svg>
           </span>
           <div>
-            <h2 id="account-details-title" class="text-[15px] font-semibold lg:text-[20px]">Account Details</h2>
-            <p class="mt-0.5 text-[10px] text-slate-600 lg:text-[13px]">Update the email and password used to sign in.</p>
+            <h2 id="account-details-title" class="text-[15px] font-semibold lg:text-[20px]">Mga Detalye ng Account</h2>
+            <p class="mt-0.5 text-[10px] text-slate-600 lg:text-[13px]">Palitan ang email at password na ginagamit sa pag-log in.</p>
           </div>
         </div>
 
         <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
           <div class="mb-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900 lg:text-[14px]">
-            Email confirmation is pending for <strong><%= resource.unconfirmed_email %></strong>.
+            Hindi pa nakukumpirma ang email na <strong><%= resource.unconfirmed_email %></strong>.
           </div>
         <% end %>
 
         <div class="space-y-4">
           <div>
-            <%= f.label :email, "Email Address", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= f.label :email, "Email", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
             <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
 
           <div class="border-t border-slate-100 pt-4">
-            <h3 class="text-[12px] font-semibold text-slate-900 lg:text-[15px]">Change Password</h3>
-            <p class="mt-1 text-[10px] leading-relaxed text-slate-600 lg:text-[13px]">Choose a strong password you do not use for other accounts. Leave both password fields blank if you only want to update your email.</p>
+            <h3 class="text-[12px] font-semibold text-slate-900 lg:text-[15px]">Palitan ang Password</h3>
+            <p class="mt-1 text-[10px] leading-relaxed text-slate-600 lg:text-[13px]">Pumili ng matibay na password na hindi ginagamit sa ibang account. Iwang blangko ang mga patlang ng password kung email lamang ang babaguhin.</p>
           </div>
 
           <div class="grid gap-4 sm:grid-cols-2">
             <div>
-              <%= f.label :password, "New Password", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= f.label :password, "Bagong Password", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
               <%= f.password_field :password, autocomplete: "new-password", minlength: @minimum_password_length, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
-              <% if @minimum_password_length %><p class="mt-1 text-[10px] text-slate-500 lg:text-[12px]"><%= @minimum_password_length %> characters minimum</p><% end %>
+              <% if @minimum_password_length %><p class="mt-1 text-[10px] text-slate-500 lg:text-[12px]"><%= @minimum_password_length %> karakter ang pinakamababa</p><% end %>
             </div>
             <div>
-              <%= f.label :password_confirmation, "Confirm New Password", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= f.label :password_confirmation, "Kumpirmahin ang Bagong Password", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
               <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
             </div>
           </div>
 
           <div class="border-t border-slate-100 pt-4">
-            <%= f.label :current_password, "Current Password", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= f.label :current_password, "Kasalukuyang Password", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
             <%= f.password_field :current_password, autocomplete: "current-password", required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
-            <p class="mt-1 text-[10px] text-slate-500 lg:text-[12px]">Enter your current password to confirm account changes.</p>
+            <p class="mt-1 text-[10px] text-slate-500 lg:text-[12px]">Ilagay ang kasalukuyang password upang makumpirma ang mga pagbabago sa account.</p>
           </div>
         </div>
 
         <div class="mt-6 flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-end">
-          <%= link_to "Cancel", profile_path, class: "rounded-md bg-[#eff3ff] px-5 py-3 text-center text-xs font-semibold text-slate-700 no-underline transition hover:bg-[#dfe8ff] lg:text-[14px]" %>
-          <%= f.submit "Save Account Changes", class: "cursor-pointer rounded-md bg-[#07349e] px-5 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0b2e83] lg:text-[14px]" %>
+          <%= link_to "Kanselahin", profile_path, class: "rounded-md bg-[#eff3ff] px-5 py-3 text-center text-xs font-semibold text-slate-700 no-underline transition hover:bg-[#dfe8ff] lg:text-[14px]" %>
+          <%= f.submit "I-save ang mga Pagbabago", class: "cursor-pointer rounded-md bg-[#07349e] px-5 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0b2e83] lg:text-[14px]" %>
         </div>
       </section>
     <% end %>
 
     <section class="rounded-xl border border-red-100 bg-white px-5 py-5 shadow-sm sm:px-7 lg:px-8 lg:py-6" aria-labelledby="cancel-account-title">
-      <h2 id="cancel-account-title" class="text-[13px] font-semibold text-red-800 lg:text-[16px]">Delete Account</h2>
-      <p class="mt-1 text-[10px] text-slate-600 lg:text-[13px]">Permanently close your resident account and remove access to this portal.</p>
+      <h2 id="cancel-account-title" class="text-[13px] font-semibold text-red-800 lg:text-[16px]">Burahin ang Account</h2>
+      <p class="mt-1 text-[10px] text-slate-600 lg:text-[13px]">Isara nang tuluyan ang inyong account bilang residente at alisin ang access sa portal na ito.</p>
       <div class="mt-4">
-        <%= button_to "Cancel My Account", registration_path(resource_name), method: :delete, data: { turbo_confirm: "Are you sure you want to permanently delete your account?" }, class: "cursor-pointer rounded-md border border-red-200 bg-white px-4 py-2.5 text-[10px] font-semibold text-red-700 transition hover:bg-red-50 lg:text-[13px]" %>
+        <%= button_to "Burahin ang Account", registration_path(resource_name), method: :delete, data: { turbo_confirm: "Sigurado ba kayong tuluyang burahin ang inyong account?" }, class: "cursor-pointer rounded-md border border-red-200 bg-white px-4 py-2.5 text-[10px] font-semibold text-red-700 transition hover:bg-red-50 lg:text-[13px]" %>
       </div>
     </section>
   </main>

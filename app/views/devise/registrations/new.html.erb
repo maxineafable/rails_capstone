@@ -7,7 +7,7 @@
         <span class="h-8 w-8 shrink-0 rounded-full bg-[#07349e] sm:h-10 sm:w-10" aria-hidden="true"></span>
         <span class="flex flex-col text-slate-900">
           <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px] lg:text-[30px]">KaSurbisyo</strong>
-          <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px] lg:text-[13px]">Digital System for Registered Residents</small>
+          <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px] lg:text-[13px]">Digital na Sistema para sa mga Rehistradong Residente</small>
         </span>
       </div>
     </div>
@@ -44,11 +44,11 @@
         <% resource.build_profile unless resource.profile %>
         <%= f.fields_for :profile do |p| %>
           <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-5">
-            <div><%= p.label :first_name, "Pangalan", class: label_class %><span class="<%= hint_class %>">(First Name)</span><%= p.text_field :first_name, required: true, placeholder: "Hal. Juan", class: input_class %></div>
-            <div><%= p.label :middle_name, "Gitnang Pangalan", class: label_class %><span class="<%= hint_class %>">(Middle Name)</span><%= p.text_field :middle_name, placeholder: "Hal. Santos", class: input_class %></div>
-            <div><%= p.label :last_name, "Apelyido", class: label_class %><span class="<%= hint_class %>">(Last Name)</span><%= p.text_field :last_name, required: true, placeholder: "Hal. Dela Cruz", class: input_class %></div>
-            <div><%= p.label :suffix, "Karagdagan", class: label_class %><span class="<%= hint_class %>">(Suffix)</span><%= p.select :suffix, [["Sr.", "Sr."], ["Jr.", "Jr."], ["II", "II"], ["III", "III"], ["IV", "IV"], ["V", "V"]], { include_blank: "-- Select Suffix --" }, { class: input_class } %></div>
-            <div><%= p.label :sex, "Sex *", class: label_class %><%= p.select :sex, [["Male", "male"], ["Female", "female"]], { include_blank: "Select an Option" }, { required: true, class: input_class } %></div>
+            <div><%= p.label :first_name, "Pangalan", class: label_class %><span class="<%= hint_class %>">(Pangalan)</span><%= p.text_field :first_name, required: true, placeholder: "Hal. Juan", class: input_class %></div>
+            <div><%= p.label :middle_name, "Gitnang Pangalan", class: label_class %><span class="<%= hint_class %>">(Gitnang Pangalan)</span><%= p.text_field :middle_name, placeholder: "Hal. Santos", class: input_class %></div>
+            <div><%= p.label :last_name, "Apelyido", class: label_class %><span class="<%= hint_class %>">(Apelyido)</span><%= p.text_field :last_name, required: true, placeholder: "Hal. Dela Cruz", class: input_class %></div>
+            <div><%= p.label :suffix, "Karugtong ng Pangalan", class: label_class %><span class="<%= hint_class %>">(Opsyonal)</span><%= p.select :suffix, [["Sr.", "Sr."], ["Jr.", "Jr."], ["II", "II"], ["III", "III"], ["IV", "IV"], ["V", "V"]], { include_blank: "-- Pumili --" }, { class: input_class } %></div>
+            <div><%= p.label :sex, "Kasarian *", class: label_class %><%= p.select :sex, [["Lalaki", "male"], ["Babae", "female"]], { include_blank: "Pumili ng opsyon" }, { required: true, class: input_class } %></div>
           </div>
         <% end %>
       </section>
@@ -56,14 +56,14 @@
       <section class="mb-7 border-t border-slate-100 pt-5">
         <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]">
           <svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18s6-5.1 6-10A6 6 0 1 0 4 8c0 4.9 6 10 6 10Zm0-7a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/></svg>
-          Tirahan at Purok <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Complete Address &amp; Purok</span>
+          Tirahan at Purok
         </h2>
         <% resource.build_address unless resource.address %>
         <%= f.fields_for :address do |a| %>
           <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 lg:grid-cols-6 lg:gap-x-5 lg:gap-y-5">
-            <div class="lg:col-span-2"><%= a.label :house_number, "House / Lot / Blk No.", class: label_class %><span class="<%= hint_class %>">(Numero ng Bahay o Lote)</span><%= a.text_field :house_number, required: true, placeholder: "Hal. Blk 12 Lot 4", class: input_class %></div>
-            <div class="lg:col-span-2"><%= a.label :street, "Street / Sitio / Subd.", class: label_class %><span class="<%= hint_class %>">(Opsyonal / Optional)</span><%= a.select :street, ["Villa Emilia Subd.", "Elizaville Subd", "Carmen Park Subd", "AGL Heights Subd", "Cristina Homes", "United Village", "Cabanatuan East", "San Fernando Village"], { include_blank: "-- Select Street / Sitio / Subd. --" }, { class: input_class } %></div>
-            <div class="lg:col-span-2"><%= a.label :purok, "Purok / Zone", class: label_class %><span class="<%= hint_class %>">(Piliin ang inyong Purok)</span><%= a.select :purok, (1..7).map { |number| ["Purok #{number}", "Purok #{number}"] }, { include_blank: "-- Pumili ng Purok --" }, { required: true, class: input_class } %></div>
+            <div class="lg:col-span-2"><%= a.label :house_number, "Numero ng Bahay / Lote / Bloke", class: label_class %><span class="<%= hint_class %>">(Numero ng Bahay o Lote)</span><%= a.text_field :house_number, required: true, placeholder: "Hal. Bloke 12 Lote 4", class: input_class %></div>
+            <div class="lg:col-span-2"><%= a.label :street, "Kalye / Sitio / Subdibisyon", class: label_class %><span class="<%= hint_class %>">(Opsyonal)</span><%= a.select :street, ["Villa Emilia Subd.", "Elizaville Subd", "Carmen Park Subd", "AGL Heights Subd", "Cristina Homes", "United Village", "Cabanatuan East", "San Fernando Village"], { include_blank: "-- Pumili ng kalye / sitio / subdibisyon --" }, { class: input_class } %></div>
+            <div class="lg:col-span-2"><%= a.label :purok, "Purok / Lugar", class: label_class %><span class="<%= hint_class %>">(Piliin ang inyong Purok)</span><%= a.select :purok, (1..7).map { |number| ["Purok #{number}", "Purok #{number}"] }, { include_blank: "-- Pumili ng Purok --" }, { required: true, class: input_class } %></div>
             <div class="lg:col-span-2"><%= a.label :barangay, "Barangay *", class: label_class %><%= a.text_field :barangay, value: "Cabanatuan Barangay", required: true, class: input_class %></div>
             <div class="lg:col-span-2"><%= a.label :city, "City / Municipality *", class: label_class %><%= a.text_field :city, value: "Cabanatuan City", required: true, class: input_class %></div>
             <div class="lg:col-span-2"><%= a.label :province, "Province *", class: label_class %><%= a.text_field :province, value: "Nueva Ecija", required: true, class: input_class %></div>
@@ -74,21 +74,21 @@
       <section class="mb-5 border-t border-slate-100 pt-4">
         <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]"><svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5Zm8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM4 15h5a4 4 0 0 0-5-3v3Zm8 0h4v-2h-4v2Z"/></svg>Impormasyon sa Pakikipag-ugnayan <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Contact Details</span></h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div><%= f.label :email, "Email Address", class: label_class %><span class="<%= hint_class %>">(Elektronikong Liham)</span><%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, placeholder: "juan.delacruz@email.com", class: input_class %></div>
+          <div><%= f.label :email, "Email", class: label_class %><%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, placeholder: "juan.delacruz@email.com", class: input_class %></div>
         </div>
       </section>
 
       <section class="mb-7 border-t border-slate-100 pt-5">
-        <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]"><svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 8V6a5 5 0 0 1 10 0v2h1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1Zm2 0h6V6a3 3 0 1 0-6 0v2Zm3 3a1.5 1.5 0 0 0-.5 2.9V16h1v-2.1A1.5 1.5 0 0 0 10 11Z" clip-rule="evenodd"/></svg>Proteksyon ng Account <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Account Security</span></h2>
-        <% if @minimum_password_length %><p class="mb-3 text-[10px] text-slate-500 lg:text-[13px]">Minimum <%= @minimum_password_length %> characters</p><% end %>
+        <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]"><svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 8V6a5 5 0 0 1 10 0v2h1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1Zm2 0h6V6a3 3 0 1 0-6 0v2Zm3 3a1.5 1.5 0 0 0-.5 2.9V16h1v-2.1A1.5 1.5 0 0 0 10 11Z" clip-rule="evenodd"/></svg>Proteksyon ng Account</h2>
+        <% if @minimum_password_length %><p class="mb-3 text-[10px] text-slate-500 lg:text-[13px]">Hindi bababa sa <%= @minimum_password_length %> karakter</p><% end %>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div><%= f.label :password, "Gumawa ng Password", class: label_class %><span class="<%= hint_class %>">(Create Password)</span><%= f.password_field :password, autocomplete: "new-password", required: true, placeholder: "Enter password", class: input_class %></div>
-          <div><%= f.label :password_confirmation, "Kumpirmahin ang Password", class: label_class %><span class="<%= hint_class %>">(Confirm Password)</span><%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, placeholder: "Confirm password", class: input_class %></div>
+          <div><%= f.label :password, "Gumawa ng Password", class: label_class %><%= f.password_field :password, autocomplete: "new-password", required: true, placeholder: "Ilagay ang password", class: input_class %></div>
+          <div><%= f.label :password_confirmation, "Kumpirmahin ang Password", class: label_class %><%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, placeholder: "Kumpirmahin ang password", class: input_class %></div>
         </div>
       </section>
 
       <div class="border-t border-slate-100 pt-4">
-        <%= f.submit "Register", class: "w-full cursor-pointer rounded-lg bg-[#07349b] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#052b82] focus:outline-none focus:ring-2 focus:ring-[#07349b] focus:ring-offset-2 lg:py-4 lg:text-[20px]" %>
+        <%= f.submit "Magrehistro", class: "w-full cursor-pointer rounded-lg bg-[#07349b] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#052b82] focus:outline-none focus:ring-2 focus:ring-[#07349b] focus:ring-offset-2 lg:py-4 lg:text-[20px]" %>
       </div>
       <div class="mt-4 text-center text-xs text-slate-600 lg:text-[16px]"><span>Mayroon ka nang account?</span> <%= render "devise/shared/links" %></div>
     <% end %>

@@ -19,6 +19,6 @@ class DashboardController < ApplicationController
       records_pool = @document_requests + @barangay_concerns
     end
 
-    @recent_records = records_pool.sort_by(&:created_at).reverse.first(3)
+    @recent_records = records_pool.sort_by(&:created_at).reverse
   end
 end
