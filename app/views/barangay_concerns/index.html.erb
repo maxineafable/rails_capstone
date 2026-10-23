@@ -95,7 +95,7 @@
               <p class="text-xs leading-relaxed text-slate-800 lg:text-[16px]">“<%= truncate(concern.reason, length: 180) %>”</p>
             </div>
             <div class="flex flex-col justify-between gap-2 bg-[#f7f9ff] px-4 py-2.5 text-[9px] sm:flex-row sm:items-center sm:px-5 lg:px-7 lg:text-[13px]">
-              <span class="font-medium text-slate-800">♧ <%= concern.location_description %></span>
+              <span class="inline-flex items-center gap-1.5 font-medium text-slate-800"><%= image_tag "lugar.svg", alt: "", class: "h-3.5 w-3.5 shrink-0 object-contain" %><%= concern.location_description %></span>
               <%= link_to "Tingnan ang Detalye →", barangay_concern_path(concern), data: { turbo_frame: "remote_modal" }, class: "font-semibold text-[#07349e] no-underline hover:underline" %>
             </div>
           </article>

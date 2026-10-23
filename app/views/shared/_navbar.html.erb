@@ -15,8 +15,8 @@ end %>
   <div class="mx-auto flex min-h-[52px] max-w-[1280px] items-center justify-between px-4 md:min-h-[92px] md:flex-wrap md:gap-3 md:px-6 md:py-2 lg:flex-nowrap lg:gap-6 lg:py-0">
     <!-- Compact phone header -->
     <div class="flex w-full items-center justify-between md:hidden">
-      <%= link_to dashboard_path, class: "flex h-9 w-9 items-center justify-center rounded-full bg-[#07349e]", aria: { label: "KaSurbisyo home" } do %>
-        <span class="sr-only">KaSurbisyo home</span>
+      <%= link_to dashboard_path, class: "flex h-9 w-9 items-center justify-center", aria: { label: "KaSurbisyo home" } do %>
+        <%= image_tag "logo.png", class: "h-12 w-12 object-contain", alt: "" %>
       <% end %>
 
       <div class="flex items-center gap-3">
@@ -32,7 +32,7 @@ end %>
 
     <!-- Full tablet and desktop header -->
     <%= link_to dashboard_path, class: "hidden shrink-0 items-center gap-2.5 no-underline md:flex" do %>
-      <span class="h-9 w-9 rounded-full bg-[#07349e] sm:h-10 sm:w-10 lg:h-12 lg:w-12" aria-hidden="true"></span>
+      <%= image_tag "logo.png", class: "h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16", alt: "" %>
       <span class="flex flex-col text-slate-900">
         <strong class="text-[16px] font-bold leading-tight tracking-[-0.04em] sm:text-[18px] lg:text-[30px]">KaSurbisyo</strong>
         <small class="mt-0.5 text-[8px] text-slate-600 sm:text-[9px] lg:text-[13px]">Digital na Sistema para sa mga Rehistradong Residente</small>
@@ -41,8 +41,8 @@ end %>
 
     <nav class="hidden w-full items-center justify-center gap-1 rounded-lg bg-white p-1 text-[11px] font-medium md:flex sm:gap-2 lg:w-auto lg:min-w-[720px] lg:justify-between lg:px-3 lg:py-2 lg:text-[15px]" aria-label="Pangunahing nabigasyon">
       <%= link_to "Tahanan", dashboard_path, class: "#{desktop_link_classes} #{active_item == :home ? active_classes : idle_classes}" %>
-      <%= link_to "Mga Kahilingan", document_requests_path, class: "#{desktop_link_classes} #{active_item == :requests ? active_classes : idle_classes}" %>
-      <%= link_to "Mga Ulat", barangay_concerns_path, class: "#{desktop_link_classes} #{active_item == :reports ? active_classes : idle_classes}" %>
+      <%= link_to "Dokumento", document_requests_path, class: "#{desktop_link_classes} #{active_item == :requests ? active_classes : idle_classes}" %>
+      <%= link_to "Reklamo", barangay_concerns_path, class: "#{desktop_link_classes} #{active_item == :reports ? active_classes : idle_classes}" %>
       <%= link_to "Impormasyon", profile_url, class: "#{desktop_link_classes} #{active_item == :profile ? active_classes : idle_classes}" %>
       <% if current_user.barangay_staff? %>
         <%= link_to "Tagapangasiwa", admin_dashboard_path, class: "#{desktop_link_classes} #{active_item == :admin ? active_classes : idle_classes}" %>

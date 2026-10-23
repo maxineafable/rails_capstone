@@ -37,6 +37,11 @@
       "certificate_of_income" => ["Certificate of Income", "Pagpapatunay ng kita para sa opisyal na transaksyon.", "INC-01", "Ayon sa layunin"],
       "certificate_of_low_income" => ["Certificate of Low Income", "Katibayan ng mababang kita para sa mga benepisyo.", "LI-01", "Ayon sa layunin"]
     }.fetch(@document_type, [@document_type.humanize, "Opisyal na dokumento ng barangay.", "DOC-01", "Ayon sa layunin"]) %>
+    <% document_icon = {
+      "barangay_clearance" => "barangayclearance.svg",
+      "certificate_of_indigency" => "certificateofindigency.svg",
+      "certificate_of_residency" => "certificateofrecidency.svg"
+    }.fetch(@document_type, "documents.svg") %>
 
     <%= form_with url: document_requests_path, scope: :document_request, method: :post, local: true, data: { turbo: false } do |f| %>
       <%= f.hidden_field :document_type, value: @document_request.document_type %>
@@ -53,11 +58,11 @@
       <div class="space-y-4 lg:space-y-5">
         <section class="overflow-hidden rounded-xl bg-white shadow-sm" aria-labelledby="review-document-title">
           <div class="flex items-center justify-between gap-3 bg-[#eff3ff] px-5 py-4 sm:px-6">
-            <h2 id="review-document-title" class="text-sm font-semibold text-slate-800 lg:text-[16px]">▤ Document Type <span class="font-normal text-slate-600">(Uri ng Dokumento)</span></h2>
+            <h2 id="review-document-title" class="flex items-center gap-2 text-sm font-semibold text-slate-800 lg:text-[16px]"><%= image_tag "uringdokumento.svg", alt: "", class: "h-4 w-4 shrink-0 object-contain" %> Uri ng Dokumento</h2>
             <button type="button" onclick="history.back()" class="shrink-0 bg-transparent text-[10px] font-semibold text-[#07349e] hover:underline lg:text-[13px]">✎ Baguhin ang Detalye</button>
           </div>
           <div class="flex items-start gap-4 p-5 sm:px-6 sm:py-6">
-            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#dce7ff] text-xl text-[#07349e]" aria-hidden="true">▣</span>
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#dce7ff]" aria-hidden="true"><%= image_tag document_icon, alt: "", class: "h-7 w-7 object-contain" %></span>
             <div>
               <h3 class="text-lg font-bold text-[#07349e] lg:text-[20px]"><%= document_details[0] %> <span class="rounded-full bg-[#e1eaff] px-2 py-1 align-middle text-[9px] font-semibold text-[#07349e]">Form <%= document_details[2] %></span></h3>
               <p class="mt-1 max-w-[560px] text-xs leading-relaxed text-slate-600 lg:text-[14px]"><%= document_details[1] %></p>
@@ -70,7 +75,7 @@
 
         <section class="rounded-xl bg-white p-5 shadow-sm sm:p-6" aria-labelledby="review-purpose-title">
           <div class="flex items-center justify-between gap-3">
-            <h2 id="review-purpose-title" class="text-sm font-semibold text-slate-800 lg:text-[16px]">▤ Layunin ng Kahilingan</h2>
+            <h2 id="review-purpose-title" class="flex items-center gap-2 text-sm font-semibold text-slate-800 lg:text-[16px]"><%= image_tag "layunin.svg", alt: "", class: "h-4 w-4 shrink-0 object-contain" %> Layunin ng Kahilingan</h2>
             <span class="rounded-full bg-[#e1eaff] px-3 py-1 text-[9px] font-semibold text-[#07349e]">Layunin</span>
           </div>
           <div class="mt-4 rounded-lg bg-[#eff3ff] p-4">
@@ -81,7 +86,7 @@
 
         <section class="rounded-xl bg-white p-5 shadow-sm sm:p-6" aria-labelledby="review-id-title">
           <div class="flex items-center justify-between gap-3">
-            <h2 id="review-id-title" class="text-sm font-semibold text-slate-800 lg:text-[16px]">▣ Attached Identification &amp; Proof <span class="font-normal text-slate-600">(Kalakip na Dokumento)</span></h2>
+            <h2 id="review-id-title" class="flex items-center gap-2 text-sm font-semibold text-slate-800 lg:text-[16px]"><%= image_tag "kalakip.svg", alt: "", class: "h-4 w-4 shrink-0 object-contain" %> Kalakip na Dokumento</h2>
             <span class="rounded-full bg-emerald-200 px-3 py-1 text-[9px] font-semibold text-emerald-800">✓ ID Attached</span>
           </div>
           <% if @document_request.valid_id_image.attached? %>
@@ -89,7 +94,7 @@
               <%= image_tag @document_request.valid_id_image, class: "h-16 w-24 rounded-md border border-white object-cover", alt: "Uploaded identification document" %>
               <div class="min-w-0 flex-1">
                 <p class="truncate text-sm font-semibold text-slate-800"><%= @document_request.valid_id_image.filename %></p>
-                <p class="text-xs text-slate-600"><%= @document_request.valid_id_type.humanize %> · <%= number_to_human_size(@document_request.valid_id_image.byte_size) %></p>
+                <p class="text-xs text-slate-600"><%= tagalog_label(@document_request.valid_id_type) %> · <%= number_to_human_size(@document_request.valid_id_image.byte_size) %></p>
                 <p class="mt-1 text-[10px] font-semibold text-emerald-700">✓ File attached and ready for submission</p>
               </div>
               <%= link_to "◉ View Full Preview", url_for(@document_request.valid_id_image), target: "_blank", rel: "noopener", class: "rounded-md bg-white px-3 py-2 text-center text-[10px] font-semibold text-[#07349e] no-underline hover:bg-blue-50" %>
@@ -101,7 +106,7 @@
 
         <% if @document_request.resident_remarks.present? %>
           <section class="rounded-xl bg-white p-5 shadow-sm sm:p-6" aria-labelledby="review-remarks-title">
-            <h2 id="review-remarks-title" class="text-sm font-semibold text-slate-800 lg:text-[16px]">☰ Karagdagang Tala</h2>
+            <h2 id="review-remarks-title" class="flex items-center gap-2 text-sm font-semibold text-slate-800 lg:text-[16px]"><%= image_tag "karagdagangpaalala.svg", alt: "", class: "h-4 w-4 shrink-0 object-contain" %> Karagdagang Tala</h2>
             <p class="mt-3 whitespace-pre-line rounded-lg bg-[#eff3ff] p-4 text-sm italic leading-relaxed text-slate-700">“<%= @document_request.resident_remarks %>”</p>
           </section>
         <% end %>
