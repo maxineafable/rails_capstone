@@ -1,21 +1,11 @@
 <% content_for :title, "Mag-log in | KaSurbisyo" %>
 
-<div class="flex min-h-screen flex-col bg-[#f5f4f7] font-sans text-slate-900">
-  <header class="h-[104px] shrink-0 bg-white shadow-[0_5px_12px_rgba(15,23,42,0.18)] sm:h-[124px] lg:h-[153px]">
-    <div class="mx-auto flex h-full w-full max-w-[1200px] items-center gap-4 px-5 sm:px-8">
-      <div class="flex items-center gap-2.5">
-        <span class="h-10 w-10 shrink-0 rounded-full bg-[#07349e] sm:h-12 sm:w-12 lg:h-14 lg:w-14" aria-hidden="true"></span>
-        <span class="flex flex-col text-slate-900">
-          <strong class="text-xl font-bold leading-tight tracking-[-0.04em] sm:text-2xl lg:text-[30px]">Barangay Kalikid Sur</strong>
-          <small class="mt-0.5 text-[10px] text-slate-600 sm:text-xs lg:text-[13px]">Digital na Sistema para sa mga Rehistradong Residente</small>
-        </span>
-      </div>
-    </div>
-  </header>
+<div class="flex min-h-screen flex-col bg-cover bg-center bg-fixed font-sans text-slate-900" style="background-image: linear-gradient(to bottom, rgba(6, 26, 59, 0.55) 0%, rgba(6, 26, 59, 0.70) 50%, rgba(6, 26, 59, 0.95) 100%), url('<%= asset_path('barangayhall.png') %>');">
+  <%= render "devise/shared/auth_navbar" %>
 
   <main class="flex flex-1 items-center justify-center px-4 py-6 sm:px-6 sm:py-8 lg:min-h-[800px] lg:py-5">
     <section class="w-full max-w-[440px] rounded-xl bg-white px-5 pb-6 pt-7 shadow-[0_5px_18px_rgba(15,23,42,0.25)] sm:px-7 sm:pb-7 sm:pt-8 lg:px-[26px] lg:pb-11 lg:pt-12" aria-labelledby="login-title">
-      <div class="mx-auto mb-4 h-[76px] w-[76px] rounded-full bg-white shadow-[0_2px_5px_rgba(15,23,42,0.2)] sm:h-[90px] sm:w-[90px] lg:mb-4 lg:h-[112px] lg:w-[112px]" aria-hidden="true"></div>
+      <div class="mx-auto mb-4 h-[76px] w-[76px] overflow-hidden rounded-full shadow-[0_2px_5px_rgba(15,23,42,0.2)] sm:h-[90px] sm:w-[90px] lg:mb-4 lg:h-[112px] lg:w-[112px]" aria-hidden="true"><%= image_tag "barangaylogoo.png", class: "h-full w-full rounded-full object-cover", alt: "" %></div>
 
       <h1 id="login-title" class="mb-3 text-center text-[24px] font-bold leading-tight tracking-[-0.04em] sm:text-[27px] lg:text-[30px]">Maligayang pagdating!</h1>
       <p class="mb-3 rounded-full bg-[#dce4ff] px-2 py-1 text-center text-[9px] font-bold tracking-[0.04em] text-[#07349e] sm:text-[11px] lg:py-1.5 lg:text-[12px]">KALIKID SUR, CABANATUAN CITY, NUEVA ECIJA</p>

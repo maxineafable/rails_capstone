@@ -90,7 +90,11 @@ Hakbang 2: Pagsusuri
       <!-- Main Form -->
       <section class="rounded-xl border border-slate-100 bg-white p-5 sm:p-7 lg:col-span-2">
 
-        <%= form_with model: @document_request, url: review_document_requests_path, local: true, data: { turbo: false } do |f| %>
+        <%= form_with model: @document_request, url: review_document_requests_path, local: true, data: { turbo: false, required_validation: true } do |f| %>
+
+          <div data-required-summary class="mb-4 hidden rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800" role="alert" tabindex="-1">
+            May mga kinakailangang patlang na hindi pa napupunan. Pakisuri ang mga naka-highlight.
+          </div>
 
           <%= f.hidden_field :document_type, value: @document_type %>
 
@@ -246,14 +250,21 @@ Pakisuri at ayusin ang mga sumusunod na mali:
                 "Scholarship Requirement",
                 "Bank Account Opening",
                 "Government ID Application",
-                "Others"
+                "Electrical Permit",
+                "Building Permit",
+                "Loan Purposes",
+                "Motorcycle Loan",
+                "Scholarship Application",
+                "Job Application",
+                "Medical Assistance",
+                "Others",
               ].each do |purpose| %>
 
                 <button
                   type="button"
                   data-purpose="<%= purpose %>"
                   onclick="selectPurpose(this)"
-                  class="purpose-chip rounded-full border border-transparent bg-[#EEF3FF] px-3 py-1.5 text-[11px] lg:text-[13px] font-semibold text-blue-800 hover:border-blue-300 hover:bg-blue-100"
+                  class="purpose-chip rounded-full border border-transparent bg-[#EEF3FF] px-3 py-1.5 text-[11px] lg:text-[13px] font-semibold text-blue-800 transition-colors hover:bg-[#07349e] hover:text-white"
                 >
                   + <%= purpose %>
                 </button>
@@ -337,10 +348,10 @@ Pakisuri at ayusin ang mga sumusunod na mali:
             </h3>
 
             <p class="mt-1 text-xs lg:text-[16px] text-slate-600">
-              Mag-upload ng malinaw na kopya o litrato ng iyong PhilSys National ID, Driver's License, UMID, o Passport.
+              Tumatanggap kami ng PhilSys ID (National ID), Driver's License, PhilHealth ID, Postal ID, Passport, UMID, PRC, at School ID. Mag-upload ng malinaw na kopya o litrato ng iyong ID.
             </p>
 
-            <div class="mt-3 rounded-xl bg-[#F6F8FF] p-5 sm:p-7">
+            <div data-required-upload="valid-id" class="mt-3 rounded-xl bg-[#F6F8FF] p-5 sm:p-7">
 
               <div class="flex flex-col items-center text-center">
                 <div class="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 text-blue-800">
@@ -363,20 +374,36 @@ Pakisuri at ayusin ang mga sumusunod na mali:
                   <%= f.file_field :valid_id_image,
                         id: "valid-id-gallery",
                         accept: "image/*",
+                        required: true,
                         class: "peer sr-only",
-                        data: { photo_picker: true, other_picker: "valid-id-camera", filename_target: "valid-id-filename" } %>
+                        data: { photo_picker: true, other_picker: "valid-id-camera", filename_target: "valid-id-filename", preview_target: "valid-id-preview", camera_group: "valid-id", upload_target: "valid-id-gallery" } %>
                   <label for="valid-id-gallery" class="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-900 transition hover:bg-blue-200 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-400 lg:text-[14px]">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><circle cx="9" cy="10" r="1.5"/><path d="m5 17 5-4 3 2 3-3 4 4"/></svg>
                     Pumili ng larawan
                   </label>
 
-                  <input id="valid-id-camera" name="document_request[valid_id_camera]" type="file" accept="image/*" capture="environment" class="peer sr-only" data-photo-picker data-other-picker="valid-id-gallery" data-filename-target="valid-id-filename">
-                  <label for="valid-id-camera" class="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-900 transition hover:bg-blue-200 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-400 lg:text-[14px]">
+                  <input id="valid-id-camera" name="document_request[valid_id_camera]" type="file" accept="image/*" capture="environment" class="peer sr-only" data-photo-picker data-other-picker="valid-id-gallery" data-filename-target="valid-id-filename" data-preview-target="valid-id-preview" data-camera-group="valid-id" data-upload-target="valid-id-gallery">
+                  <button type="button" data-camera-open="valid-id" class="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-900 transition hover:bg-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 lg:text-[14px]">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
                     Gamitin ang camera
-                  </label>
+                  </button>
+                </div>
+                <div id="valid-id-camera-panel" class="mt-4 hidden w-full max-w-md rounded-xl border border-blue-200 bg-white p-3" aria-live="polite">
+                  <p id="valid-id-camera-message" class="mb-2 text-xs font-semibold text-slate-700">Iharap ang ID sa camera.</p>
+                  <video id="valid-id-camera-video" class="max-h-72 w-full rounded-lg bg-slate-900 object-contain" autoplay playsinline muted></video>
+                  <img id="valid-id-camera-captured" class="hidden max-h-72 w-full rounded-lg object-contain" alt="Larawang kuha mula sa camera">
+                  <div class="mt-3 flex flex-wrap justify-center gap-2">
+                    <button type="button" data-camera-action="capture" data-camera-group="valid-id" class="rounded-lg bg-[#07349e] px-4 py-2 text-xs font-semibold text-white hover:bg-[#0b2e83]">Kumuha ng Larawan</button>
+                    <button type="button" data-camera-action="retake" data-camera-group="valid-id" class="hidden rounded-lg bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-900 hover:bg-blue-200">Kumuha Muli</button>
+                    <button type="button" data-camera-action="use" data-camera-group="valid-id" class="hidden rounded-lg bg-emerald-700 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-800">Gamitin ang Larawan</button>
+                    <button type="button" data-camera-action="cancel" data-camera-group="valid-id" class="rounded-lg bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200">Isara</button>
+                    <button type="button" data-camera-action="fallback" data-camera-group="valid-id" class="hidden rounded-lg bg-blue-100 px-4 py-2 text-xs font-semibold text-blue-900 hover:bg-blue-200">Pumili ng larawan sa device</button>
+                  </div>
                 </div>
                 <p id="valid-id-filename" class="mt-2 min-h-4 text-[10px] text-slate-600" aria-live="polite">Wala pang napipiling larawan</p>
+                <div class="mt-3 hidden w-full max-w-sm overflow-hidden rounded-lg border border-blue-200 bg-white p-2" id="valid-id-preview-container">
+                  <img id="valid-id-preview" class="max-h-64 w-full object-contain" alt="Preview ng napiling larawan ng ID">
+                </div>
                 <p class="mt-1 text-[10px] font-medium text-slate-600">Kinakailangan ang kahit isang malinaw na larawan ng ID.</p>
               </div>
 

@@ -4,11 +4,10 @@
   <main class="mx-auto max-w-[1280px] px-4 pb-10 pt-10 sm:px-6 lg:px-8 lg:pb-14 lg:pt-12">
     <section class="mx-auto max-w-[768px] text-center" aria-labelledby="submission-title">
       <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-300 shadow-[0_8px_24px_rgba(5,150,105,0.25)] lg:h-24 lg:w-24">
-        <span class="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-4xl font-bold text-white lg:h-16 lg:w-16" aria-hidden="true">✓</span>
+        <%= image_tag "background-shadow.svg", alt: "", class: "h-16 w-16 object-contain lg:h-20 lg:w-20", aria: { hidden: true } %>
       </div>
       <h1 id="submission-title" class="mt-4 text-[30px] font-bold leading-tight tracking-[-0.04em] text-slate-900 lg:text-[40px]">Naipasa na ang Ulat!</h1>
-      <p class="mt-1 text-lg font-semibold text-[#07349e] lg:text-[21px]">Naipadala na ang inyong ulat!</p>
-      <p class="mt-2 text-sm text-slate-600 lg:text-[18px]">Natanggap na ng tanggapan ang inyong ulat.</p>
+      <p class="mt-2 text-sm text-slate-600 lg:text-[18px]">Natanggap na ang iyong ulat at nakatakda nang suriin. Salamat sa pagtulong na mapanatiling maayos at ligtas ang ating barangay!</p>
     </section>
 
     <section class="mx-auto mt-8 max-w-[768px] overflow-hidden rounded-xl bg-white shadow-md" aria-label="Report reference details">
@@ -25,16 +24,16 @@
 
         <div class="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 rounded-lg bg-[#f5f8ff] p-5 sm:grid-cols-2 sm:p-6">
           <div class="flex items-start gap-4">
-            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-xl text-[#07349e]" aria-hidden="true">⌖</span>
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100" aria-hidden="true"><%= image_tag({ "peace_and_order" => "streetlight.svg", "infrastructure" => "roads.svg", "waste_management" => "garbage.svg", "health_and_sanitation" => "drainage.svg", "others" => "others.svg" }.fetch(@barangay_concern.category, "others.svg"), alt: "", class: "h-6 w-6 object-contain") %></span>
             <div>
-              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Category (Kategorya)</p>
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Kategorya</p>
               <p class="mt-1 text-sm font-semibold text-slate-900 lg:text-[16px]"><%= @barangay_concern.category.humanize %></p>
               <p class="mt-0.5 text-xs text-slate-600"><%= @barangay_concern.reason.truncate(72) %></p>
             </div>
           </div>
 
           <div class="flex items-start gap-4">
-            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-200 text-xl text-emerald-800" aria-hidden="true">◷</span>
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-200" aria-hidden="true"><%= image_tag "petsa.svg", alt: "", class: "h-6 w-6 object-contain" %></span>
             <div>
               <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Petsa at Oras ng Pagsumite</p>
               <p class="mt-1 text-sm font-semibold text-slate-900 lg:text-[16px]"><%= tagalog_datetime(@barangay_concern.created_at) %></p>
@@ -43,7 +42,7 @@
           </div>
 
           <div class="flex items-start gap-4 sm:col-span-2">
-            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-xl text-[#07349e]" aria-hidden="true">♙</span>
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100" aria-hidden="true"><%= image_tag "lugar.svg", alt: "", class: "h-6 w-6 object-contain" %></span>
             <div>
               <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Lokasyon ng Ulat</p>
               <p class="mt-1 text-sm font-semibold text-slate-900 lg:text-[16px]"><%= @barangay_concern.location_description %></p>

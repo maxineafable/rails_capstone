@@ -8,7 +8,7 @@ class DocumentRequest < ApplicationRecord
 
   enum :document_type, { barangay_clearance: 0, certificate_of_indigency: 1, certificate_of_residency: 2, good_moral_character: 3, certificate_of_income: 4, certificate_of_low_income: 5 }
   enum :status, { pending: 0, processing: 1, rejected: 2, ready_to_pickup: 3, claimed: 4 }, default: :pending
-  enum :valid_id_type, { national_id: 0, drivers_license: 1, passport: 2, philhealth: 3 }
+  enum :valid_id_type, { national_id: 0, drivers_license: 1, passport: 2, philhealth: 3, postal_id: 4, umid: 5, prc: 6, school_id: 7 }
 
   store_accessor :custom_fields, :years_of_residency, :monthly_income, :job
 
