@@ -50,7 +50,7 @@
 
         <div class="grid gap-4 sm:grid-cols-2 lg:gap-x-6 lg:gap-y-5">
           <div>
-            <%= f.label :first_name, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= f.label :first_name, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>First name <span class="text-red-600">*</span><% end %>
             <%= f.text_field :first_name, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
           <div>
@@ -58,7 +58,7 @@
             <%= f.text_field :middle_name, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
           <div>
-            <%= f.label :last_name, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= f.label :last_name, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Last name <span class="text-red-600">*</span><% end %>
             <%= f.text_field :last_name, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
           <div>
@@ -66,11 +66,11 @@
             <%= f.text_field :suffix, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
           <div>
-            <%= f.label :sex, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= f.label :sex, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Sex <span class="text-red-600">*</span><% end %>
             <%= f.select :sex, Profile.sexes.keys.map { |sex| [tagalog_label(sex), sex] }, { include_blank: "Pumili ng kasarian" }, { required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" } %>
           </div>
           <div>
-            <%= label_tag "user_email", "Email", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= label_tag "user_email", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Email <span class="text-red-600">*</span><% end %>
             <%= email_field_tag "user[email]", current_user.email, required: true, autocomplete: "email", class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
         </div>
@@ -85,27 +85,27 @@
         <%= fields_for :address, @address do |a| %>
           <div class="grid gap-4 sm:grid-cols-2 lg:gap-x-6 lg:gap-y-5">
             <div>
-              <%= a.label :house_number, "House Number / Block & Lot", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= a.label :house_number, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>House Number / Block & Lot <span class="text-red-600">*</span><% end %>
               <%= a.text_field :house_number, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
             </div>
             <div>
-              <%= a.label :street, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= a.label :street, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Street <span class="text-red-600">*</span><% end %>
               <%= a.text_field :street, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
             </div>
             <div>
-              <%= a.label :purok, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= a.label :purok, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Purok <span class="text-red-600">*</span><% end %>
               <%= a.text_field :purok, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
             </div>
             <div>
-              <%= a.label :barangay, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= a.label :barangay, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Barangay <span class="text-red-600">*</span><% end %>
               <%= a.text_field :barangay, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
             </div>
             <div>
-              <%= a.label :city, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= a.label :city, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>City <span class="text-red-600">*</span><% end %>
               <%= a.text_field :city, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
             </div>
             <div>
-              <%= a.label :province, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+              <%= a.label :province, class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Province <span class="text-red-600">*</span><% end %>
               <%= a.text_field :province, required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
             </div>
           </div>

@@ -1,0 +1,209 @@
+<div class="min-h-screen bg-[#f3f4f8] lg:flex">
+  <%= render "sidebar" %>
+
+  <main class="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+    <div class="mx-auto max-w-[1600px] space-y-5">
+      <header class="flex flex-col gap-6 rounded-2xl bg-white px-6 py-7 shadow-sm sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+        <div class="max-w-3xl">
+          <h1 class="text-3xl font-bold leading-tight tracking-tight text-blue-900 sm:text-4xl">Pagbuo ng mga Talaan at Ulat ng Barangay</h1>
+          <p class="mt-2 font-semibold text-amber-800">Ulat at Talaan ng Barangay</p>
+          <p class="mt-1 text-sm leading-6 text-slate-600">Tingnan at ilabas ang mga talaan ng kahilingan sa dokumento, ulat ng suliranin, at residente para sa opisyal na pangangasiwa ng barangay.</p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-2">
+          <%= link_to admin_reports_export_path(request.query_parameters.merge(format: :csv)), class: "inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800" do %>
+            <%= image_tag "excel.svg", alt: "", class: "h-5 w-5 object-contain" %> I-export bilang CSV
+          <% end %>
+        </div>
+      </header>
+
+      <section class="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
+          <%= image_tag "paper.svg", alt: "", class: "h-5 w-5 object-contain" %> Pumili ng Uri ng Ulat
+        </div>
+
+        <div class="grid gap-3 md:grid-cols-3">
+          <% [
+            ["documents", "paper.svg", "Talaan ng Kahilingan sa Dokumento"],
+            ["concerns", "flag.svg", "Talaan ng mga Suliranin"],
+            ["residents", "residents.svg", "Talaan ng mga Residente"]
+          ].each do |key, icon, title| %>
+            <%= link_to admin_reports_path(report: key, date_from: @date_from, date_to: @date_to), class: "flex min-h-28 items-center gap-4 rounded-xl p-4 transition-colors #{ @report_type == key ? 'bg-blue-800 text-white shadow-sm' : 'bg-[#eef3ff] text-slate-800 hover:bg-blue-100' }" do %>
+              <%= image_tag icon, alt: "", class: "h-7 w-7 shrink-0 object-contain #{@report_type == key ? 'brightness-0 invert' : 'report-icon-blue'}" %>
+              <span class="font-semibold"><%= title %></span>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%= form_with url: admin_reports_path, method: :get, local: true, id: "report-filter-form", class: "grid gap-4 lg:grid-cols-[1fr_1fr_2.2fr_auto] lg:items-end" do |f| %>
+          <%= f.hidden_field :report, value: @report_type %>
+          <div>
+            <%= f.label :date_from, "Simula", class: "mb-1.5 block text-xs font-semibold text-slate-700" %>
+            <%= f.date_field :date_from, value: @date_from, class: "w-full rounded-lg border-0 bg-[#eef3ff] px-3 py-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-300" %>
+          </div>
+          <div>
+            <%= f.label :date_to, "Hanggang", class: "mb-1.5 block text-xs font-semibold text-slate-700" %>
+            <%= f.date_field :date_to, value: @date_to, class: "w-full rounded-lg border-0 bg-[#eef3ff] px-3 py-3 text-sm text-slate-800 focus:ring-2 focus:ring-blue-300" %>
+          </div>
+          <div>
+            <p class="mb-1.5 text-xs font-semibold text-slate-700">Mabilisang Panahon</p>
+            <div class="flex flex-wrap gap-1.5">
+              <% [["Ngayong Buwan", "month"], ["Huling 30 Araw", "30days"], ["Kasalukuyang Kuwarter", "quarter"], ["Ngayong Taon", "year"]].each do |label, preset| %>
+                <button type="button" data-report-preset="<%= preset %>" class="rounded-lg bg-[#eef3ff] px-3 py-3 text-xs font-medium text-slate-700 hover:bg-blue-100"><%= label %></button>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="flex flex-col gap-2 rounded-lg bg-[#eef3ff] px-4 py-3 text-sm text-slate-700 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-200 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-900">
+              <%= image_tag "verified.svg", alt: "", class: "h-4 w-4 object-contain" %> <%= number_with_delimiter(@report_count) %> tala
+            </span>
+            <span>Ipinapakita ang <strong><%= number_with_delimiter(@report_count) %></strong> tala mula <strong><%= @date_from.strftime("%d-%m-%Y") %></strong> hanggang <strong><%= @date_to.strftime("%d-%m-%Y") %></strong></span>
+          </div>
+          <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-blue-900">Aktibong talaan: <%= {"documents" => "Mga Kahilingan sa Dokumento", "concerns" => "Mga Ulat ng Suliranin", "residents" => "Mga Residente"}[@report_type] %></span>
+        </div>
+      </section>
+
+      <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="flex items-center gap-2 bg-[#f8faff] px-5 py-4 text-sm text-slate-600 sm:px-6">
+          <%= image_tag({"documents" => "paper.svg", "concerns" => "flag.svg", "residents" => "residents.svg"}[@report_type], alt: "", class: "h-5 w-5 object-contain") %>
+          <span><%= {"documents" => "Opisyal na Listahan ng Kahilingan sa Dokumento", "concerns" => "Opisyal na Listahan ng mga Ulat ng Suliranin", "residents" => "Opisyal na Talaan ng mga Residente"}[@report_type] %> • Barangay Kalikid Sur</span>
+        </div>
+        <% if @report_type == "residents" %>
+          <div class="flex flex-col justify-between gap-2 border-b border-blue-100 bg-[#f8faff] px-5 py-4 text-sm text-slate-700 sm:flex-row sm:items-center sm:px-6">
+            <div class="flex items-center gap-3">
+              <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50"><%= image_tag "paper.svg", alt: "", class: "h-5 w-5 object-contain" %></span>
+              <span class="font-medium">Paunang Tingin sa mga Aktuwal na Tala: Opisyal na Talaan ng mga Naninirahan (RBI Form A) <span class="text-blue-300">•</span> Barangay Kalikid Sur, Lungsod ng Cabanatuan</span>
+            </div>
+            <span class="shrink-0 text-xs text-slate-500">Pahina <%= @pagy.page %> sa <%= @pagy.pages %></span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[1250px] border-collapse text-left">
+              <thead class="border-b border-slate-100 bg-white text-[9px] font-semibold uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th class="px-3 py-4">Numero ng Sambahayan</th><th class="px-3 py-4">Apelyido</th><th class="px-3 py-4">Pangalan</th><th class="px-3 py-4">Gitnang Pangalan</th><th class="px-3 py-4">Dugtong sa Pangalan</th><th class="px-3 py-4">Purok / Sona</th><th class="px-3 py-4">Kalye / Subdibisyon</th><th class="px-3 py-4">Petsa ng Kapanganakan</th><th class="px-3 py-4">Kasarian</th><th class="px-3 py-4">Katayuang Sibil</th><th class="px-3 py-4">Pagkamamamayan</th><th class="px-3 py-4">Hanapbuhay</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11px] text-slate-700">
+                <% last_household_id = nil %>
+                <% @report_rows.each do |member| %>
+                  <% household = member.household %>
+                  <% household_number = "HH-#{household.date_accomplished.year}-#{household.id.to_s.rjust(4, '0')}" %>
+                  <% if last_household_id != household.id %>
+                    <tr class="bg-[#f3f7ff]"><td colspan="12" class="px-4 py-3 font-semibold text-blue-800">
+                      <span class="mr-2 inline-flex h-4 w-4 items-center justify-center"><%= image_tag "house.svg", alt: "", class: "h-4 w-4 object-contain" %></span>
+                      Numero ng Sambahayan: <%= household_number %> <span class="mx-1 text-blue-300">•</span> Purok <%= household.purok %> (<%= [household.house_number, household.street].compact_blank.join(" ") %>) <span class="mx-1 text-blue-300">•</span> <%= household.household_members.size %> kasapi
+                    </td></tr>
+                    <% last_household_id = household.id %>
+                  <% end %>
+                  <tr class="hover:bg-slate-50">
+                    <td class="whitespace-nowrap px-3 py-4 font-medium text-blue-800"><%= household_number %> <span class="text-[9px] text-slate-400">(<%= member.relationship_to_head %>)</span></td>
+                    <td class="px-3 py-4 font-semibold text-slate-900"><%= member.last_name %></td>
+                    <td class="px-3 py-4 text-slate-900"><%= member.first_name %></td>
+                    <td class="px-3 py-4"><%= member.middle_name.presence || "—" %></td>
+                    <td class="px-3 py-4 text-blue-700"><%= member.suffix.presence || "—" %></td>
+                    <td class="whitespace-nowrap px-3 py-4">Purok <%= household.purok %></td>
+                    <td class="px-3 py-4"><%= [household.house_number, household.street].compact_blank.join(" ") %></td>
+                    <td class="whitespace-nowrap px-3 py-4"><%= tagalog_date(member.birth_date) %></td>
+                    <td class="px-3 py-4"><%= tagalog_label(member.sex) %></td>
+                    <td class="px-3 py-4"><%= tagalog_label(member.civil_status) %></td>
+                    <td class="px-3 py-4"><%= member.citizenship.presence || "—" %></td>
+                    <td class="px-3 py-4"><%= member.occupation.presence || "—" %></td>
+                  </tr>
+                <% end %>
+                <% if @report_rows.empty? %>
+                  <tr><td colspan="12" class="px-5 py-12 text-center text-sm text-slate-500">Walang kasaping naitala sa napiling panahon.</td></tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+          <footer class="flex flex-col gap-3 border-t border-blue-100 bg-[#f5f8ff] px-5 py-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <span>Ipinapakita ang <strong><%= @pagy.from || 0 %> hanggang <%= @pagy.to || 0 %></strong> sa <strong><%= number_with_delimiter(@report_count) %></strong> tala ng kasapi</span>
+            <div class="text-blue-900"><%== pagy_nav(@pagy) if @pagy.pages > 1 %></div>
+          </footer>
+        <% else %>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[1050px] text-left text-sm">
+            <thead class="bg-[#dfeaff] text-[11px] font-bold uppercase tracking-wide text-slate-800">
+              <tr>
+                <th class="px-5 py-4">Sanggunian</th><th class="px-5 py-4">Petsa ng Pagtatala</th><th class="px-5 py-4">Pangalan ng Residente</th><th class="px-5 py-4">Purok / Tirahan</th><th class="px-5 py-4"><%= @report_type == "documents" ? "Uri ng Dokumento" : (@report_type == "concerns" ? "Uri ng Suliranin" : "Uri ng Talaan") %></th><th class="px-5 py-4"><%= @report_type == "residents" ? "Email" : "Layunin / Detalye" %></th><th class="px-5 py-4">Kalagayan</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-blue-100">
+              <% @report_rows.each do |record| %>
+                <% user = @report_type == "residents" ? record : record.resident %>
+                <% profile = user&.profile %>
+                <% address = user&.address %>
+                <% name = [profile&.first_name, profile&.middle_name, profile&.last_name, profile&.suffix].compact_blank.join(" ") %>
+                <% reference = @report_type == "residents" ? "RES-#{record.id}" : record.tracking_number %>
+                <% status_key = @report_type == "residents" ? "registered" : record.status %>
+                <% status_label, status_icon, status_style = case status_key
+                  when "ready_to_pickup", "claimed", "resolved", "registered" then [status_key == "registered" ? "Naitala" : (status_key == "resolved" ? "Nalutas" : "Inilabas"), "verified.svg", "bg-emerald-200 text-emerald-800"]
+                  when "processing", "ongoing" then ["Pinoproseso", "processing.svg", "bg-indigo-100 text-blue-800"]
+                  when "rejected", "unactionable" then ["Hindi Naaprubahan", "pending.svg", "bg-rose-100 text-rose-800"]
+                  else ["Naghihintay", "pending.svg", "bg-orange-100 text-amber-900"]
+                  end %>
+                <% kind = if @report_type == "documents"
+                  record.document_type.humanize
+                elsif @report_type == "concerns"
+                  {"peace_and_order" => "Kapayapaan at Kaayusan", "infrastructure" => "Imprastraktura", "waste_management" => "Pamamahala ng Basura", "health_and_sanitation" => "Kalusugan at Kalinisan", "others" => "Iba pa"}[record.category]
+                else
+                  "Talaan ng Residente"
+                end %>
+                <tr class="align-middle hover:bg-slate-50">
+                  <td class="whitespace-nowrap px-5 py-4 font-bold text-blue-900"><%= reference %></td>
+                  <td class="px-5 py-4 text-slate-600"><%= record.created_at.strftime("%d-%m-%Y") %><br><span class="text-xs"><%= record.created_at.strftime("%I:%M %p") %></span></td>
+                  <td class="px-5 py-4 font-semibold text-slate-800"><%= name.presence || "Hindi nakasaad" %></td>
+                  <td class="px-5 py-4 text-slate-700"><%= [address&.purok, address&.house_number, address&.street, address&.barangay].compact_blank.join(", ").presence || "Hindi nakasaad" %></td>
+                  <td class="px-5 py-4 font-semibold text-slate-800"><%= kind %></td>
+                  <td class="max-w-56 px-5 py-4 text-slate-600"><%= @report_type == "residents" ? user.email : (@report_type == "documents" ? record.purpose : record.reason) %></td>
+                  <td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide <%= status_style %>"><%= image_tag status_icon, alt: "", class: "h-4 w-4 object-contain" %><%= status_label %></span></td>
+                </tr>
+              <% end %>
+              <% if @report_rows.empty? %>
+                <tr><td colspan="7" class="px-5 py-12 text-center text-sm text-slate-500">Walang tala sa napiling panahon.</td></tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <footer class="flex flex-col gap-3 bg-[#f5f8ff] px-5 py-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <span>Mga tala sa pahinang ito: <strong class="text-slate-900"><%= @report_rows.size %></strong> sa <strong class="text-slate-900"><%= number_with_delimiter(@report_count) %></strong></span>
+          <div class="text-blue-900"><%== pagy_nav(@pagy) if @pagy.pages > 1 %></div>
+        </footer>
+        <% end %>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+  (() => {
+    const form = document.getElementById("report-filter-form");
+    if (!form) return;
+    const from = form.querySelector('[name="date_from"]');
+    const to = form.querySelector('[name="date_to"]');
+    [from, to].forEach((field) => field.addEventListener("change", () => form.requestSubmit()));
+    const date = (value) => value.toISOString().slice(0, 10);
+    form.querySelectorAll("[data-report-preset]").forEach((button) => button.addEventListener("click", () => {
+      const today = new Date();
+      let start = new Date(today);
+      switch (button.dataset.reportPreset) {
+        case "month": start.setDate(1); break;
+        case "30days": start.setDate(start.getDate() - 29); break;
+        case "quarter": start.setMonth(Math.floor(start.getMonth() / 3) * 3, 1); break;
+        case "year": start.setMonth(0, 1); break;
+      }
+      from.value = date(start);
+      to.value = date(today);
+      form.requestSubmit();
+    }));
+  })();
+</script>
+
+<style>
+  .report-icon-blue {
+    filter: invert(17%) sepia(96%) saturate(2015%) hue-rotate(214deg) brightness(88%) contrast(105%);
+  }
+
+</style>

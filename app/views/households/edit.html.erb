@@ -1,88 +1,43 @@
 <%= turbo_frame_tag "remote_modal" do %>
-  <!-- OVERLAY BACKDROP SHADOW EFFECT -->
-  <div class="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm">
-    
-    <!-- RIGHT SIDE SLIDING DRAWER SHEET PANEL CONTAINER -->
-    <div class="h-screen w-full max-w-2xl overflow-y-auto bg-white shadow-2xl flex flex-col animate-slide-in">
-
-      <%= form_with model: @household, local: true, class: "h-full flex flex-col" do |f| %>
-
-        <!-- STICKY DRAWER PANEL HEADER CONTROLS -->
-        <div class="sticky top-0 z-10 flex items-center justify-between border-b bg-gray-50 p-5">
+  <div class="animate-overlay-in fixed inset-0 z-[1200] flex justify-end bg-slate-950/50 backdrop-blur-sm" onclick="if (event.target === this) { const drawer = this.querySelector('[data-household-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220); }">
+    <div data-household-drawer class="h-screen w-full max-w-5xl overflow-hidden bg-white shadow-2xl animate-slide-in">
+      <%= form_with model: @household, local: true, class: "flex h-full min-h-0 flex-col" do |f| %>
+        <header class="flex shrink-0 items-start justify-between gap-5 border-b border-slate-100 bg-white px-5 py-5 sm:px-8 lg:px-10">
           <div>
-            <h2 class="text-xl font-bold text-gray-800">
-              Edit Household Information
-            </h2>
-            <p class="mt-0.5 text-xs text-gray-500 font-medium">
-              Modifying Record #<%= @household.id %> · Barangay Census Registry
-            </p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.08em] text-[#07349e] lg:text-[11px]">Talaan ng Populasyon at Sambahayan (RBI Form A) <span class="mx-1 text-slate-300">•</span> <span class="normal-case tracking-normal text-slate-600">Barangay Kalikid Sur</span></p>
+            <h1 class="mt-2 text-[25px] font-bold leading-tight tracking-[-0.04em] text-slate-900 sm:text-[28px]">I-edit ang Talaan ng Sambahayan</h1>
+            <p class="mt-1 text-xs text-slate-500">Sambahayan Blg. <%= @household.house_number %> · I-update ang lokasyon at mga detalye ng talaan.</p>
           </div>
+          <button type="button" onclick="const drawer = this.closest('[data-household-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="shrink-0 rounded-lg p-2 text-2xl leading-none text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="Isara ang pormularyo">×</button>
+        </header>
 
-          <!-- CLOSES DRAWER VIA THE ASSIGNABLE INTERFACE METHOD -->
-          <%= link_to "✕", "#",
-                      class: "rounded-lg p-2 text-xl text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition",
-                      data: { action: "click->remote-modal#close" } %>
-        </div>
-
-        <!-- MAIN FORM BODY AREA -->
-        <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50">
-
+        <div class="min-h-0 flex-1 space-y-4 overflow-y-auto bg-white px-5 py-4 sm:px-8 lg:px-10">
           <% if @household.errors.any? %>
-            <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-              <h4 class="font-semibold">Pak ayusin ang mga sumusunod na error:</h4>
-              <ul class="mt-2 list-disc pl-5">
-                <% @household.errors.full_messages.each do |msg| %>
-                  <li><%= msg %></li>
-                <% end %>
-              </ul>
-            </div>
+            <section class="rounded-lg border border-red-200 bg-red-50 p-4 text-xs text-red-800" role="alert">
+              <h2 class="font-semibold">Pakisuri ang sumusunod:</h2>
+              <ul class="mt-1 list-inside list-disc"><% @household.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
+            </section>
           <% end %>
 
-          <!-- MAIN FIELD ENTITIES FORM CARD -->
-          <section class="bg-white rounded-xl border p-5 shadow-sm space-y-4">
-            <div class="border-b pb-2">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                Location & Survey Information
-              </h3>
+          <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-labelledby="household-edit-title">
+            <div class="mb-4 flex items-center gap-2">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-[11px] font-bold text-[#07349e]">1</span>
+              <h2 id="household-edit-title" class="text-sm font-bold text-slate-900">Lokasyon at Impormasyon ng Sambahayan</h2>
             </div>
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <%= f.label :house_number, "House / Building Number *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :house_number, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :street, "Street *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :street, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :purok, "Purok *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :purok, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :date_accomplished, "Date Nakumpleto *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.date_field :date_accomplished, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
+            <div class="grid gap-x-4 gap-y-3 sm:grid-cols-2">
+              <div><%= f.label :house_number, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Numero ng Bahay / Gusali <span class="text-red-600">*</span><% end %><%= f.text_field :house_number, required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+              <div><%= f.label :street, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Subdibisyon / Kalye <span class="text-red-600">*</span><% end %><%= f.select :street, ([@household.street].compact + ["Villa Emilia Subd.", "Elizaville Subd", "Carmen Park Subd.", "AGL Heights Subd.", "Cristina Homes", "United Village", "Cabanatuan East", "San Fernando Village"]).uniq, { include_blank: "Pumili ng kalye / sitio / subdibisyon..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %></div>
+              <div><%= f.label :purok, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Purok <span class="text-red-600">*</span><% end %><%= f.select :purok, (1..7).map { |number| ["Purok #{number}", number.to_s] }, { include_blank: "Pumili ng Purok..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %></div>
+              <div><%= f.label :date_accomplished, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Petsa ng Pagkumpleto <span class="text-red-600">*</span><% end %><%= f.date_field :date_accomplished, required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
             </div>
           </section>
-
         </div>
 
-        <!-- STICKY BOTTOM BUTTON BAR ACTION LAYOUT -->
-        <div class="sticky bottom-0 z-10 flex items-center justify-end gap-3 border-t bg-gray-50 p-4">
-          <%= link_to "Kanselahin", "#",
-                      class: "rounded-lg border bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition",
-                      data: { action: "click->remote-modal#close" } %>
-
-          <%= f.submit "Update Household",
-                       class: "cursor-pointer rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition" %>
-        </div>
-
+        <footer class="flex shrink-0 items-center justify-between gap-3 border-t border-slate-100 bg-white px-5 py-4 sm:px-8 lg:px-10">
+          <button type="button" onclick="const drawer = this.closest('[data-household-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="rounded-lg bg-red-700 px-6 py-3 text-xs font-semibold text-white transition hover:bg-red-800 lg:min-w-[160px] lg:text-[13px]">Kanselahin</button>
+          <%= f.submit "I-save ang mga Pagbabago", class: "cursor-pointer rounded-lg bg-[#2445b8] px-6 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#17379f] lg:min-w-[205px] lg:text-[13px]" %>
+        </footer>
       <% end %>
-
     </div>
   </div>
 <% end %>

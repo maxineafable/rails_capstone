@@ -19,19 +19,19 @@
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "text-left", id: "login-form", novalidate: true }) do |f| %>
         <div class="mb-3 lg:mb-4">
-          <%= f.label :email, class: "mb-1 block text-sm font-semibold lg:text-[16px]" %>
+          <%= f.label :email, class: "mb-1 block text-sm font-semibold lg:text-[16px]" do %>Email <span class="text-red-600">*</span><% end %>
           <div class="flex h-11 items-center gap-2 rounded-lg bg-[#f1f2ff] px-3 sm:h-12 lg:h-[50px]">
             <svg class="h-3.5 w-3.5 shrink-0 text-slate-700 lg:h-4 lg:w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3.5 6.5h17v12h-17z"/><path d="m4 7 8 6 8-6"/></svg>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "juan@gmail.com", "aria-describedby": "login-email-error", class: "h-full min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-slate-400 lg:text-[16px]" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, placeholder: "juan@gmail.com", "aria-describedby": "login-email-error", class: "h-full min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-slate-400 lg:text-[16px]" %>
           </div>
           <p id="login-email-error" class="mt-1 hidden text-xs font-medium text-red-700" aria-live="polite"></p>
         </div>
 
         <div class="mb-1">
-          <%= f.label :password, class: "mb-1 block text-sm font-semibold lg:text-[16px]" %>
+          <%= f.label :password, class: "mb-1 block text-sm font-semibold lg:text-[16px]" do %>Password <span class="text-red-600">*</span><% end %>
           <div class="flex h-11 items-center gap-2 rounded-lg bg-[#f1f2ff] px-3 sm:h-12 lg:h-[50px]">
             <svg class="h-3.5 w-3.5 shrink-0 text-slate-700 lg:h-4 lg:w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg>
-            <%= f.password_field :password, autocomplete: "current-password", placeholder: "********", "aria-describedby": "login-password-error", class: "h-full min-w-0 flex-1 bg-transparent text-xs tracking-[0.18em] outline-none placeholder:text-slate-400 lg:text-[16px]" %>
+            <%= f.password_field :password, autocomplete: "current-password", required: true, placeholder: "********", "aria-describedby": "login-password-error", class: "h-full min-w-0 flex-1 bg-transparent text-xs tracking-[0.18em] outline-none placeholder:text-slate-400 lg:text-[16px]" %>
             <svg class="h-4 w-4 shrink-0 text-slate-700 lg:h-5 lg:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
           </div>
           <p id="login-password-error" class="mt-1 hidden text-xs font-medium text-red-700" aria-live="polite"></p>

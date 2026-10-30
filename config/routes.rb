@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "document_requests/new", to: "document_requests#select_type", as: :select_document_type
   resources :document_requests, only: [ :index, :create, :show, :update ] do
     get :submitted, on: :member
+    get :residency_certificate, on: :member
     collection do
       get ":document_type/new", to: "document_requests#new", as: :new_type
       post :review
@@ -22,6 +23,8 @@ Rails.application.routes.draw do
   get "/admin/barangay_concerns", to: "admin#barangay_concerns", as: :admin_barangay_concerns
   get "/admin/residents", to: "admin#residents", as: :admin_residents
   get "/admin/staffs", to: "admin#staffs", as: :admin_staffs
+  get "/admin/reports", to: "admin#reports", as: :admin_reports
+  get "/admin/reports/export", to: "admin#reports_export", as: :admin_reports_export
 
   resources :households, except: [ :index ] do
     resources :household_members, only: [ :new, :create, :edit, :update ], as: :members

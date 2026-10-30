@@ -115,7 +115,7 @@
           <label class="flex cursor-pointer items-start gap-3">
             <%= check_box_tag :accepted_declaration, "1", @accepted_declaration || params[:accepted_declaration] == "1", id: "accepted_declaration", required: true, onchange: "document.getElementById('document-request-submit').disabled = !this.checked", class: "mt-1 h-5 w-5 shrink-0 rounded border-slate-300 text-[#07349e] focus:ring-[#07349e]" %>
             <span>
-              <span class="block text-sm font-semibold text-slate-800">Panunumpa sa Kawastuhan at Pagsang-ayon (Sworn Declaration)</span>
+              <span class="block text-sm font-semibold text-slate-800">Panunumpa sa Kawastuhan at Pagsang-ayon (Sworn Declaration) <span class="text-red-600">*</span></span>
               <span class="mt-1 block text-xs leading-relaxed text-slate-600">Pinatutunayan ko na ang lahat ng impormasyong ibinigay ko ay totoo, tama, at kumpleto. Nauunawaan ko na ang maling pahayag o pekeng dokumento ay maaaring magdulot ng karagdagang pagsusuri at kaukulang legal na aksyon alinsunod sa batas at Data Privacy Act of 2012 (R.A. 10173).</span>
               <span class="mt-2 block text-[10px] font-semibold text-emerald-700">⛨ Protected by Barangay Resident Privacy Standards</span>
             </span>
