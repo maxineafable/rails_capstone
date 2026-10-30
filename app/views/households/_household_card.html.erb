@@ -2,47 +2,46 @@
 <% household_number = "HH-#{household.date_accomplished.year}-#{household.id.to_s.rjust(4, '0')}" %>
 <% expanded_id = "members-#{household.id}" %>
 
-<tr id="<%= dom_id(household) %>" class="group hover:bg-[#f8faff]">
+<tr id="<%= dom_id(household) %>" class="group hover:bg-[#f7f9fd]">
   <td class="px-3 py-3 align-top lg:px-4 lg:py-4">
     <span class="font-semibold text-[#2445b8]">● <%= household_number %></span>
-    <span class="mt-1 block pl-3 text-[9px] text-slate-400">Talaan ng mga Sambahayan</span>
+    <span class="mt-1 block pl-3 text-[9px] text-slate-400 lg:text-[12px]">Formularyo ng Sambahayan</span>
   </td>
-  <td class="px-3 py-3 align-top text-xs font-semibold text-slate-800 lg:py-4">
-    <%= head.present? ? [head.last_name, "#{head.first_name} #{head.middle_name}".strip].join(", ") : "No household head recorded" %>
-    <% if head.present? %><span class="mt-1 block text-[9px] font-normal text-emerald-700">Puno ng Sambahayan</span><% end %>
+  <td class="px-3 py-3 align-top text-[10px] font-semibold text-slate-800 lg:py-4 lg:text-[16px]">
+    <%= head.present? ? [head.last_name, "#{head.first_name} #{head.middle_name}".strip].join(", ") : "Walang nakatalang pinuno" %>
+    <% if head.present? %><span class="mt-1 block text-[9px] font-normal text-emerald-700 lg:text-[13px]">Puno ng Sambahayan</span><% end %>
   </td>
-  <td class="px-3 py-3 align-top lg:py-4"><span class="rounded border border-blue-100 bg-blue-50 px-2 py-1 text-[10px] font-medium text-blue-700">Purok <%= household.purok %></span></td>
-  <td class="px-3 py-3 align-top text-xs leading-relaxed text-slate-600 lg:py-4"><%= household.street %></td>
-  <td class="px-3 py-3 align-top lg:py-4"><span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[9px] font-semibold text-emerald-800">♟ <%= household.household_members.size %> kasapi</span></td>
-  <td class="whitespace-nowrap px-3 py-3 align-top text-xs text-slate-600 lg:py-4"><%= tagalog_date(household.date_accomplished) %></td>
+  <td class="px-3 py-3 align-top lg:py-4"><span class="rounded border border-blue-100 bg-blue-50 px-2 py-1 text-[9px] font-medium text-blue-700 lg:text-[13px]">Purok <%= household.purok %></span></td>
+  <td class="px-3 py-3 align-top text-[10px] leading-relaxed text-slate-600 lg:py-4 lg:text-[16px]"><%= household.street %></td>
+  <td class="px-3 py-3 align-top lg:py-4"><span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[9px] font-semibold text-emerald-800 lg:text-[13px]">♟ <%= household.household_members.size %> kasapi</span></td>
+  <td class="whitespace-nowrap px-3 py-3 align-top text-[10px] text-slate-600 lg:py-4 lg:text-[16px]"><%= tagalog_date(household.date_accomplished) %></td>
   <td class="px-3 py-3 align-top lg:py-4">
     <div class="flex items-center gap-1.5">
-      <button type="button" aria-expanded="false" aria-controls="<%= expanded_id %>" onclick="const details = document.getElementById('<%= expanded_id %>'); const willOpen = details.classList.contains('hidden'); details.classList.toggle('hidden'); this.setAttribute('aria-expanded', willOpen); this.innerHTML = willOpen ? '⌃ Tignan' : '⌄ Tignan'" class="whitespace-nowrap rounded-md bg-[#2445b8] px-2.5 py-1.5 text-[10px] font-semibold text-white hover:bg-[#17379f]">⌄ Tignan</button>
-      <%= link_to "✎ Edit", edit_household_path(household), data: { turbo_frame: "remote_modal" }, class: "whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-[10px] font-semibold text-slate-700 no-underline hover:bg-slate-50" %>
+      <button type="button" aria-expanded="false" aria-controls="<%= expanded_id %>" onclick="const details = document.getElementById('<%= expanded_id %>'); const willOpen = details.classList.contains('hidden'); details.classList.toggle('hidden'); this.setAttribute('aria-expanded', willOpen); this.querySelector('img').classList.toggle('rotate-180', willOpen)" class="inline-flex items-center gap-1 whitespace-nowrap rounded-md bg-[#173da8] px-2.5 py-1.5 text-[9px] font-semibold text-white hover:bg-[#17379f] lg:text-[13px]"><%= image_tag "drop.svg", alt: "", class: "h-3 w-3 object-contain transition-transform" %><span>Tignan</span></button>
     </div>
   </td>
 </tr>
 
-<tr id="<%= expanded_id %>" class="hidden bg-[#f8faff]">
+<tr id="<%= expanded_id %>" class="hidden bg-[#f7f9fd]">
   <td colspan="7" class="px-3 pb-4 pt-1 sm:px-4">
-    <section class="overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm" aria-label="Household members">
+    <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Mga kasapi ng sambahayan">
       <header class="flex flex-col justify-between gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:px-5">
         <div class="flex items-center gap-3">
-          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-[#2445b8]" aria-hidden="true">▤</span>
+          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50"><%= image_tag "paper.svg", alt: "", class: "h-5 w-5 object-contain" %></span>
           <div><h3 class="text-sm font-bold text-slate-900">Mga Kasapi ng Sambahayan</h3><p class="text-[10px] text-slate-500">Talaan ng mga Naninirahan sa Barangay ayon sa Sambahayan</p></div>
         </div>
-        <%= link_to "＋ Add Member", new_household_member_path(household), data: { turbo_frame: "remote_modal" }, class: "inline-flex items-center justify-center rounded-md bg-[#3267ef] px-4 py-2 text-[10px] font-semibold text-white no-underline hover:bg-blue-700" %>
+        <%= link_to "+ Magdagdag ng Kasapi", new_household_member_path(household), data: { turbo_frame: "remote_modal" }, class: "inline-flex items-center justify-center rounded-md bg-[#2457d6] px-4 py-2 text-[10px] font-semibold text-white no-underline hover:bg-blue-700" %>
       </header>
 
       <% if household.household_members.any? %>
         <div class="overflow-x-auto">
           <table class="w-full min-w-[1180px] border-collapse text-left">
-            <thead class="text-[8px] font-bold uppercase tracking-wide text-slate-500">
+            <thead class="text-[8px] font-bold uppercase tracking-wide text-slate-500 lg:text-[10px]">
               <tr>
                 <th class="px-3 py-4">Apelyido</th><th class="px-3 py-4">Pangalan</th><th class="px-3 py-4">Gitnang Pangalan</th><th class="px-3 py-4">Karugtong ng Pangalan</th><th class="px-3 py-4">Petsa ng Kapanganakan</th><th class="px-3 py-4">Lugar ng Kapanganakan</th><th class="px-3 py-4">Kasarian</th><th class="px-3 py-4">Katayuang Sibil</th><th class="px-3 py-4">Pagkamamamayan</th><th class="px-3 py-4">Hanapbuhay</th><th class="px-3 py-4">Aksyon</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-slate-100 text-[10px] text-slate-700">
+            <tbody class="divide-y divide-slate-100 text-[10px] text-slate-700 lg:text-sm">
               <% household.household_members.each do |member| %>
                 <tr class="hover:bg-slate-50">
                   <td class="px-3 py-4 font-medium text-slate-900"><%= member.last_name %><span class="ml-1.5 rounded bg-blue-100 px-1.5 py-1 text-[8px] font-semibold text-blue-700"><%= member.relationship_to_head.upcase %></span></td>
@@ -62,7 +61,7 @@
           </table>
         </div>
       <% else %>
-        <div class="px-5 py-8 text-center text-xs text-slate-500">No household members are recorded yet.</div>
+        <div class="px-5 py-8 text-center text-xs text-slate-500">Wala pang naidaragdag na kasapi sa sambahayan.</div>
       <% end %>
     </section>
   </td>

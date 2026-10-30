@@ -1,8 +1,8 @@
-<aside class="sticky top-0 h-screen w-80 shrink-0 overflow-y-auto bg-white">
-  <div class="p-6">
+<aside class="border-b border-slate-200 bg-white lg:sticky lg:top-0 lg:h-screen lg:w-80 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r">
+  <div class="p-4 sm:p-6">
     <!-- Barangay Header -->
-    <div class="mb-6 flex items-center gap-3">
-      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-blue-900 text-blue-900">
+    <div class="mb-5 flex items-center gap-3 sm:mb-7">
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white shadow-sm">
         <span class="text-sm font-bold">BK</span>
       </div>
 
@@ -17,57 +17,68 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="space-y-1">
+    <nav class="flex flex-wrap gap-1 lg:block lg:space-y-1">
 
       <%= link_to admin_dashboard_path,
-          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_dashboard_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
-        <span>▦</span>
+          class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 #{current_page?(admin_dashboard_path) ? 'bg-blue-800 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <%= image_tag "dashboard.svg", alt: "", class: "admin-nav-icon h-5 w-5 shrink-0 object-contain #{current_page?(admin_dashboard_path) ? 'admin-nav-icon-active' : ''}" %>
         <span>Pangunahing Pahina</span>
       <% end %>
 
       <%= link_to admin_document_requests_path,
-          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_document_requests_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
-        <span>▤</span>
+          class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 #{current_page?(admin_document_requests_path) ? 'bg-blue-800 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <%= image_tag "paper.svg", alt: "", class: "admin-nav-icon h-5 w-5 shrink-0 object-contain #{current_page?(admin_document_requests_path) ? 'admin-nav-icon-active' : ''}" %>
         <span>Mga Kahilingan sa Dokumento</span>
       <% end %>
 
       <%= link_to admin_barangay_concerns_path,
-          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_barangay_concerns_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
-        <span>△</span>
+          class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 #{current_page?(admin_barangay_concerns_path) ? 'bg-blue-800 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <%= image_tag "concerns.svg", alt: "", class: "admin-nav-icon h-5 w-5 shrink-0 object-contain #{current_page?(admin_barangay_concerns_path) ? 'admin-nav-icon-active' : ''}" %>
         <span>Mga Ulat ng Suliranin</span>
       <% end %>
 
       <%= link_to admin_residents_path,
-          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_residents_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
-        <span>♟</span>
+          class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 #{current_page?(admin_residents_path) ? 'bg-blue-800 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <%= image_tag "residents.svg", alt: "", class: "admin-nav-icon h-5 w-5 shrink-0 object-contain #{current_page?(admin_residents_path) ? 'admin-nav-icon-active' : ''}" %>
         <span>Mga Residente</span>
       <% end %>
 
       <%= link_to admin_staffs_path,
-          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold #{current_page?(admin_staffs_path) ? 'bg-blue-800 text-white' : 'text-gray-600 hover:bg-gray-100'}" do %>
-        <span>▣</span>
+          class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 #{current_page?(admin_staffs_path) ? 'bg-blue-800 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <%= image_tag "personel.svg", alt: "", class: "admin-nav-icon h-5 w-5 shrink-0 object-contain #{current_page?(admin_staffs_path) ? 'admin-nav-icon-active' : ''}" %>
         <span>Mga Kawani</span>
       <% end %>
 
-      <%= link_to "#",
-          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100" do %>
-        <span>▥</span>
+      <%= link_to admin_reports_path,
+          class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 #{current_page?(admin_reports_path) ? 'bg-blue-800 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}" do %>
+        <%= image_tag "reports.svg", alt: "", class: "admin-nav-icon h-5 w-5 shrink-0 object-contain #{current_page?(admin_reports_path) ? 'admin-nav-icon-active' : ''}" %>
         <span>Mga Ulat</span>
       <% end %>
 
       <%= link_to "#",
-          class: "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100" do %>
-        <span>⚙</span>
+          class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-100 sm:px-4" do %>
+        <%= image_tag "reports.svg", alt: "", class: "admin-nav-icon h-5 w-5 shrink-0 object-contain" %>
         <span>Mga Setting</span>
       <% end %>
 
       <%= button_to destroy_user_session_path,
           method: :delete,
-          class: "flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50" do %>
-        <span>←</span>
+          class: "admin-logout-button flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-700 hover:text-white sm:px-4 lg:w-full" do %>
+        <%= image_tag "logout.svg", alt: "", class: "admin-nav-icon admin-logout-icon h-5 w-5 shrink-0 object-contain" %>
         <span>Mag-log out</span>
       <% end %>
 
     </nav>
   </div>
 </aside>
+
+<style>
+  .admin-nav-icon {
+    filter: brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(581%) hue-rotate(198deg) brightness(94%) contrast(88%);
+  }
+
+  .admin-nav-icon-active,
+  .admin-logout-button:hover .admin-logout-icon {
+    filter: brightness(0) invert(1);
+  }
+</style>

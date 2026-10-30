@@ -44,12 +44,12 @@
     <p class="mb-4 text-[9px] text-slate-600 lg:mb-5 lg:text-[13px]">Magbigay ng kumpletong detalye upang madaling matukoy at maaksiyunan ng mga kawani ng barangay.</p>
 
     <div class="mb-3">
-      <%= f.label :location_description, "Purok / Sona ng Insidente · Eksaktong Lokasyon *", class: "mb-1 block text-[9px] font-medium lg:text-[15px]" %>
+      <%= f.label :location_description, class: "mb-1 block text-[9px] font-medium lg:text-[15px]" do %>Purok / Sona ng Insidente · Eksaktong Lokasyon <span class="text-red-600">*</span><% end %>
       <%= f.text_field :location_description, required: true, placeholder: "Hal. Purok 3, malapit sa Barangay Hall", class: "h-10 w-full rounded-md border-0 bg-[#eff3ff] px-3 text-[10px] lg:h-14 lg:px-4 lg:text-[16px] outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-[#244fbd]/30" %>
     </div>
 
     <div>
-      <%= f.label :reason, "Paglalarawan ng nangyari *", class: "mb-1 block text-[9px] font-medium lg:text-[15px]" %>
+      <%= f.label :reason, class: "mb-1 block text-[9px] font-medium lg:text-[15px]" do %>Paglalarawan ng nangyari <span class="text-red-600">*</span><% end %>
       <%= f.text_area :reason, required: true, maxlength: 500, rows: 5, placeholder: "Ilarawan ang problema, kailan ito nangyari, at iba pang detalyeng makatutulong sa pagsisiyasat.", class: "min-h-[115px] w-full resize-y rounded-md border-0 bg-[#eff3ff] px-3 py-2.5 text-[10px] lg:min-h-[180px] lg:px-4 lg:py-4 lg:text-[16px] leading-relaxed outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-[#244fbd]/30" %>
       <p class="mt-1 text-right text-[8px] text-[#07349e] lg:text-[13px]"><span id="reason-character-count"><%= barangay_concern.reason.to_s.length %></span> / 500 character</p>
     </div>

@@ -1,17 +1,18 @@
 <%= form_with model: document_request, local: true do |f| %>
+  <% residency_required = document_request.certificate_of_residency? %>
   <div>
-    <%= f.label :document_type %>
-    <%= f.select :document_type, DocumentRequest.document_types.keys.map { |d| [tagalog_label(d), d] } %>
+    <%= f.label :document_type do %>Uri ng Dokumento <span class="text-red-600">*</span><% end %>
+    <%= f.select :document_type, DocumentRequest.document_types.keys.map { |d| [tagalog_label(d), d] }, { include_blank: "Pumili ng uri ng dokumento" }, { required: true } %>
   </div>
 
   <%# Dynamic Input Placeholders (Toggle these via vanilla JS depending on type) %>
   <div>
-    <%= f.label :years_of_residency %>
-    <%= f.number_field :years_of_residency %>
+    <%= f.label :years_of_residency do %>Taon ng Paninirahan<% if residency_required %> <span class="text-red-600">*</span><% end %><% end %>
+    <%= f.number_field :years_of_residency, required: residency_required %>
   </div>
 
   <div>
-    <%= f.label :purpose %>
+    <%= f.label :purpose do %>Layunin <span class="text-red-600">*</span><% end %>
     <%= f.text_area :purpose, required: true %>
   </div>
 
@@ -19,14 +20,14 @@
   <h3>Mga Detalye ng Pagpapatunay</h3>
 
   <div>
-    <%= f.label :valid_id_type, "Uri ng Ipinakitang ID" %>
+    <%= f.label :valid_id_type do %>Uri ng Ipinakitang ID <span class="text-red-600">*</span><% end %>
     <%= f.select :valid_id_type, DocumentRequest.valid_id_types.keys.map { |i| [tagalog_label(i), i] }, { include_blank: "Pumili ng uri ng ID" }, { required: true } %>
   </div>
 
   <br>
 
   <div>
-    <%= f.label :valid_id_image, "Mag-upload ng Malinaw na Larawan ng ID" %>
+    <%= f.label :valid_id_image do %>Mag-upload ng Malinaw na Larawan ng ID <span class="text-red-600">*</span><% end %>
     <%= f.file_field :valid_id_image, accept: 'image/*', required: true %>
   </div>
 

@@ -1,0 +1,174 @@
+<% logs = request.status_logs.order(created_at: :asc).to_a %>
+<% processing_log = logs.find { |log| log.status == DocumentRequest.statuses.fetch("processing") } %>
+<% ready_log = logs.find { |log| log.status == DocumentRequest.statuses.fetch("ready_to_pickup") } %>
+<% claimed_log = logs.find { |log| log.status == DocumentRequest.statuses.fetch("claimed") } %>
+<% latest_remarks = logs.reverse.find { |log| log.staff_remarks.present? } %>
+<% document_icon = { "barangay_clearance" => "paper.svg", "certificate_of_indigency" => "documents.svg", "certificate_of_residency" => "documents.svg" }.fetch(request.document_type, "documents.svg") %>
+<% target_status = { "approve" => "processing", "reject" => "rejected", "ready" => "ready_to_pickup", "release" => "claimed" }[intent] %>
+<% submit_text = { "approve" => "Kumpirmahin ang Pag-apruba", "reject" => "Kumpirmahin ang Pagtanggi", "ready" => "Markahan bilang Naaprubahan", "release" => "Markahan bilang Nakuha na" }[intent] || "I-update ang Kahilingan" %>
+<% submit_class = intent == "reject" ? "bg-rose-700 hover:bg-rose-800" : (intent == "ready" ? "bg-emerald-700 hover:bg-emerald-800" : "bg-[#07349e] hover:bg-[#0b2e83]") %>
+<% show_action_panel = current_user.barangay_staff? && intent.present? %>
+<% status_icon = request.ready_to_pickup? ? "ready.svg" : (request.claimed? ? "doublecheck.svg" : (request.processing? ? "pinoproseso.svg" : "test.svg")) %>
+<% progress_index = request.claimed? ? 4 : (request.ready_to_pickup? ? 3 : (request.status == "approved" ? 2 : (request.processing? ? 1 : 0))) %>
+<% active_index = request.processing? ? 1 : (request.status == "approved" ? 2 : (request.ready_to_pickup? ? 3 : nil)) %>
+<% progress_width = "#{progress_index * 25}%" %>
+<% timeline = [
+     ["Naipasa", request.created_at, true, "checkk.svg", nil],
+     ["Pinoproseso", processing_log&.created_at, processing_log.present?, "pinoproseso.svg", "processing"],
+     ["Naaprubahan", processing_log&.created_at, processing_log.present?, "checkk.svg", "approved"],
+     ["Handa nang Kunin", ready_log&.created_at, ready_log.present?, "ready.svg", "ready_to_pickup"],
+     ["Nakuha", claimed_log&.created_at, claimed_log.present?, "doublecheck.svg", "claimed"]
+   ] %>
+
+<%= turbo_frame_tag "remote_modal" do %>
+  <div class="fixed inset-0 z-[1200] flex items-center justify-center bg-slate-950/75 p-2 sm:p-5" onclick="if (event.target === this) document.getElementById('remote_modal').innerHTML = ''">
+    <section class="relative flex max-h-[96vh] w-full max-w-[1024px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="document-modal-title">
+      <header class="flex shrink-0 items-start gap-4 bg-[#eef3ff] px-5 py-5 sm:px-8">
+        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#07349e]"><%= image_tag "test.svg", alt: "", class: "h-7 w-7 object-contain brightness-0 invert" %></span>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <h2 id="document-modal-title" class="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">Mga Detalye ng Kahilingan sa Dokumento</h2>
+            <span class="inline-flex items-center gap-2 rounded-md bg-blue-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">Ref ID <span class="font-mono text-blue-900"><%= request.tracking_number %></span>
+              <button type="button" aria-label="Kopyahin ang numero ng sanggunian" onclick="navigator.clipboard.writeText('<%= j request.tracking_number %>').then(() => { this.textContent = 'Nakopya'; })" class="normal-case text-blue-800 hover:underline">Kopyahin</button>
+            </span>
+          </div>
+          <p class="mt-1 text-xs text-slate-600">Mga detalye ng kahilingan sa dokumento • Pamahalaang Barangay ng Kalikid Sur</p>
+        </div>
+        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-lg bg-blue-100 p-2 text-lg leading-none text-slate-700 hover:bg-blue-200" aria-label="Isara">×</button>
+      </header>
+
+      <div class="flex items-center justify-between gap-4 bg-[#e4edff] px-5 py-3 text-xs sm:px-8">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-semibold uppercase tracking-wide text-slate-600">Kasalukuyang Kalagayan:</span>
+          <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-bold <%= tagalog_status_class(request.status) %>"><%= image_tag status_icon, alt: "", class: "h-4 w-4 object-contain" %><%= tagalog_status(request.status) %></span>
+        </div>
+        <div class="flex shrink-0 items-center gap-2 text-slate-600"><%= image_tag "calendar.svg", alt: "", class: "h-4 w-4 object-contain" %><span>Petsa ng Kahilingan:</span><strong class="text-slate-800"><%= tagalog_datetime(request.created_at) %></strong></div>
+      </div>
+
+      <div class="min-h-0 flex-1 space-y-5 overflow-y-auto px-5 py-6 sm:px-8">
+        <div class="grid gap-5 lg:grid-cols-2">
+          <section class="rounded-xl bg-[#eef3ff] p-5 sm:p-6">
+            <h3 class="mb-5 flex items-center gap-2 font-semibold text-slate-900"><%= image_tag "resident.svg", alt: "", class: "h-5 w-5 object-contain" %> Impormasyon ng Residente</h3>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Buong Pangalan</p>
+            <p class="mt-1 text-base font-semibold text-slate-900"><%= [request.resident&.profile&.first_name, request.resident&.profile&.middle_name, request.resident&.profile&.last_name, request.resident&.profile&.suffix].compact_blank.join(" ").presence || "Hindi nakatala" %></p>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Numero ng Telepono</p>
+                <p class="mt-1 flex items-center gap-2 text-sm text-slate-800"><%= image_tag "phone.svg", alt: "", class: "h-4 w-4 object-contain" %> Hindi nakatala</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Email Address</p>
+                <p class="mt-1 flex items-center gap-2 break-all text-sm text-slate-800"><%= image_tag "email.svg", alt: "", class: "h-4 w-4 shrink-0 object-contain" %><%= request.resident&.email || "Hindi nakatala" %></p>
+              </div>
+            </div>
+            <% address = request.resident&.address %>
+            <div class="mt-5">
+              <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Opisyal na Rehistradong Tirahan</p>
+              <p class="mt-1 flex items-start gap-2 text-sm leading-relaxed text-slate-800"><%= image_tag "location.svg", alt: "", class: "mt-0.5 h-4 w-4 shrink-0 object-contain" %><%= [address&.purok && "Purok #{address.purok}", address&.house_number, address&.street, address&.barangay, address&.city, address&.province].compact_blank.join(", ").presence || "Hindi nakatala" %></p>
+            </div>
+          </section>
+
+          <section class="rounded-xl bg-[#eef3ff] p-5 sm:p-6">
+            <h3 class="mb-5 flex items-center gap-2 font-semibold text-slate-900"><%= image_tag "documents.svg", alt: "", class: "h-5 w-5 object-contain" %> Detalye ng Dokumento</h3>
+            <p class="text-[10px] font-bold uppercase tracking-wide text-slate-600">Uri ng Dokumentong Hinihiling</p>
+            <span class="mt-1 inline-flex items-center gap-2 rounded-lg bg-blue-100 px-3 py-2 font-semibold text-blue-900"><%= image_tag document_icon, alt: "", class: "h-4 w-4 object-contain" %><%= tagalog_label(request.document_type) %></span>
+            <p class="mt-4 text-[10px] font-bold uppercase tracking-wide text-slate-600">Nakalagay na Layunin</p>
+            <p class="mt-1 min-h-16 whitespace-pre-line rounded-lg bg-white px-3 py-3 text-sm leading-relaxed text-slate-800"><%= request.purpose.presence || "Walang nakasaad na layunin" %></p>
+            <% if request.document_type == "certificate_of_residency" && request.years_of_residency.present? %>
+              <p class="mt-3 text-xs text-slate-700"><strong>Tagal ng Paninirahan:</strong> <%= request.years_of_residency %> taon</p>
+            <% elsif request.document_type == "certificate_of_income" %>
+              <p class="mt-3 text-xs text-slate-700"><strong>Hanapbuhay:</strong> <%= request.job.presence || "Hindi nakatala" %> <span class="mx-1">•</span> <strong>Kita:</strong> <%= request.monthly_income.present? ? number_to_currency(request.monthly_income, unit: "₱") : "Hindi nakatala" %></p>
+            <% end %>
+          </section>
+        </div>
+
+        <% if current_user.barangay_staff? && request.certificate_of_residency? && request.ready_to_pickup? %>
+          <div class="flex justify-end rounded-xl bg-emerald-50 p-4">
+            <%= link_to residency_certificate_document_request_path(request), target: "_blank", rel: "noopener", class: "inline-flex items-center gap-2 rounded-lg bg-blue-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-800" do %>
+              <%= image_tag "paper.svg", alt: "", class: "h-5 w-5 object-contain brightness-0 invert" %>
+              I-print ang Certificate of Residency
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if request.valid_id_image.attached? %>
+          <section>
+            <h3 class="mb-3 flex items-center gap-2 font-semibold text-slate-900"><%= image_tag "clip.svg", alt: "", class: "h-5 w-5 object-contain" %> Mga Ipinadalang Suportang Dokumento</h3>
+            <div class="flex flex-col gap-4 rounded-xl bg-[#eef3ff] p-4 sm:flex-row sm:items-center">
+              <%= image_tag request.valid_id_image, class: "h-20 w-24 shrink-0 rounded-lg bg-white object-cover", alt: "Larawan ng #{tagalog_label(request.valid_id_type)}" %>
+              <div class="min-w-0 flex-1">
+                <span class="rounded bg-blue-100 px-2 py-1 text-[10px] font-bold uppercase text-blue-900"><%= tagalog_label(request.valid_id_type) %></span>
+                <p class="mt-2 truncate text-xs font-semibold text-slate-800"><%= request.valid_id_image.filename %></p>
+                <p class="text-xs text-slate-600"><%= number_to_human_size(request.valid_id_image.byte_size) %></p>
+              </div>
+              <%= link_to rails_blob_path(request.valid_id_image, disposition: "inline"), target: "_blank", rel: "noopener", class: "inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold text-blue-900 hover:bg-blue-50" do %>
+                <%= image_tag "view.svg", alt: "", class: "h-5 w-5 object-contain" %> Tingnan
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+
+        <section class="rounded-xl bg-[#eef3ff] p-5 sm:p-6">
+          <h3 class="mb-6 flex items-center gap-2 font-semibold text-slate-900"><%= image_tag "history.svg", alt: "", class: "h-5 w-5 object-contain" %> Kasaysayan ng Kalagayan <span class="text-xs font-normal text-slate-500">• Pagsubaybay ng mga Hakbang</span></h3>
+          <div class="relative">
+            <div class="absolute left-[10%] right-[10%] top-4 h-1 rounded-full bg-[#d8e2f6]" aria-hidden="true">
+              <span class="block h-full rounded-full bg-emerald-700 transition-[width] duration-700 ease-out" style="width: <%= progress_width %>"></span>
+            </div>
+            <div class="relative grid grid-cols-5 gap-1">
+            <% timeline.each_with_index do |(label, occurred_at, _logged, icon, _status_key), index| %>
+              <% active = index == active_index %>
+              <% reached = index < progress_index || (request.pending? && index.zero?) || (request.claimed? && index == 4) %>
+              <% milestone_icon = if reached && index < 4
+                   "checkk.svg"
+                 elsif active && index == 1
+                   "pinoproseso.svg"
+                 elsif active && index == 3
+                   "ready.svg"
+                 elsif index == 4
+                   "doublecheck.svg"
+                 elsif index == 1
+                   "pinoproseso.svg"
+                 elsif index == 3
+                   "ready.svg"
+                 else
+                   icon
+                 end %>
+              <div class="relative flex flex-col items-center text-center">
+                <span class="mb-2 flex h-8 w-8 items-center justify-center rounded-full <%= active ? 'bg-blue-900 ring-4 ring-blue-100' : (reached ? 'bg-emerald-700' : 'bg-slate-200') %>"><%= image_tag milestone_icon, alt: "", class: "h-4 w-4 object-contain #{reached || active ? 'brightness-0 invert' : 'milestone-icon-muted'}" %></span>
+                <span class="text-xs font-semibold <%= active ? 'text-blue-900' : 'text-slate-900' %>"><%= label %></span>
+                <% if occurred_at.present? %><time class="mt-1 text-[10px] text-slate-600"><%= tagalog_datetime(occurred_at) %></time><% else %><span class="mt-1 text-[10px] text-slate-600"><%= request.rejected? ? "Hindi naisagawa" : "Hindi pa nagsisimula" %></span><% end %>
+              </div>
+            <% end %>
+            </div>
+          </div>
+          <% if latest_remarks.present? %>
+            <div class="mt-5 rounded-lg bg-white p-3 text-xs text-slate-700"><strong>Tala ng Barangay:</strong> <%= latest_remarks.staff_remarks %></div>
+          <% end %>
+        </section>
+
+        <% if show_action_panel %>
+          <section class="rounded-xl border border-slate-200 p-4 sm:p-5">
+            <h3 class="mb-3 font-semibold text-slate-900">Aksyon ng Kawani</h3>
+            <%= form_with model: request, local: true do |f| %>
+              <% if request.errors.any? %><div class="mb-3 rounded-lg bg-red-50 p-3 text-xs text-red-700"><%= request.errors.full_messages.to_sentence %></div><% end %>
+              <%= f.hidden_field :status, value: target_status %>
+              <%= f.label :staff_remarks, class: "mb-1 block text-xs font-semibold text-slate-700" do %><%= intent == "reject" ? "Dahilan ng Pagtanggi " : "Tala ng Kawani / Detalye ng Pagkuha " %><% if intent == "reject" %><span class="text-red-600">*</span><% else %><span class="text-slate-500">(Opsyonal)</span><% end %><% end %>
+              <%= f.text_area :staff_remarks, rows: 3, required: intent == "reject", class: "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-100" %>
+              <%= f.submit submit_text, class: "mt-3 cursor-pointer rounded-lg px-5 py-3 text-sm font-semibold text-white #{submit_class}" %>
+            <% end %>
+          </section>
+        <% end %>
+      </div>
+
+      <footer class="flex shrink-0 items-center justify-between gap-3 bg-[#eef3ff] px-5 py-4 sm:px-8">
+        <p class="flex items-center gap-2 text-[10px] font-semibold text-slate-600"><%= image_tag "checkk.svg", alt: "", class: "h-4 w-4 object-contain" %> Para sa pagkuha nang personal, magpakita ng isang balidong ID ng pamahalaan.</p>
+        <button type="button" onclick="document.getElementById('remote_modal').innerHTML = ''" class="rounded-lg bg-blue-100 px-5 py-3 text-sm font-semibold text-slate-800 hover:bg-blue-200">Isara</button>
+      </footer>
+    </section>
+  </div>
+  <style>
+    .milestone-icon-muted {
+      filter: brightness(0) saturate(100%) invert(28%) sepia(8%) saturate(581%) hue-rotate(198deg) brightness(94%) contrast(88%);
+    }
+  </style>
+<% end %>

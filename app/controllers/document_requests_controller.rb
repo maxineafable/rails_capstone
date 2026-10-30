@@ -33,6 +33,29 @@ class DocumentRequestsController < ApplicationController
     @intent = params[:intent]
   end
 
+  def residency_certificate
+    unless current_user.barangay_staff?
+      redirect_to root_path, alert: "Hindi awtorisadong mag-print ng sertipiko."
+      return
+    end
+
+    @document_request = DocumentRequest.includes(resident: [ :profile, :address ]).find(params[:id])
+
+    unless @document_request.certificate_of_residency? && @document_request.ready_to_pickup?
+      redirect_to admin_document_requests_path, alert: "Para lamang sa Certificate of Residency na handa nang kunin ang sertipikong ito."
+      return
+    end
+
+    @certificate_resident = @document_request.resident
+    @certificate_profile = @certificate_resident.profile
+    @certificate_address = @certificate_resident.address
+    @certificate_name = [@certificate_profile.first_name, @certificate_profile.middle_name, @certificate_profile.last_name, @certificate_profile.suffix].compact_blank.join(" ")
+    @certificate_salutation = @certificate_profile.male? ? "Mr." : "Ms."
+    @certificate_issued_on = Time.zone.today
+
+    render :residency_certificate, layout: false
+  end
+
   def submitted
     @document_request = current_user.document_requests.find(params[:id])
   end

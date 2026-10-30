@@ -1,137 +1,75 @@
+<% household_number = "HH-#{@household.date_accomplished.year}-#{@household.id.to_s.rjust(4, '0')}" %>
+<% head = @household.household_members.find { |member| member.relationship_to_head.to_s.casecmp("head").zero? } %>
 <%= turbo_frame_tag "remote_modal" do %>
-  <!-- OVERLAY BACKDROP SHADOW EFFECT -->
-  <div class="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm">
-    
-    <!-- RIGHT SIDE SLIDING DRAWER SHEET PANEL CONTAINER -->
-    <div class="h-screen w-full max-w-2xl overflow-y-auto bg-white shadow-2xl flex flex-col animate-slide-in">
+  <div class="animate-overlay-in fixed inset-0 z-[1200] flex justify-end bg-slate-950/50 backdrop-blur-sm" onclick="if (event.target === this) { const drawer = this.querySelector('[data-member-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220); }">
+    <div data-member-drawer class="h-screen w-full max-w-5xl overflow-hidden bg-white shadow-2xl animate-slide-in">
+      <%= form_with model: [@household, @household_member], url: household_member_path(@household, @household_member), method: :patch, local: true, class: "flex h-full min-h-0 flex-col" do |f| %>
+        <header class="flex shrink-0 items-start justify-between gap-5 border-b border-slate-100 bg-white px-5 py-5 sm:px-8 lg:px-10">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.08em] text-[#07349e] lg:text-[11px]">Talaan ng Populasyon at Sambahayan (RBI Form A) <span class="mx-1 text-slate-300">•</span> <span class="normal-case tracking-normal text-slate-600">Barangay Kalikid Sur</span></p>
+            <h1 class="mt-2 text-[25px] font-bold leading-tight tracking-[-0.04em] text-slate-900 sm:text-[28px]">I-edit ang Kasapi ng Sambahayan</h1>
+          </div>
+          <button type="button" onclick="const drawer = this.closest('[data-member-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="shrink-0 rounded-lg p-2 text-2xl leading-none text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="Isara ang pormularyo">×</button>
+        </header>
 
-      <!-- STICKY DRAWER PANEL HEADER CONTROLS -->
-      <div class="sticky top-0 z-10 flex items-center justify-between border-b bg-gray-50 p-5">
-        <div>
-          <h2 class="text-xl font-bold text-gray-800">
-            I-edit ang Kasapi ng Sambahayan
-          </h2>
-          <p class="mt-0.5 text-xs font-semibold text-blue-600 tracking-wide uppercase">
-            <%= "#{@household_member.first_name} #{@household_member.last_name}" %>
-          </p>
-          <p class="mt-0.5 text-xs text-gray-500 font-medium">
-            Household #<%= @household.house_number %> · <%= @household.street %>
-          </p>
-        </div>
-
-        <!-- STIMULUS MODAL DISMISS TOGGLE ACTION BUTTON LINK -->
-        <%= link_to "✕", "#",
-                    class: "rounded-lg p-2 text-xl text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition",
-                    data: { action: "click->remote-modal#close" } %>
-      </div>
-
-      <!-- MAIN CONFIGURABLE DRAW SCROLL BODY INNER AREA FORM -->
-      <div class="flex-1 p-6 space-y-6">
-        <%= form_with model: [@household, @household_member],
-                      url: household_member_path(@household, @household_member),
-                      method: :patch,
-                      local: true do |f| %>
-
+        <div class="min-h-0 flex-1 space-y-4 overflow-y-auto bg-white px-5 py-4 sm:px-8 lg:px-10">
           <% if @household_member.errors.any? %>
-            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-              <h4 class="font-semibold">Pak ayusin ang mga sumusunod na error:</h4>
-              <ul class="mt-2 list-disc pl-5">
-                <% @household_member.errors.full_messages.each do |msg| %>
-                  <li><%= msg %></li>
-                <% end %>
-              </ul>
-            </div>
+            <section class="rounded-lg border border-red-200 bg-red-50 p-4 text-xs text-red-800" role="alert">
+              <h2 class="font-semibold">Pakisuri ang sumusunod:</h2>
+              <ul class="mt-1 list-inside list-disc"><% @household_member.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
+            </section>
           <% end %>
 
-          <!-- PERSONAL DATA GROUP -->
-          <div class="space-y-4">
-            <h3 class="text-md font-semibold text-gray-800 border-b pb-2">
-              Personal na Impormasyon
-            </h3>
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <%= f.label :first_name, "Pangalan *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :first_name, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :middle_name, "Gitnang Pangalan", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :middle_name, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :last_name, "Apelyido *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :last_name, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :suffix, "Suffix", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :suffix, placeholder: "Jr., Sr.", class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
+          <section class="flex flex-wrap items-center gap-3 rounded-xl bg-orange-50 p-4 text-amber-950 sm:p-5">
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-amber-900 text-sm font-bold text-white"><%= [@household_member.first_name.first, @household_member.last_name.first].compact.join.upcase %></span>
+            <div class="min-w-0 flex-1">
+              <h2 class="font-bold"><%= "Pag-edit kay #{@household_member.first_name} #{@household_member.last_name}" %></h2>
+              <p class="mt-0.5 text-xs text-amber-900">Sambahayan Blg. <%= household_number %> <span class="mx-1 text-amber-700">•</span> Pinuno: <%= head ? "#{head.first_name} #{head.last_name}" : "Walang nakatalang pinuno" %></p>
+              <p class="mt-1 flex items-center gap-1.5 text-xs text-amber-900"><%= image_tag "location.svg", alt: "", class: "h-4 w-4 object-contain" %> Purok <%= @household.purok %>, <%= @household.street %> <span class="text-amber-700">(Naka-ugnay sa sambahayan)</span></p>
             </div>
-          </div>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-900 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white"><%= image_tag "activerecords.svg", alt: "", class: "h-3.5 w-3.5 object-contain brightness-0 invert" %> Aktibong Talaan</span>
+          </section>
 
-          <!-- ACCOUNT NG RESIDENTE DETAILS LAYOUT MATRIX -->
-          <div class="mt-8 space-y-4">
-            <h3 class="text-md font-semibold text-gray-800 border-b pb-2">
-              Resident Details
-            </h3>
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <%= f.label :birth_date, "Petsa ng Kapanganakan *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.date_field :birth_date, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :birth_place, "Lugar ng Kapanganakan *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :birth_place, required: true, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :sex, "Kasarian *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.select :sex, HouseholdMember.sexes.keys.map { |s| [tagalog_label(s), s] }, { include_blank: "Pumili" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
-              </div>
-
-              <div>
-                <%= f.label :civil_status, "Katayuang Sibil *", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.select :civil_status, HouseholdMember.civil_statuses.keys.map { |c| [tagalog_label(c), c] }, { include_blank: "Pumili" }, { required: true, class: "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" } %>
-              </div>
-
-              <div>
-                <%= f.label :citizenship, "Pagkamamamayan", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :citizenship, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div>
-                <%= f.label :occupation, "Hanapbuhay", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :occupation, class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" %>
-              </div>
-
-              <div class="sm:col-span-2">
-                <%= f.label :relationship_to_head, "Ugnayan sa Pinuno", class: "mb-1 block text-xs font-semibold text-gray-600 uppercase tracking-wider" %>
-                <%= f.text_field :relationship_to_head, 
-                placeholder: "Child, Grandchild, Spouse", 
-                readonly: @household_member.relationship_to_head == "Head",
-                class: "w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none #{@household_member.relationship_to_head == 'Head' ? 'bg-gray-50 text-gray-500 cursor-not-allowed border-gray-200' : 'bg-white'}" %>
-              </div>
+          <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-labelledby="member-name-title">
+            <div class="mb-4 flex items-center gap-2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-[#07349e]">1</span>
+              <h2 id="member-name-title" class="text-sm font-bold text-slate-900">Personal na Impormasyon</h2>
             </div>
+            <div class="grid gap-x-4 gap-y-3 sm:grid-cols-2">
+              <div><%= f.label :last_name, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Apelyido <span class="text-red-600">*</span><% end %><%= f.text_field :last_name, required: true, placeholder: "Hal. Dela Cruz", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+              <div><%= f.label :first_name, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Pangalan <span class="text-red-600">*</span><% end %><%= f.text_field :first_name, required: true, placeholder: "Hal. Juan", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+              <div><%= f.label :middle_name, "Gitnang Pangalan", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %><%= f.text_field :middle_name, placeholder: "Hal. Santos", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+              <div><%= f.label :suffix, "Dugtong sa Pangalan (Opsyonal)", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %><%= f.select :suffix, ["Jr.", "Sr.", "II", "III", "IV", "V"], { include_blank: "Wala" }, { class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %></div>
+              <div class="sm:col-span-2"><%= f.label :relationship_to_head, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Ugnayan sa Pinuno ng Sambahayan <span class="text-red-600">*</span><% end %><%= f.text_field :relationship_to_head, required: true, placeholder: "Hal. Anak, Asawa, Apo", readonly: @household_member.relationship_to_head == "Head", class: "w-full rounded-lg border border-slate-200 px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px] #{@household_member.relationship_to_head == 'Head' ? 'cursor-not-allowed border-slate-200 bg-slate-50 text-slate-500' : 'bg-white'}" %></div>
+            </div>
+          </section>
+
+          <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-labelledby="member-details-title">
+            <div class="mb-4 flex items-center gap-2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-[#07349e]">2</span>
+              <h2 id="member-details-title" class="text-sm font-bold text-slate-900">Karagdagang Impormasyon</h2>
+            </div>
+            <div class="grid gap-x-4 gap-y-3 sm:grid-cols-2">
+              <div><%= f.label :birth_date, class: "mb-1 flex items-center gap-1.5 text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %><%= image_tag "calendar.svg", alt: "", class: "h-4 w-4 object-contain" %> Petsa ng Kapanganakan <span class="text-red-600">*</span><% end %><%= f.date_field :birth_date, required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+              <div><%= f.label :birth_place, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Lugar ng Kapanganakan <span class="text-red-600">*</span><% end %><%= f.text_field :birth_place, required: true, placeholder: "Hal. Lungsod ng Cabanatuan", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition placeholder:text-slate-400 focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+              <div><%= f.label :sex, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Kasarian <span class="text-red-600">*</span><% end %><%= f.select :sex, HouseholdMember.sexes.keys.map { |sex| [tagalog_label(sex), sex] }, { include_blank: "Pumili ng kasarian..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %></div>
+              <div><%= f.label :civil_status, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Katayuang Sibil <span class="text-red-600">*</span><% end %><%= f.select :civil_status, HouseholdMember.civil_statuses.keys.map { |status| [tagalog_label(status), status] }, { include_blank: "Pumili ng katayuan..." }, { required: true, class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" } %></div>
+              <div><%= f.label :citizenship, class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" do %>Pagkamamamayan <span class="text-red-600">*</span><% end %><%= f.text_field :citizenship, required: true, placeholder: "Filipino", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+              <div><%= f.label :occupation, "Hanapbuhay", class: "mb-1 block text-[10px] font-semibold text-slate-800 lg:text-[12px]" %><%= f.text_field :occupation, placeholder: "Ilagay ang hanapbuhay", class: "w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs outline-none transition focus:border-[#2445b8] focus:ring-2 focus:ring-blue-100 lg:text-[14px]" %></div>
+            </div>
+          </section>
+
+          <div class="flex items-start gap-2 rounded-lg bg-[#e7efff] px-4 py-3 text-[10px] font-medium leading-relaxed text-slate-700 lg:text-[11px]">
+            <%= image_tag "shield.svg", alt: "", class: "mt-0.5 h-4 w-4 shrink-0 object-contain" %>
+            <p>Protektado ang mga tala alinsunod sa Batas sa Pagkapribado ng Datos (RA 10173) at mga alituntunin ng DILG.</p>
           </div>
+        </div>
 
-          <!-- BOTTOM STICKY BUTTON BAR ACTION LAYOUT -->
-          <div class="mt-8 flex items-center justify-end gap-3 border-t pt-4">
-            <%= link_to "Kanselahin", "#",
-                        class: "rounded-lg border bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition",
-                        data: { action: "click->remote-modal#close" } %>
-
-            <%= f.submit "I-update ang Impormasyon ng Kasapi",
-                         class: "cursor-pointer rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition" %>
-          </div>
-
-        <% end %>
-      </div>
-
+        <footer class="flex shrink-0 items-center justify-between gap-3 border-t border-slate-100 bg-white px-5 py-4 sm:px-8 lg:px-10">
+          <button type="button" onclick="const drawer = this.closest('[data-member-drawer]'); drawer.classList.add('animate-slide-out'); setTimeout(() => document.getElementById('remote_modal').innerHTML = '', 220)" class="rounded-lg bg-red-700 px-6 py-3 text-xs font-semibold text-white transition hover:bg-red-800 lg:min-w-[160px] lg:text-[13px]">Kanselahin</button>
+          <%= f.submit "I-save ang mga Pagbabago", class: "cursor-pointer rounded-lg bg-[#2445b8] px-6 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#17379f] lg:min-w-[205px] lg:text-[13px]" %>
+        </footer>
+      <% end %>
     </div>
   </div>
 <% end %>
