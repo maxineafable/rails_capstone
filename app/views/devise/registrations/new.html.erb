@@ -38,7 +38,24 @@
             <div><%= p.label :middle_name, "Gitnang Pangalan", class: label_class %><span class="<%= hint_class %>">(Gitnang Pangalan)</span><%= p.text_field :middle_name, placeholder: "Hal. Santos", class: input_class %></div>
             <div><%= p.label :last_name, class: label_class do %>Apelyido <span class="text-red-600">*</span><% end %><span class="<%= hint_class %>">(Apelyido)</span><%= p.text_field :last_name, required: true, placeholder: "Hal. Dela Cruz", class: input_class %></div>
             <div><%= p.label :suffix, "Karugtong ng Pangalan", class: label_class %><span class="<%= hint_class %>">(Opsyonal)</span><%= p.select :suffix, [["Sr.", "Sr."], ["Jr.", "Jr."], ["II", "II"], ["III", "III"], ["IV", "IV"], ["V", "V"]], { include_blank: "-- Pumili --" }, { class: input_class } %></div>
-            <div><%= p.label :sex, class: label_class do %>Kasarian <span class="text-red-600">*</span><% end %><%= p.select :sex, [["Lalaki", "male"], ["Babae", "female"]], { include_blank: "Pumili ng opsyon" }, { required: true, class: input_class } %></div>
+            <div>
+              <%= p.label :sex, class: label_class do %>
+                Kasarian <span class="text-red-600">*</span>
+              <% end %>
+              <%= p.select :sex,
+                  [["Lalaki", "male"], ["Babae", "female"]],
+                  { include_blank: "Pumili ng opsyon" },
+                  { required: true, class: input_class } %>
+            </div>
+            <div>
+              <%= p.label :birth_date, class: label_class do %>
+                Petsa ng Kapanganakan <span class="text-red-600">*</span>
+              <% end %>
+              <%= p.date_field :birth_date,
+                  required: true,
+                  max: Date.current,
+                  class: input_class %>
+            </div>
           </div>
         <% end %>
       </section>
@@ -64,7 +81,7 @@
       <section class="mb-5 border-t border-slate-100 pt-4">
         <h2 class="mb-4 flex items-center gap-1.5 text-base font-semibold text-slate-900 lg:text-[20px]"><svg class="h-4 w-4 shrink-0 text-[#07349b] lg:h-5 lg:w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5Zm8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM4 15h5a4 4 0 0 0-5-3v3Zm8 0h4v-2h-4v2Z"/></svg>Impormasyon sa Pakikipag-ugnayan <span class="text-[10px] font-normal text-slate-500 lg:text-[13px]">/ Contact Details</span></h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div><%= f.label :email, class: label_class do %>Email <span class="text-red-600">*</span><% end %><%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, placeholder: "juan.delacruz@email.com", class: input_class %></div>
+          <div><%= f.label :email, class: label_class do %>Phone Number <span class="text-red-600">*</span><% end %><%= f.telephone_field :phone_number, autofocus: true, required: true, placeholder: "09123456789", class: input_class %></div>
         </div>
       </section>
 

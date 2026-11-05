@@ -3,11 +3,12 @@ class RegistrationsController < Devise::RegistrationsController
 
   protected
     def configure_permitted_parameters
-      profile_attributes = [ :first_name, :middle_name, :last_name, :suffix, :sex ]
+      profile_attributes = [ :first_name, :middle_name, :last_name, :suffix, :sex, :birth_date ]
 
       address_attributes = [ :house_number, :street, :purok, :barangay, :city, :province ]
 
       devise_parameter_sanitizer.permit(:sign_up, keys: [
+        :phone_number,
         profile_attributes: profile_attributes,
         address_attributes: address_attributes
       ])
