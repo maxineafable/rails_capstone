@@ -19,10 +19,10 @@
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "text-left", id: "login-form", novalidate: true }) do |f| %>
         <div class="mb-3 lg:mb-4">
-          <%= f.label :email, class: "mb-1 block text-sm font-semibold lg:text-[16px]" do %>Email <span class="text-red-600">*</span><% end %>
+          <%= f.label :phone_number, class: "mb-1 block text-sm font-semibold lg:text-[16px]" do %>Phone Number <span class="text-red-600">*</span><% end %>
           <div class="flex h-11 items-center gap-2 rounded-lg bg-[#f1f2ff] px-3 sm:h-12 lg:h-[50px]">
             <svg class="h-3.5 w-3.5 shrink-0 text-slate-700 lg:h-4 lg:w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3.5 6.5h17v12h-17z"/><path d="m4 7 8 6 8-6"/></svg>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, placeholder: "juan@gmail.com", "aria-describedby": "login-email-error", class: "h-full min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-slate-400 lg:text-[16px]" %>
+            <%= f.telephone_field :phone_number, autofocus: true, required: true, placeholder: "09123456789", "aria-describedby": "login-email-error", class: "h-full min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-slate-400 lg:text-[16px]" %>
           </div>
           <p id="login-email-error" class="mt-1 hidden text-xs font-medium text-red-700" aria-live="polite"></p>
         </div>
