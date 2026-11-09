@@ -6,48 +6,82 @@
   <title>Certificate of Residency - <%= @certificate_name %></title>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; background: #e7e9ee; color: #111; font-family: "Times New Roman", serif; }
+    body { margin: 0; background: #e7e9ee; color: #111; font-family: Cambria, "Times New Roman", serif; }
     .toolbar { display: flex; justify-content: center; padding: 16px; font-family: Arial, sans-serif; }
     .toolbar button { border: 0; border-radius: 7px; background: #07349e; color: #fff; cursor: pointer; padding: 11px 18px; font-size: 14px; font-weight: 700; }
-    .certificate { position: relative; display: flex; flex-direction: column; width: 8.5in; height: 13in; margin: 0 auto 24px; overflow: hidden; background: #fff; padding: .72in .66in 1.08in; box-shadow: 0 10px 35px #0002; }
-    .certificate::before { position: absolute; z-index: 2; inset: .55in .42in .85in; border: 3px double #26344b; content: ""; pointer-events: none; }
-    .watermark { position: absolute; z-index: 0; inset: 1.95in 0 auto; display: flex; justify-content: center; pointer-events: none; }
-    .watermark img { width: 7.5in; height: 7.5in; object-fit: contain; opacity: .065; }
-    .certificate-content, .council { position: relative; z-index: 1; }
-    .letterhead { display: grid; grid-template-columns: .9in 1fr .9in; align-items: center; gap: 10px; text-align: center; }
-    .letterhead img { width: .82in; height: .82in; object-fit: contain; justify-self: center; }
-    .letterhead p { margin: 0; line-height: 1.15; }
-    .letterhead .barangay-title { font-size: 16pt; font-weight: 700; }
-    .letterhead .captain-name { margin-top: 3px; font-size: 16pt; font-weight: 700; }
-    .letterhead .captain-role { margin-top: 2px; font-size: 12pt; }
-    .officials { display: grid; grid-template-columns: 1fr 1fr; margin: 19px 5px 14px; text-align: center; font-size: 12pt; line-height: 1.12; }
-    .officials strong { display: block; }
-    .jurisdiction { text-align: center; line-height: 1.2; }
-    .jurisdiction p { margin: 0 0 2px; font-size: 11pt; }
-    .jurisdiction .city { font-size: 12pt; }
-    .jurisdiction .barangay { font-size: 14pt; font-weight: 700; }
-    .office-heading { margin-top: 14px; text-align: center; font-size: 14pt; font-weight: 700; }
-    .office-rule { height: 1px; margin: 5px 0 12px; background: #26344b; }
-    h1 { margin: 0 0 18px; text-align: center; font-size: 20pt; font-weight: 700; }
-    .salutation { margin: 0 0 18px; font-size: 16pt; }
-    .body-copy { font-size: 15pt; line-height: 1.18; text-align: justify; }
-    .body-copy p { margin: 0 0 22px; text-indent: 27px; }
+
+    /* Page: 8.5in x 14in. All positions below are measured from the PDF. */
+    .certificate { position: relative; width: 8.5in; height: 14in; margin: 0 auto 24px; overflow: hidden; background: #fff; box-shadow: 0 10px 35px #0002; }
+    .certificate::before { position: absolute; z-index: 5; top: .55in; right: .53in; bottom: .75in; left: .47in; border: 7px double #111; content: ""; pointer-events: none; }
+    .certificate-content { position: absolute; z-index: 1; margin: 0; }
+
+    .script { font-family: "Segoe Print", "Comic Sans MS", cursive; font-weight: 400; }
+
+    /* Watermark */
+    .watermark { position: absolute; z-index: 0; top: 4.05in; left: 1.07in; width: 6.3in; height: 6.3in; pointer-events: none; }
+    .watermark img { width: 100%; height: 100%; object-fit: contain; opacity: .3; }
+
+    /* Letterhead */
+    .emblem-left  { top: .75in; left: 1.27in; width: 1in; height: 1in; object-fit: contain; }
+    .emblem-right { top: .78in; left: 6.05in; width: 1in; height: 1in; object-fit: contain; }
+    .letterhead { top: .78in; left: 1.65in; width: 5in; text-align: center; }
+    .letterhead p { margin: 0; }
+    .letterhead .barangay-title { font-size: 16pt; font-weight: 700; line-height: .24in; }
+    .letterhead .captain-name { margin-top: .08in; font-size: 18pt; line-height: .26in; }
+    .letterhead .captain-role { margin-top: .07in; font-size: 13pt; font-weight: 700; line-height: .18in; }
+
+    /* Secretary / Treasurer */
+    .official { top: 1.92in; width: 2.4in; text-align: center; font-size: 11.5pt; font-weight: 700; line-height: .2in; color: #3333ff; }
+    .official strong { display: block; color: #111; }
+    .official.left  { left: .83in; }
+    .official.right { left: 5.24in; }
+
+    /* Horizontal rules */
+    .divider { left: .47in; width: 7.5in; height: 6px; border-top: 6px double #111; }
+    .divider.header  { top: 2.32in; }
+    .divider.council { top: 10.37in; }
+    .divider.footer  { top: 12.40in; }
+    .office-rule { top: 4.02in; left: .47in; width: 7.5in; height: 2px; background: #111; }
+
+    /* Jurisdiction + titles */
+    .jurisdiction { top: 2.58in; left: .47in; width: 7.5in; text-align: center; }
+    .jurisdiction p { margin: 0; }
+    .jurisdiction .republic { font-size: 12pt; line-height: .27in; }
+    .jurisdiction .city { font-size: 12pt; font-weight: 700; line-height: .21in; }
+    .jurisdiction .barangay { font-size: 14pt; font-weight: 700; line-height: .23in; }
+    .office-heading { top: 3.78in; left: .47in; width: 7.5in; text-align: center; font-size: 14pt; font-weight: 700; line-height: .2in; }
+    h1 { top: 4.15in; left: .47in; width: 7.5in; text-align: center; font-size: 20pt; line-height: .3in; }
+
+    /* Body */
+    .certificate-body { top: 4.845in; left: .83in; width: 6.62in; font-size: 15.5pt; line-height: .27in; }
+    .salutation { margin: 0 0 .23in; }
+    .body-copy { text-align: justify; }
+    .body-copy p { margin: 0; text-indent: .37in; }
+    .body-copy p:nth-child(1) { margin-bottom: .19in; }
+    .body-copy p:nth-child(2) { margin-bottom: .16in; }
+    .body-copy p:nth-child(3) { margin-bottom: -.04in; }
     .filled { font-weight: 400; text-decoration: underline; text-underline-offset: 2px; }
-    .given-date { margin: 0 0 14px; font-size: 15pt; }
-    .signature-row { display: flex; align-items: flex-end; justify-content: space-between; min-height: .82in; margin: 0 0 8px; }
-    .dry-seal { width: .92in; height: .92in; object-fit: contain; }
-    .signature-block { width: 2.75in; border-top: 1px solid #111; padding-top: 4px; text-align: center; font-size: 12pt; }
-    .signature-block strong { display: block; font-size: 14pt; }
-    .seal-notice { margin: 0 0 0 1.1in; text-align: center; font-size: 12pt; font-weight: 700; }
-    .council { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: min-content; column-gap: 12px; row-gap: 12px; margin-top: auto; padding: 10px 3px 0; text-align: center; font-size: 9pt; line-height: 1.1; }
-    .council strong { display: block; margin-bottom: 3px; font-size: 10pt; }
-    .council .sk { grid-column: 3; }
-    .slogan { position: absolute; z-index: 3; right: .58in; bottom: .28in; left: .58in; display: flex; min-height: .77in; align-items: center; justify-content: center; border: 1px solid #344d91; padding: 5px 16px; color: #111; text-align: center; font-size: 15pt; font-weight: 700; line-height: 1.25; }
-    @page { size: 8.5in 13in; margin: 0; }
+    .given-date { margin: .14in 0 0; text-indent: .37in; }
+
+    /* Dry seal + signature */
+    .dry-seal { top: 9.32in; left: .73in; width: 1.02in; height: 1.02in; object-fit: contain; }
+    .signature-block { top: 9.41in; left: 4.87in; width: 2.6in; text-align: center; font-size: 12pt; line-height: .2in; }
+    .signature-block::before { display: block; width: 2.35in; height: 1px; margin: 0 auto .12in; background: #111; content: ""; }
+    .signature-block strong { display: block; font-size: 14pt; line-height: .22in; }
+    .seal-notice { top: 10.15in; left: .47in; width: 7.5in; text-align: center; color: #78a8db; font-size: 12pt; font-weight: 400; line-height: .2in; }
+
+    /* Council members: --cx = horizontal center, --y = top of the name line */
+    .member { left: var(--cx); top: var(--y); width: 3.3in; transform: translateX(-50%); text-align: center; font-size: 9pt; font-weight: 700; line-height: .145in; color: #3333ff; }
+    .member strong { display: block; color: #111; font-size: 10pt; line-height: .14in; text-decoration: underline; }
+
+    /* Footer slogan */
+    .slogan { position: absolute; z-index: 3; top: 12.46in; left: .47in; width: 7.5in; height: .79in; display: flex; align-items: center; justify-content: center; background: #0875bd; color: #fff; text-align: center; font-family: "Mongolian Baiti", Georgia, serif; font-size: 15pt; font-weight: 700; line-height: 1.25; }
+
+    @page { size: 8.5in 14in; margin: 0; }
     @media print {
       body { background: #fff; }
       .toolbar { display: none; }
-      .certificate { width: 8.5in; height: 13in; margin: 0; padding: .72in .66in 1.08in; box-shadow: none; break-after: avoid; }
+      .certificate { width: 8.5in; height: 14in; margin: 0; box-shadow: none; break-after: avoid; }
     }
     @media screen and (max-width: 850px) {
       body { overflow-x: auto; }
@@ -58,34 +92,33 @@
 <body>
   <div class="toolbar"><button type="button" onclick="window.print()">I-print ang Sertipiko</button></div>
   <main class="certificate" aria-label="Certificate of Residency">
-    <div class="watermark"><%= image_tag "logo1.png", alt: "" %></div>
+    <div class="watermark"><%= image_tag "residency_certificate/barangay_watermark.png", alt: "" %></div>
 
+    <!-- Letterhead -->
+    <%= image_tag "residency_certificate/barangay_emblem.png", alt: "Sagisag ng Barangay Kalikid Sur", class: "certificate-content emblem-left" %>
     <header class="letterhead certificate-content">
-      <%= image_tag "logo3.png", alt: "Sagisag ng Barangay Kalikid Sur" %>
-      <div>
-        <p class="barangay-title">THE SANGGUNIANG BARANGAY</p>
-        <p class="captain-name">NORMAN V. TACBIANAN</p>
-        <p class="captain-role">Barangay Captain</p>
-      </div>
-      <%= image_tag "logo2.png", alt: "Sagisag ng Lungsod ng Cabanatuan" %>
+      <p class="barangay-title">THE SANGGUNIANG BARANGAY</p>
+      <p class="captain-name script">NORMAN V. TACBIANAN</p>
+      <p class="captain-role">Barangay Captain</p>
     </header>
+    <%= image_tag "residency_certificate/cabanatuan_seal.png", alt: "Sagisag ng Lungsod ng Cabanatuan", class: "certificate-content emblem-right" %>
 
-    <section class="officials certificate-content" aria-label="Mga opisyal ng barangay">
-      <div><strong>NOLIE S. ISIDRO</strong>Barangay Secretary</div>
-      <div><strong>NANCY B. BAUTISTA</strong>Barangay Treasurer</div>
-    </section>
+    <div class="official left certificate-content"><strong>NOLIE S. ISIDRO</strong>Barangay Secretary</div>
+    <div class="official right certificate-content"><strong>NANCY B. BAUTISTA</strong>Barangay Treasurer</div>
+    <div class="divider header certificate-content"></div>
 
     <div class="jurisdiction certificate-content">
-      <p>Republic of the Philippines</p>
-      <p>Province of Nueva Ecija</p>
+      <p class="republic script">Republic of the Philippines</p>
+      <p class="republic script">Province of Nueva Ecija</p>
       <p class="city">CITY OF CABANATUAN</p>
       <p class="barangay">BARANGAY KALIKID SUR</p>
     </div>
     <div class="office-heading certificate-content">OFFICE OF THE BARANGAY CAPTAIN</div>
     <div class="office-rule certificate-content"></div>
-    <h1 class="certificate-content">CERTIFICATE OF RESIDENCY</h1>
+    <h1 class="certificate-content script">CERTIFICATE OF RESIDENCY</h1>
 
-    <div class="certificate-content">
+    <!-- Body -->
+    <div class="certificate-content certificate-body">
       <p class="salutation">To Whom It May Concern:</p>
       <section class="body-copy">
         <p>That I, NORMAN V. TACBIANAN, Punong Barangay of Kalikid Sur, Cabanatuan City, whose signature appears below do hereby attest the following facts:</p>
@@ -93,27 +126,30 @@
         <p>That, <%= @certificate_profile.male? ? "he" : "she" %> is a legitimate, registered and bona fide resident/s of this community for more than <span class="filled"><%= @document_request.years_of_residency %></span> already.</p>
         <p>This Certification was issued upon the request of <span class="filled"><%= @certificate_salutation %> <%= @certificate_name %></span> for <span class="filled"><%= @document_request.purpose %></span> and for any legal purpose/s it may serve.</p>
       </section>
-      <p class="given-date">Given this <span class="filled"><%= @certificate_issued_on.day %></span> day of <span class="filled"><%= @certificate_issued_on.strftime("%B") %></span>, <span class="filled"><%= @certificate_issued_on.year %></span>.</p>
-
-      <div class="signature-row">
-        <%= image_tag "logo3.png", alt: "Sagisag ng Barangay Kalikid Sur", class: "dry-seal" %>
-        <div class="signature-block"><strong>Hon. NORMAN V. TACBIANAN</strong>Punong Barangay</div>
-      </div>
-      <p class="seal-notice">NOT VALID WITHOUT OFFICIAL DRY SEAL</p>
+      <p class="given-date">Given this <span class="filled"><%= @certificate_issued_on.day %></span> day of <span class="filled"><%= @certificate_issued_on.strftime("%B") %></span>, <%= @certificate_issued_on.year %>.</p>
     </div>
 
-    <section class="council" aria-label="Mga miyembro ng Sangguniang Barangay">
-      <div><strong>Hon. HECTOR R. DIZON</strong>Committee on AGRICULTURE</div>
-      <div><strong>Hon. JONATHAN C. YALA</strong>Committee on INFRASTRUCTURE</div>
-      <div><strong>Hon. ROMMEL C. TACBIANAN</strong>Committee on ENVIRONMENTAL<br>PROTECTION</div>
-      <div><strong>Hon. IMELDA R. TOLENTINO</strong>Committee on APPROPRIATION/<br>COOPERATIVE/CALAMITY<br>DISASTER PREPAREDNESS</div>
-      <div><strong>Hon. FEBE D. PEREZ</strong>Committee on PEACE &amp; ORDER</div>
-      <div><strong>Hon. NANCY A. CAPINPIN</strong>Committee on HEALTH &amp; EDUCATION</div>
-      <div><strong>Hon. PAUL ADRIAN P. DELA CRUZ</strong>Committee on SPORTS &amp; YOUTH<br>DEVELOPMENT</div>
-      <div class="sk"><strong>ASHANTI BRILLIANT P. VALLE</strong>SK CHAIRPERSON</div>
-    </section>
+    <%= image_tag "residency_certificate/nueva_ecija_seal.jpeg", alt: "Sagisag ng Nueva Ecija", class: "certificate-content dry-seal" %>
+    <div class="signature-block certificate-content"><strong>Hon. NORMAN V. TACBIANAN</strong>Punong Barangay</div>
+    <p class="seal-notice certificate-content">NOT VALID WITHOUT OFFICIAL DRY SEAL</p>
 
-    <footer class="slogan">KALIKID SUR, SAMA-SAMA PARA SA TUNAY NA<br>PAGBABAGO AT PAG-UNLAD!</footer>
+    <!-- Council -->
+    <div class="divider council certificate-content"></div>
+    <section aria-label="Mga miyembro ng Sangguniang Barangay">
+      <div class="member certificate-content" style="--cx:1.71in;--y:10.62in"><strong>Hon. HECTOR R. DIZON</strong>Committee on AGRICULTURE</div>
+      <div class="member certificate-content" style="--cx:3.92in;--y:10.62in"><strong>Hon. JONATHAN C. YALA</strong>Committee on INFRASTRUCTURE</div>
+      <div class="member certificate-content" style="--cx:6.72in;--y:10.62in"><strong>Hon. ROMMEL C. TACBIANAN</strong>Committee on ENVIRONMENTAL<br>PROTECTION</div>
+
+      <div class="member certificate-content" style="--cx:1.57in;--y:11.20in"><strong>Hon. IMELDA R. TOLENTINO</strong>Committee on APPROPRIATION/<br>COOPERATIVE/ CALAMITY<br>DISASTER PREPAREDNESS</div>
+      <div class="member certificate-content" style="--cx:3.92in;--y:11.20in"><strong>Hon. FEBE D. PEREZ</strong>Committee on PEACE &amp; ORDER</div>
+      <div class="member certificate-content" style="--cx:6.72in;--y:11.20in"><strong>Hon. NANCY A. CAPINPIN</strong>Committee on HEALTH &amp; EDUCATION</div>
+
+      <div class="member certificate-content" style="--cx:2.78in;--y:11.94in"><strong>Hon. PAUL ADRIAN P. DELA CRUZ</strong>Committee on SPORTS &amp; YOUTH DEVELOPMENT</div>
+      <div class="member certificate-content" style="--cx:6.17in;--y:11.94in"><strong>ASHANTI BRILLIANT P. VALLE</strong>SK CHAIRPERSON</div>
+    </section>
+    <div class="divider footer certificate-content"></div>
+
+    <footer class="slogan">“KALIKID SUR, SAMA-SAMA PARA SA TUNAY NA<br>PAG-BABAGO AT PAG-UNLAD!”</footer>
   </main>
   <script>
     window.addEventListener("load", () => window.setTimeout(() => window.print(), 250));

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barangay Clearance - <%= @clearance_name %></title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { margin: 0; background: #e7e9ee; color: #000; }
+    .toolbar { display: flex; justify-content: center; padding: 16px; font-family: Arial, sans-serif; }
+    .toolbar button { border: 0; border-radius: 7px; background: #07349e; color: #fff; cursor: pointer; padding: 11px 18px; font-size: 14px; font-weight: 700; }
+
+    /* Page = 8.5in x 13in (612 x 936 pt). Every coordinate below was measured from the reference PDF. */
+    .page { position: relative; width: 8.5in; height: 13in; margin: 0 auto 24px; overflow: hidden; background: #fff; box-shadow: 0 10px 35px #0002; }
+    .frame { position: absolute; left: .334in; top: .334in; width: 7.841in; height: 12.341in; border: .042in solid #000; box-shadow: inset 0 0 0 .008in #fff, inset 0 0 0 .016in #000; }
+
+    .t { position: absolute; margin: 0; white-space: pre; line-height: 1; font-kerning: none; font-variant-ligatures: none; text-rendering: geometricPrecision; }
+    .t.b, .t b, .v.b { font-weight: 700; }
+    .tnr { font-family: "Times New Roman", "Liberation Serif", Times, serif; }
+    .cal { font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; }
+    .cam { font-family: Cambria, Caladea, Georgia, serif; }
+    .imp { font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; }
+    .bod { font-family: "Bodoni MT Black", "Bodoni MT", "Bodoni 72", Didot, "Playfair Display", serif; font-weight: 400; }
+    .ele { font-family: Elephant, "Bookman Old Style", Georgia, serif; font-weight: 400; }
+    .cal.b { font-weight: 700; }
+
+    /* justified lines (width is set per line so line breaks match the PDF) */
+    .j { white-space: normal; text-align: justify; text-align-last: justify; }
+
+    /* blank = a typed-in field drawn like the underscores in the PDF */
+    .blank { height: .96em; border-bottom: .06em solid #000; overflow-x: clip; overflow-y: visible; text-align: left; white-space: nowrap; }
+    .blank.in { display: inline-block; position: static; margin: 0; overflow: visible; text-align: center; text-align-last: center; vertical-align: baseline; }
+    .v { font-size: .86em; }
+    .v.b, .j .v { font-size: 1em; }
+
+    .img { position: absolute; object-fit: fill; max-width: none; }
+    .watermark { left: .322in; top: 2.53in; width: 7.793in; height: 7.793in; opacity: .145; object-fit: contain; }
+    .bar { position: absolute; background: #000; display: block; }
+    .box { position: absolute; background: #fff; }
+    .dash { --c: #001f60; background:
+        linear-gradient(90deg, var(--c) 4pt, transparent 4pt) top left / 5.5pt .5pt repeat-x,
+        linear-gradient(90deg, var(--c) 4pt, transparent 4pt) bottom left / 5.5pt .5pt repeat-x,
+        linear-gradient(180deg, var(--c) 4pt, transparent 4pt) top left / .5pt 5.5pt repeat-y,
+        linear-gradient(180deg, var(--c) 4pt, transparent 4pt) top right / .5pt 5.5pt repeat-y,
+        #fff; }
+    .dashline { position: absolute; left: .394in; top: 10.345in; width: 7.717in; height: 2.25pt; background: repeating-linear-gradient(90deg, #0033cc 0 4.5pt, transparent 4.5pt 9pt); }
+
+    @page { size: 8.5in 13in; margin: 0; }
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .page { width: 8.5in; height: 13in; margin: 0; box-shadow: none; break-after: avoid; }
+    }
+    @media screen and (max-width: 850px) {
+      body { overflow-x: auto; }
+      .page { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar"><button type="button" onclick="window.print()">I-print ang Barangay Clearance</button></div>
+  <main class="page" aria-label="Barangay Clearance">
+    <div class="frame"></div>
+    <%= image_tag "residency_certificate/barangay_watermark.png", alt: "", class: "img watermark" %>
+    <%= image_tag "residency_certificate/barangay_emblem.png", alt: "Sagisag ng Barangay Kalikid Sur", class: "img", style: "left:.727in;top:.523in;width:.981in;height:.981in" %>
+    <%= image_tag "residency_certificate/cabanatuan_seal.png", alt: "Sagisag ng Lungsod ng Cabanatuan", class: "img", style: "left:6.628in;top:.488in;width:1.031in;height:1.031in" %>
+    <img alt="" class="img" style="left:2.75in;top:1.467in;width:2.946in;height:.854in" src="data:image/png;base64,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">
+    <%= image_tag "barangay_clearance/dilg_seal.png", alt: "DILG seal", class: "img", style: "left:.455in;top:11.727in;width:.834in;height:.834in" %>
+    <%= image_tag "barangay_clearance/provincial_seal.jpeg", alt: "Sagisag ng Nueva Ecija", class: "img", style: "left:7.235in;top:11.727in;width:.831in;height:.831in" %>
+    <div class="t tnr" style="left:3.087in;top:0.524in;font-size:10.8pt;letter-spacing:0.0598pt;">REPUBLIC OF THE PHILIPPINES</div>
+    <div class="t tnr" style="left:3.195in;top:0.708in;font-size:10.8pt;letter-spacing:0.0962pt;">PROVINCE OF NUEVA ECIJA</div>
+    <div class="t tnr" style="left:3.303in;top:0.884in;font-size:11.4pt;letter-spacing:0.1583pt;">CITY OF CABANATUAN</div>
+    <div class="t tnr b" style="left:3.137in;top:1.069in;font-size:12pt;letter-spacing:-0.0364pt;">BARANGAY KALIKID SUR</div>
+    <div class="t bod" style="left:2.252in;top:1.29in;font-size:13.8pt;">OFFICE OF THE BARANGAY CAPTAIN</div>
+    <div class="t imp" style="left:2.728in;top:1.659in;width:3in;text-align:center;font-size:14pt;color:#002060">Hon. NORMAN VINLUAN TACBIANAN</div>
+    <div class="t tnr b" style="left:2.73in;top:1.907in;width:3in;text-align:center;font-size:11pt;color:#365f91">PUNONG BARANGAY</div>
+    <div class="t tnr b" style="left:0.901in;top:1.903in;font-size:12pt;letter-spacing:-0.0111pt;">NOLIE S. ISIDRO</div>
+    <i class="bar" style="left:0.901in;top:2.06in;width:1.351in;height:0.017in;"></i>
+    <div class="t tnr b" style="left:0.734in;top:2.082in;font-size:10.2pt;letter-spacing:-0.1752pt;">BARANGAY SECRETARY</div>
+    <div class="t tnr b" style="left:5.964in;top:1.928in;font-size:12pt;letter-spacing:-0.0537pt;">NANCY B. BAUTISTA</div>
+    <i class="bar" style="left:5.964in;top:2.085in;width:1.677in;height:0.017in;"></i>
+    <div class="t tnr b" style="left:5.964in;top:2.107in;font-size:10.2pt;letter-spacing:-0.1752pt;">BARANGAY TREASURER</div>
+    <div class="t tnr" style="left:0.375in;top:2.345in;font-size:12pt;letter-spacing:-0.0369pt;">==================================================================================</div>
+    <div class="t bod" style="left:1.635in;top:2.696in;font-size:19.8pt;">B</div>
+    <i class="bar" style="left:1.635in;top:2.943in;width:0.233in;height:0.017in;"></i>
+    <div class="t bod" style="left:1.96in;top:2.696in;font-size:19.8pt;">A</div>
+    <i class="bar" style="left:1.96in;top:2.943in;width:0.209in;height:0.017in;"></i>
+    <div class="t bod" style="left:2.269in;top:2.696in;font-size:19.8pt;">R</div>
+    <i class="bar" style="left:2.269in;top:2.943in;width:0.242in;height:0.017in;"></i>
+    <div class="t bod" style="left:2.603in;top:2.696in;font-size:19.8pt;">A</div>
+    <i class="bar" style="left:2.603in;top:2.943in;width:0.208in;height:0.017in;"></i>
+    <div class="t bod" style="left:2.903in;top:2.696in;font-size:19.8pt;">N</div>
+    <i class="bar" style="left:2.903in;top:2.943in;width:0.225in;height:0.017in;"></i>
+    <div class="t bod" style="left:3.22in;top:2.696in;font-size:19.8pt;">G</div>
+    <i class="bar" style="left:3.22in;top:2.943in;width:0.217in;height:0.017in;"></i>
+    <div class="t bod" style="left:3.528in;top:2.696in;font-size:19.8pt;">A</div>
+    <i class="bar" style="left:3.528in;top:2.943in;width:0.209in;height:0.017in;"></i>
+    <div class="t bod" style="left:3.829in;top:2.696in;font-size:19.8pt;">Y</div>
+    <i class="bar" style="left:3.829in;top:2.943in;width:0.217in;height:0.017in;"></i>
+    <div class="t bod" style="left:4.229in;top:2.696in;font-size:19.8pt;">C</div>
+    <i class="bar" style="left:4.229in;top:2.943in;width:0.192in;height:0.017in;"></i>
+    <div class="t bod" style="left:4.513in;top:2.696in;font-size:19.8pt;">L</div>
+    <i class="bar" style="left:4.513in;top:2.943in;width:0.192in;height:0.017in;"></i>
+    <div class="t bod" style="left:4.805in;top:2.696in;font-size:19.8pt;">E</div>
+    <i class="bar" style="left:4.805in;top:2.943in;width:0.208in;height:0.017in;"></i>
+    <div class="t bod" style="left:5.105in;top:2.696in;font-size:19.8pt;">A</div>
+    <i class="bar" style="left:5.105in;top:2.943in;width:0.209in;height:0.017in;"></i>
+    <div class="t bod" style="left:5.405in;top:2.696in;font-size:19.8pt;">R</div>
+    <i class="bar" style="left:5.405in;top:2.943in;width:0.242in;height:0.017in;"></i>
+    <div class="t bod" style="left:5.739in;top:2.696in;font-size:19.8pt;">A</div>
+    <i class="bar" style="left:5.739in;top:2.943in;width:0.209in;height:0.017in;"></i>
+    <div class="t bod" style="left:6.039in;top:2.696in;font-size:19.8pt;">N</div>
+    <i class="bar" style="left:6.039in;top:2.943in;width:0.226in;height:0.017in;"></i>
+    <div class="t bod" style="left:6.356in;top:2.696in;font-size:19.8pt;">C</div>
+    <i class="bar" style="left:6.356in;top:2.943in;width:0.192in;height:0.017in;"></i>
+    <div class="t bod" style="left:6.64in;top:2.696in;font-size:19.8pt;">E</div>
+    <i class="bar" style="left:6.64in;top:2.943in;width:0.208in;height:0.017in;"></i>
+    <div class="t tnr" style="left:3.495in;top:3.006in;font-size:13.2pt;letter-spacing:0.1802pt;">BC No</div>
+    <div class="t tnr b" style="left:4.02in;top:3.006in;font-size:13.2pt;">.:</div>
+    <% bc_parts = @clearance_number.to_s.split("-"); bc_year = bc_parts.length > 1 ? bc_parts.pop : @clearance_issued_on.strftime("%y"); bc_number = bc_parts.join("-") %>
+    <div class="t tnr blank " style="left:4.179in;top:3.02in;width:0.583in;font-size:12pt;text-align:right;overflow:visible"><span class="v b"><%= bc_number %></span></div>
+    <div class="t tnr b" style="left:4.762in;top:3.02in;font-size:12pt;">-<%= bc_year %></div>
+    <div class="t tnr j" style="left:1.093in;top:3.42in;width:6.793in;font-size:15pt;">This is to certify that the person whose name, picture, thumb mark and signature</div>
+    <div class="t tnr j" style="left:0.592in;top:3.653in;width:7.288in;font-size:15pt;">appear hereon is a bona fide resident and has no derogatory record on file at Barangay</div>
+    <div class="t tnr b" style="left:0.592in;top:3.895in;font-size:15pt;letter-spacing:0.0249pt;">KALIKID SUR, CABANATUAN CITY, NUEVA ECIJA.</div>
+    <div class="t tnr b" style="left:0.659in;top:4.712in;font-size:11.4pt;letter-spacing:0.1214pt;">NAME</div>
+    <div class="t tnr" style="left:1.151in;top:4.712in;font-size:11.4pt;">:</div>
+    <div class="t tnr blank " style="left:1.235in;top:4.691in;width:3.483in;font-size:13.2pt;"><span class="v"><%= @clearance_name %></span></div>
+    <div class="t tnr b" style="left:0.659in;top:5.02in;font-size:11.4pt;letter-spacing:0.0879pt;">DATE OF BIRTH</div>
+    <div class="t tnr" style="left:1.927in;top:5.02in;font-size:11.4pt;">:</div>
+    <div class="t tnr blank " style="left:2.01in;top:4.999in;width:2.659in;font-size:13.2pt;"><span class="v"><%= @clearance_profile.birth_date&.strftime("%B %-d, %Y") %></span></div>
+    <div class="t tnr b" style="left:0.659in;top:5.329in;font-size:11.4pt;letter-spacing:0.0543pt;">PLACE OF BIRTH</div>
+    <div class="t tnr" style="left:2.019in;top:5.329in;font-size:11.4pt;">:</div>
+    <div class="t tnr blank " style="left:2.102in;top:5.322in;width:2.583in;font-size:12pt;"><span class="v"><%= @document_request.birth_place %></span></div>
+    <div class="t tnr b" style="left:4.88in;top:4.703in;font-size:11.4pt;letter-spacing:0.1658pt;">GENDER</div>
+    <div class="t tnr" style="left:5.572in;top:4.703in;font-size:11.4pt;">:</div>
+    <div class="t tnr blank " style="left:5.656in;top:4.682in;width:2.291in;font-size:13.2pt;"><span class="v"><%= @clearance_profile.male? ? "Male" : "Female" %></span></div>
+    <div class="t tnr b" style="left:4.88in;top:5.02in;font-size:11.4pt;letter-spacing:0.1036pt;">CIVIL STATUS</div>
+    <div class="t tnr" style="left:6.014in;top:5.02in;font-size:11.4pt;">:</div>
+    <div class="t tnr blank " style="left:6.098in;top:4.999in;width:1.833in;font-size:13.2pt;"><span class="v"><%= @document_request.civil_status&.humanize %></span></div>
+    <div class="t tnr b" style="left:4.88in;top:5.32in;font-size:11.4pt;letter-spacing:-0.0017pt;">PURPOSE</div>
+    <div class="t tnr" style="left:5.622in;top:5.32in;font-size:11.4pt;">:</div>
+    <div class="t tnr blank " style="left:5.714in;top:5.313in;width:2.167in;font-size:12pt;"><span class="v"><%= @document_request.purpose %></span></div>
+    <% if @clearance_profile.avatar.attached? %>
+      <div class="box dash" style="left:.694in;top:5.832in;width:1.9in;height:2in"></div>
+      <%= image_tag @clearance_profile.avatar, alt: "Larawan ni #{@clearance_name}", class: "img", style: "left:.694in;top:5.832in;width:1.9in;height:2in;object-fit:cover" %>
+    <% else %>
+      <div class="box dash" style="left:.694in;top:5.832in;width:1.9in;height:2in" aria-label="Photo area"></div>
+    <% end %>
+    <div class="box dash" style="left:2.831in;top:6.441in;width:1.067in;height:1.395in"></div>
+    <div class="box dash" style="left:4.076in;top:6.441in;width:1.067in;height:1.395in"></div>
+    <div class="t cal" style="left:3.262in;top:6.835in;font-size:9pt;letter-spacing:0.1212pt;color:#d9d9d9">Left</div>
+    <div class="t cal" style="left:3.053in;top:7.019in;font-size:9pt;letter-spacing:-0.0293pt;color:#d9d9d9">Thumbmark</div>
+    <div class="t cal" style="left:4.488in;top:6.877in;font-size:9pt;letter-spacing:-0.0836pt;color:#d9d9d9">Right</div>
+    <div class="t cal" style="left:4.304in;top:7.06in;font-size:9pt;letter-spacing:-0.0293pt;color:#d9d9d9">Thumbmark</div>
+    <div class="box" style="left:5.411in;top:7.3in;width:2.669in;height:.527in"></div>
+    <i class="bar" style="left:5.539in;top:7.538in;width:2.419in;height:0.008in;background:#365f91"></i>
+    <div class="t cal b" style="left:5.823in;top:7.635in;font-size:10.8pt;letter-spacing:0.0863pt;">Signature Over Printed Name</div>
+    <div class="t tnr j" style="left:1.084in;top:8.098in;width:6.724in;font-size:15pt;">This <b>Barangay Clearance</b> is valid only for <b>six (6) months</b> from the date of</div>
+    <div class="t tnr j" style="left:0.584in;top:8.332in;width:7.219in;font-size:15pt;word-spacing:-.4pt">issuance and after its expiration is null and void.&nbsp; Issued this <span class="blank in" style="width:.429in"><span class="v"><%= @clearance_issued_on.day %></span></span> day of <span class="blank in" style="width:1.146in"><span class="v"><%= @clearance_issued_on.strftime("%B") %></span></span></div>
+    <div class="t tnr j" style="left:0.584in;top:8.573in;width:7.217in;font-size:15pt;word-spacing:-.6pt"><b><%= @clearance_issued_on.year %></b> at the office of the Barangay Captain, Kalikid Sur, Cabanatuan City, Nueva Ecija<b>.</b></div>
+    <div class="t tnr b" style="left:0.551in;top:9.107in;font-size:12pt;letter-spacing:-0.0600pt;">CTC No.:</div>
+    <i class="bar" style="left:1.282in;top:9.268in;width:2.503in;height:0.014in;background:#001f60"></i>
+    <div class="t tnr b" style="left:0.551in;top:9.491in;font-size:12pt;letter-spacing:0.0511pt;">Issued at:</div>
+    <i class="bar" style="left:1.29in;top:9.651in;width:2.503in;height:0.014in;background:#001f60"></i>
+    <div class="t tnr b" style="left:0.551in;top:9.875in;font-size:12pt;letter-spacing:0.0210pt;">Issued on:</div>
+    <i class="bar" style="left:1.324in;top:10.034in;width:2.503in;height:0.014in;background:#001f60"></i>
+    <div class="t tnr b" style="left:4.588in;top:9.137in;font-size:13.8pt;letter-spacing:0.0101pt;">CERTIFIED:</div>
+    <i class="bar" style="left:5.13in;top:9.765in;width:2.836in;height:0.017in;"></i>
+    <div class="t ele" style="left:5.164in;top:9.806in;font-size:12pt;">Hon. NORMAN V. TACBIANAN</div>
+    <div class="t tnr b" style="left:5.939in;top:10.022in;font-size:10.8pt;letter-spacing:0.0207pt;">BARANGAY CAPTAIN</div>
+    <i class="dashline"></i>
+    <div class="t tnr b" style="left:0.776in;top:10.582in;font-size:11.4pt;letter-spacing:0.1481pt;">Hon. HECTOR R. DIZON</div>
+    <i class="bar" style="left:0.776in;top:10.732in;width:1.852in;height:0.017in;"></i>
+    <div class="t tnr" style="left:0.876in;top:10.76in;font-size:9pt;letter-spacing:0.0779pt;">Committee on AGRICULTURE</div>
+    <div class="t tnr b" style="left:3.12in;top:10.574in;font-size:11.4pt;letter-spacing:0.1747pt;">Hon. JONATHAN C. YALA</div>
+    <i class="bar" style="left:3.12in;top:10.724in;width:1.994in;height:0.017in;"></i>
+    <div class="t tnr" style="left:3.187in;top:10.752in;font-size:9pt;letter-spacing:0.0579pt;">Committee on INFRASTRUCTURE</div>
+    <div class="t tnr b" style="left:5.506in;top:10.574in;font-size:11.4pt;letter-spacing:0.1432pt;">Hon. ROMMEL C. TACBIANAN</div>
+    <i class="bar" style="left:5.506in;top:10.724in;width:2.36in;height:0.017in;"></i>
+    <div class="t tnr" style="left:5.756in;top:10.752in;font-size:9pt;letter-spacing:0.0726pt;">Committee on ENVIRONMENTAL</div>
+    <div class="t tnr" style="left:6.298in;top:10.894in;font-size:9pt;letter-spacing:-0.0324pt;">PROTECTION</div>
+    <div class="t tnr b" style="left:0.684in;top:11.091in;font-size:11.4pt;letter-spacing:0.1334pt;">Hon. IMELDA R. TOLENTINO</div>
+    <i class="bar" style="left:0.684in;top:11.241in;width:2.26in;height:0.017in;"></i>
+    <div class="t tnr" style="left:0.943in;top:11.269in;font-size:9pt;letter-spacing:0.0553pt;">Committee on APPROPRIATION</div>
+    <div class="t tnr" style="left:1.076in;top:11.411in;font-size:9pt;letter-spacing:0.0536pt;">Committee AGRICULTURE</div>
+    <div class="t tnr" style="left:0.626in;top:11.553in;font-size:9pt;letter-spacing:-0.0194pt;">CALAMITY &amp; DISASTER PREPAREDNESS</div>
+    <div class="t tnr b" style="left:3.395in;top:11.149in;font-size:11.4pt;letter-spacing:0.1176pt;">Hon. FEBE D. PEREZ</div>
+    <i class="bar" style="left:3.395in;top:11.299in;width:1.576in;height:0.017in;"></i>
+    <div class="t tnr" style="left:3.22in;top:11.327in;font-size:9pt;letter-spacing:0.0767pt;">Committee on PEACE AND ORDER</div>
+    <div class="t tnr b" style="left:5.739in;top:11.091in;font-size:11.4pt;letter-spacing:0.0850pt;">Hon. NANCY A. CAPINPIN</div>
+    <i class="bar" style="left:5.739in;top:11.241in;width:1.977in;height:0.017in;"></i>
+    <div class="t tnr" style="left:5.664in;top:11.269in;font-size:9pt;letter-spacing:-0.0005pt;">Committee on HEALTH &amp; EDUCATION</div>
+    <div class="t tnr b" style="left:1.56in;top:11.85in;font-size:11.4pt;letter-spacing:0.0528pt;">Hon. PAUL ADRIAN P. DELA CRUZ</div>
+    <i class="bar" style="left:1.56in;top:11.999in;width:2.644in;height:0.017in;"></i>
+    <div class="t tnr" style="left:2.119in;top:12.028in;font-size:9pt;letter-spacing:0.0597pt;">Committee on SPORTS AND</div>
+    <div class="t tnr" style="left:2.185in;top:12.178in;font-size:9pt;letter-spacing:-0.0028pt;">YOUTH DEVELOPMENT</div>
+    <div class="t tnr b" style="left:4.379in;top:11.85in;font-size:11.4pt;letter-spacing:0.1151pt;">Hon. ASHANTI BRILLIANT P. VALLE</div>
+    <i class="bar" style="left:4.379in;top:11.999in;width:2.837in;height:0.017in;"></i>
+    <div class="t tnr" style="left:5.305in;top:12.028in;font-size:9pt;letter-spacing:-0.0142pt;">SK CHAIPERSON</div>
+    <div class="t cam" style="left:2.678in;top:12.331in;font-size:12pt;color:#548dd4">NOT VALID WITHOUT OFFICIAL DRY SEAL</div>
+  </main>
+  <script>
+    window.addEventListener("load", () => window.setTimeout(() => window.print(), 250));
+  </script>
+</body>
+</html>

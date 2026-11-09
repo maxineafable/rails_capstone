@@ -266,9 +266,12 @@
 
                 <!-- Actions -->
                 <td class="px-4 py-5 text-center">
-                  <%= link_to "Tingnan",
-                        barangay_concern_path(concern),
-                        class: "inline-block rounded-lg bg-blue-100 px-4 py-1.5 font-semibold text-slate-800 hover:bg-blue-200" %>
+                  <%= link_to barangay_concern_path(concern, return_to: request.fullpath),
+                        data: { turbo_frame: "remote_modal" },
+                        class: "inline-flex items-center gap-1.5 rounded-lg bg-blue-100 px-4 py-1.5 font-semibold text-slate-800 hover:bg-blue-200" do %>
+                    <%= image_tag "view.svg", alt: "", class: "h-3.5 w-3.5 object-contain" %>
+                    Tingnan
+                  <% end %>
                 </td>
 
               </tr>

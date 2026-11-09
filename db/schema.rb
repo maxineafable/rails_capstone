@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_05_070055) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_09_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -127,6 +127,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_070055) do
     t.index ["user_id"], name: "index_profiles_on_user_id", unique: true
   end
 
+  create_table "resident_notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.string "subject", null: false
+    t.string "status", null: false
+    t.text "body", null: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "index_resident_notifications_on_notifiable"
+    t.index ["user_id", "read_at", "created_at"], name: "index_resident_notifications_for_inbox"
+    t.index ["user_id"], name: "index_resident_notifications_on_user_id"
+  end
+
   create_table "staffs", force: :cascade do |t|
     t.integer "position", null: false
     t.bigint "user_id", null: false
@@ -167,5 +182,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_070055) do
   add_foreign_key "document_requests", "users", on_delete: :cascade
   add_foreign_key "household_members", "households", on_delete: :cascade
   add_foreign_key "profiles", "users", on_delete: :cascade
+  add_foreign_key "resident_notifications", "users"
   add_foreign_key "staffs", "users", on_delete: :cascade
 end

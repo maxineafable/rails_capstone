@@ -6,6 +6,8 @@ class AdminController < ApplicationController
   before_action :authorize_staff!
 
   def index
+    prepare_activity_chart
+
     @pending_docs_count = DocumentRequest.pending.count
     @ongoing_concerns_count = BarangayConcern.ongoing.count
 
@@ -80,11 +82,12 @@ class AdminController < ApplicationController
     sort_direction = params[:sort_direction] == "asc" ? "ASC" : "DESC"
     query = query.order("document_requests.created_at #{sort_direction}")
 
-    @pagy, @all_document_requests = pagy(:offset, query, items: 10)
+    @pagy, @all_document_requests = pagy(:offset, query, limit: 10)
 
-    @total_docs = DocumentRequest.count
+    @total_docs = DocumentRequest.where.not(status: DocumentRequest.statuses.fetch("claimed")).count
     @pending_docs_count = DocumentRequest.pending.count
     @processing_docs = DocumentRequest.processing.count
+    @approved_docs = DocumentRequest.approved.count
     @rejected_docs = DocumentRequest.rejected.count
     @ready_pickup_docs = DocumentRequest.ready_to_pickup.count
   end
@@ -129,9 +132,9 @@ class AdminController < ApplicationController
     sort_direction = params[:sort_direction] == "asc" ? "ASC" : "DESC"
     query = query.order("barangay_concerns.created_at #{sort_direction}")
 
-    @pagy, @all_barangay_concerns = pagy(:offset, query, items: 10)
+    @pagy, @all_barangay_concerns = pagy(:offset, query, limit: 10)
 
-    @total_concerns = BarangayConcern.count
+    @total_concerns = BarangayConcern.where.not(status: BarangayConcern.statuses.fetch("resolved")).count
     @pending_concerns = BarangayConcern.pending.count
     @ongoing_concerns = BarangayConcern.ongoing.count
     @resolved_concerns = BarangayConcern.resolved.count
@@ -225,6 +228,69 @@ class AdminController < ApplicationController
   end
 
   private
+    def prepare_activity_chart
+      today = Time.zone.today
+      @activity_type = %w[all documents concerns completed].include?(params[:activity_type]) ? params[:activity_type] : "all"
+      @activity_period = %w[7days month year custom].include?(params[:activity_period]) ? params[:activity_period] : "7days"
+
+      case @activity_period
+      when "month"
+        @activity_date_from = today - 29.days
+        @activity_date_to = today
+      when "year"
+        @activity_date_from = today - 364.days
+        @activity_date_to = today
+      when "custom"
+        @activity_date_from = parse_filter_date(params[:date_from]) || (today - 6.days)
+        @activity_date_to = parse_filter_date(params[:date_to]) || today
+        @activity_date_from, @activity_date_to = @activity_date_to, @activity_date_from if @activity_date_to < @activity_date_from
+      else
+        @activity_date_from = today - 6.days
+        @activity_date_to = today
+      end
+
+      @activity_monthly = (@activity_date_to - @activity_date_from).to_i >= 31
+      bucket_dates = if @activity_monthly
+        dates = []
+        month = @activity_date_from.beginning_of_month
+        while month <= @activity_date_to
+          dates << month
+          month = month.next_month
+        end
+        dates
+      else
+        (@activity_date_from..@activity_date_to).to_a
+      end
+
+      label_format = @activity_monthly ? "%b %Y" : (@activity_date_to - @activity_date_from).to_i <= 7 ? "%a" : "%b %-d"
+      @activity_chart_data = bucket_dates.map do |date|
+        { date: date, label: date.strftime(label_format), documents: 0, concerns: 0 }
+      end
+      bucket_index = @activity_chart_data.each_with_index.to_h { |bucket, index| [bucket[:date], index] }
+
+      document_query = DocumentRequest.where(created_at: @activity_date_from.beginning_of_day..@activity_date_to.end_of_day)
+      document_query = document_query.claimed if @activity_type == "completed"
+      document_query.pluck(:created_at).each do |created_at|
+        date = created_at.in_time_zone.to_date
+        date = date.beginning_of_month if @activity_monthly
+        index = bucket_index[date]
+        @activity_chart_data[index][:documents] += 1 if index
+      end
+
+      concern_query = BarangayConcern.where(created_at: @activity_date_from.beginning_of_day..@activity_date_to.end_of_day)
+      concern_query = concern_query.resolved if @activity_type == "completed"
+      concern_query.pluck(:created_at).each do |created_at|
+        date = created_at.in_time_zone.to_date
+        date = date.beginning_of_month if @activity_monthly
+        index = bucket_index[date]
+        @activity_chart_data[index][:concerns] += 1 if index
+      end
+
+      @activity_document_total = @activity_chart_data.sum { |bucket| bucket[:documents] }
+      @activity_concern_total = @activity_chart_data.sum { |bucket| bucket[:concerns] }
+      @activity_busiest_bucket = @activity_chart_data.max_by { |bucket| bucket[:documents] + bucket[:concerns] }
+    end
+
     def prepare_report_filters
       @report_type = %w[documents concerns residents].include?(params[:report]) ? params[:report] : "documents"
       @date_from = parse_filter_date(params[:date_from]) || Time.zone.today.beginning_of_month

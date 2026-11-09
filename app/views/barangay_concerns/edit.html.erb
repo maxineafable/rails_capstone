@@ -27,7 +27,8 @@
           </div>
         </div>
 
-        <%= form_with model: @barangay_concern, local: true do |f| %>
+        <%= form_with model: @barangay_concern, local: true, data: { turbo_frame: "_top" } do |f| %>
+          <%= hidden_field_tag :return_to, @return_to %>
 
           <!-- Validation Errors -->
           <% if @barangay_concern.errors.any? %>
@@ -135,7 +136,8 @@
           <!-- Actions -->
           <div class="flex flex-col-reverse gap-3 sm:flex-row">
             <%= link_to "Kanselahin / Kanselahin",
-                barangay_concern_path(@barangay_concern),
+                @return_to,
+                data: { turbo_frame: "_top" },
                 class: "flex flex-1 items-center justify-center rounded-md bg-indigo-50 px-4 py-2.5 text-center text-sm font-semibold text-gray-800 hover:bg-indigo-100" %>
 
             <%= f.submit "I-save ang Pagbabago / Save Changes",

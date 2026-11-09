@@ -19,6 +19,8 @@ class BarangayConcernsController < ApplicationController
     when "unactionable" then @all_barangay_concerns.unactionable
     else @all_barangay_concerns
     end
+
+    @pagy, @barangay_concerns = pagy(:offset, @barangay_concerns, limit: 5)
   end
 
   def show
@@ -42,6 +44,7 @@ class BarangayConcernsController < ApplicationController
   def edit
     if current_user.barangay_staff?
       @barangay_concern = BarangayConcern.find(params[:id])
+      @return_to = safe_admin_return_path(params[:return_to])
     end
   end
 
@@ -72,11 +75,13 @@ class BarangayConcernsController < ApplicationController
 
   def update
     @barangay_concern = BarangayConcern.find(params[:id])
+    return_to = safe_admin_return_path(params[:return_to])
 
     if @barangay_concern.update(admin_barangay_concern_params)
-      redirect_to @barangay_concern, notice: "Concern status updated successfully."
+      redirect_to return_to, notice: "Concern status updated successfully."
     else
-      render :show, status: :unprocessable_entity
+      @return_to = return_to
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -87,6 +92,11 @@ class BarangayConcernsController < ApplicationController
 
     def admin_barangay_concern_params
       params.require(:barangay_concern).permit(:status, :staff_remarks, :assigned_staff_id)
+    end
+
+    def safe_admin_return_path(path)
+      path = path.to_s
+      path.start_with?("/") && !path.start_with?("//") ? path : admin_barangay_concerns_path
     end
 
     def authorize_staff!

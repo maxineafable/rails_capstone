@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
   <%= render "shared/navbar", active: :requests %>
 
-  <main class="mx-auto max-w-[1280px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-5 lg:px-6 lg:py-7">
+  <main class="mx-auto max-w-[1280px] space-y-4 px-4 py-5 pb-24 sm:px-6 sm:py-6 sm:pb-24 md:pb-6 lg:space-y-5 lg:px-6 lg:py-7">
     <section class="relative overflow-hidden rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 sm:py-6 lg:px-8 lg:py-8" aria-labelledby="requests-title">
       <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#07349e] via-[#2457c5] to-emerald-700" aria-hidden="true"></div>
       <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
@@ -35,10 +35,10 @@
       </div>
     </section>
 
-    <% active_filter = params[:filter].presence_in(%w[all pending processing ready_to_pickup claimed rejected]) || "all" %>
+    <% active_filter = params[:filter].presence_in(%w[all pending processing approved ready_to_pickup claimed rejected]) || "all" %>
     <section class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-2 py-2 shadow-sm sm:px-3" aria-label="Kahilingan status filters">
       <nav class="flex flex-wrap items-center gap-1 text-[9px] font-semibold text-slate-700 lg:gap-2 lg:text-[13px]" aria-label="Filter document requests">
-        <% filters = [["all", "Lahat ng Kahilingan", @total_requests], ["pending", "Naghihintay", @pending_requests], ["processing", "Pinoproseso", @processing_requests], ["ready_to_pickup", "Handa nang Kunin", @ready_requests]] %>
+        <% filters = [["all", "Lahat ng Kahilingan", @total_requests], ["pending", "Naghihintay", @pending_requests], ["processing", "Pinoproseso", @processing_requests], ["approved", "Naaprubahan", @approved_requests], ["ready_to_pickup", "Handa nang Kunin", @ready_requests]] %>
         <% filters.each do |filter_key, label, count| %>
           <%= link_to document_requests_path(filter: filter_key), class: "rounded-lg px-3 py-2 no-underline transition #{active_filter == filter_key ? 'bg-[#dce7ff] text-[#07349e]' : 'text-slate-700 hover:bg-slate-50'}" do %>
             <%= label %> <span class="ml-1 rounded-full bg-white px-1.5 py-0.5"><%= count %></span>
@@ -55,6 +55,8 @@
             ["border-amber-900", "bg-[#ffdec2] text-amber-950", "Naghihintay ng Pagsusuri", "Naghihintay ng pagsusuri ng kawani ng barangay"]
           elsif request.processing?
             ["border-[#07349e]", "bg-[#dce4ff] text-[#17379f]", "Pinoproseso", "Inihahanda ang inyong dokumento"]
+          elsif request.approved?
+            ["border-emerald-700", "bg-emerald-100 text-emerald-900", "Naaprubahan", "Naaprubahan na at ihahanda para makuha"]
           elsif request.ready_to_pickup?
             ["border-emerald-700", "bg-emerald-200 text-emerald-900", "Handa nang Kunin", "Kunin sa Barangay Hall at magdala ng balidong ID"]
           elsif request.claimed?
@@ -62,17 +64,18 @@
           else
             ["border-rose-700", "bg-rose-100 text-rose-900", "Tinanggihan", "Tingnan ang detalye para sa tala ng kawani’s remarks"]
           end %>
-          <% status_icon = { "pending" => "pending.svg", "processing" => "pinoproseso.svg", "ready_to_pickup" => "Handanangkunin.svg", "claimed" => "check.svg", "rejected" => "action.svg" }.fetch(request.status, "pending.svg") %>
+          <% status_icon = { "pending" => "pending.svg", "processing" => "pinoproseso.svg", "approved" => "check.svg", "ready_to_pickup" => "Handanangkunin.svg", "claimed" => "check.svg", "rejected" => "action.svg" }.fetch(request.status, "pending.svg") %>
           <% status_style = tagalog_status_class(request.status) %>
           <% status_label = tagalog_status(request.status) %>
 
-          <article class="overflow-hidden rounded-xl border-l-4 <%= accent_style %> bg-white shadow-sm lg:border-l-[6px]">
-            <div class="flex flex-col gap-3 px-4 py-4 sm:px-5 lg:px-7 lg:py-5">
+          <article class="relative overflow-hidden rounded-xl border-l-4 <%= accent_style %> bg-white shadow-sm lg:border-l-[6px]">
+            <%= link_to "", document_request_path(request), data: { turbo_frame: "remote_modal" }, aria: { label: "Tingnan ang detalye ng kahilingan #{request.tracking_number}" }, class: "absolute inset-0 z-10 block lg:hidden" %>
+            <div class="pointer-events-none relative z-0 flex flex-col gap-3 px-4 py-4 sm:px-5 lg:pointer-events-auto lg:px-7 lg:py-5">
               <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div class="flex min-w-0 items-center gap-3">
-                  <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg <%= request.ready_to_pickup? || request.claimed? ? 'bg-emerald-100 text-emerald-800' : request.processing? ? 'bg-indigo-100 text-indigo-800' : 'bg-[#ffeadb] text-amber-900' %>" aria-hidden="true"><%= image_tag request.ready_to_pickup? || request.claimed? ? "resolved.svg" : request.processing? ? "Icon.svg" : "documents.svg", alt: "", class: "h-5 w-5" %></span>
+                  <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg <%= request.ready_to_pickup? || request.claimed? || request.approved? ? 'bg-emerald-100 text-emerald-800' : request.processing? ? 'bg-indigo-100 text-indigo-800' : 'bg-[#ffeadb] text-amber-900' %>" aria-hidden="true"><%= image_tag request.ready_to_pickup? || request.claimed? || request.approved? ? "resolved.svg" : request.processing? ? "Icon.svg" : "documents.svg", alt: "", class: "h-5 w-5" %></span>
                   <div class="min-w-0">
-                    <h2 class="text-sm font-semibold text-slate-900 lg:text-[18px]"><%= request.document_type.humanize %></h2>
+                    <h2 class="text-sm font-semibold text-slate-900 lg:text-[18px]"><%= tagalog_label(request.document_type) %></h2>
                     <p class="text-[9px] text-slate-700 lg:text-[13px]">◷ <%= tagalog_datetime(request.created_at) %></p>
                   </div>
                 </div>
@@ -83,13 +86,26 @@
               </div>
               <p class="text-xs italic leading-relaxed text-slate-700 lg:text-[14px]">“<%= truncate(request.purpose, length: 160) %>”</p>
             </div>
-            <div class="flex flex-col justify-between gap-2 bg-[#f7f9ff] px-4 py-2.5 text-[9px] sm:flex-row sm:items-center sm:px-5 lg:px-7 lg:text-[12px]">
-                  <span class="inline-flex items-center gap-1.5 font-medium <%= request.ready_to_pickup? || request.claimed? ? 'text-emerald-700' : request.processing? ? 'text-[#07349e]' : request.rejected? ? 'text-rose-700' : 'text-slate-600' %>"><%= image_tag status_icon, alt: "", class: "h-3.5 w-3.5 shrink-0 object-contain" %><%= note %></span>
-              <%= link_to "Tingnan ang Detalye →", document_request_path(request), data: { turbo_frame: "remote_modal" }, class: "font-semibold text-[#07349e] no-underline hover:underline" %>
+            <div class="pointer-events-none relative z-20 flex flex-col justify-between gap-2 bg-[#f7f9ff] px-4 py-2.5 text-[9px] sm:flex-row sm:items-center sm:px-5 lg:px-7 lg:text-[12px]">
+                  <span class="inline-flex items-center gap-1.5 font-medium <%= request.ready_to_pickup? || request.claimed? || request.approved? ? 'text-emerald-700' : request.processing? ? 'text-[#07349e]' : request.rejected? ? 'text-rose-700' : 'text-slate-600' %>"><%= image_tag status_icon, alt: "", class: "h-3.5 w-3.5 shrink-0 object-contain" %><%= note %></span>
+              <%= link_to "Tingnan ang Detalye →", document_request_path(request), data: { turbo_frame: "remote_modal" }, class: "pointer-events-auto relative z-20 font-semibold text-[#07349e] no-underline hover:underline" %>
             </div>
           </article>
         <% end %>
       </section>
+      <% if @pagy.count > 5 %>
+        <nav class="flex min-h-11 flex-nowrap items-center justify-center gap-1.5 overflow-x-auto py-1" aria-label="Mga pahina ng kahilingan">
+          <% if @pagy.page > 1 %>
+            <%= link_to "<", document_requests_path(filter: active_filter, page: @pagy.page - 1), aria: { label: "Nakaraang pahina" }, class: "flex h-9 min-w-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-700 no-underline" %>
+          <% end %>
+          <% (1..@pagy.pages).each do |page_number| %>
+            <%= link_to page_number, document_requests_path(filter: active_filter, page: page_number), aria: { current: (@pagy.page == page_number ? "page" : nil), label: "Pahina #{page_number}" }, class: "flex h-9 min-w-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border px-2 text-sm no-underline #{@pagy.page == page_number ? 'border-blue-600 bg-blue-600 font-semibold text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}" %>
+          <% end %>
+          <% if @pagy.page < @pagy.pages %>
+            <%= link_to ">", document_requests_path(filter: active_filter, page: @pagy.page + 1), aria: { label: "Susunod na pahina" }, class: "flex h-9 min-w-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-700 no-underline" %>
+          <% end %>
+        </nav>
+      <% end %>
     <% else %>
       <section class="rounded-xl bg-white px-5 py-10 text-center shadow-sm sm:px-8 lg:py-14">
         <p class="text-sm font-semibold text-slate-800 lg:text-[20px]">You haven’t submitted any document requests yet.</p>

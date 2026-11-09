@@ -145,7 +145,7 @@
                   else ["Naghihintay", "pending.svg", "bg-orange-100 text-amber-900"]
                   end %>
                 <% kind = if @report_type == "documents"
-                  record.document_type.humanize
+                  tagalog_label(record.document_type)
                 elsif @report_type == "concerns"
                   {"peace_and_order" => "Kapayapaan at Kaayusan", "infrastructure" => "Imprastraktura", "waste_management" => "Pamamahala ng Basura", "health_and_sanitation" => "Kalusugan at Kalinisan", "others" => "Iba pa"}[record.category]
                 else

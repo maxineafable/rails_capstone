@@ -40,121 +40,96 @@
 
     </section>
 
-    <!-- TODO: HARDCODED Activity Chart -->
+    <% chart_max = [@activity_chart_data.flat_map { |bucket| [(@activity_type == "concerns" ? 0 : bucket[:documents]), (@activity_type == "documents" ? 0 : bucket[:concerns])] }.max.to_i, 1].max %>
+    <% chart_axis_max = [[(chart_max / 10.0).ceil * 10, 10].max, chart_max].max %>
+    <% chart_left = 58.0; chart_right = 735.0; chart_top = 35.0; chart_bottom = 175.0 %>
+    <% chart_step = @activity_chart_data.size > 1 ? (chart_right - chart_left) / (@activity_chart_data.size - 1) : 0 %>
+    <% chart_bar_width = [28.0, chart_step.positive? ? chart_step * 0.55 : 28.0].min %>
+    <% chart_label_stride = [(@activity_chart_data.size / 10.0).ceil, 1].max %>
+    <% chart_show_values = @activity_chart_data.size <= 31 %>
     <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <div class="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 class="font-semibold text-slate-900">
-            Aktibidad ng mga Kahilingan at Ulat (Nakaraang 7 Araw)
-          </h2>
-          <p class="mt-1 text-sm text-slate-500">
-            Ulat at Kahilingan sa Nakaraang 7 Araw
-          </p>
+          <h2 class="font-semibold text-slate-900">Aktibidad ng mga Kahilingan at Ulat</h2>
+          <p class="mt-1 text-sm text-slate-500"><%= @activity_date_from.strftime("%B %-d, %Y") %> – <%= @activity_date_to.strftime("%B %-d, %Y") %></p>
         </div>
-
         <div class="flex flex-wrap gap-4 text-xs text-slate-600">
-          <span class="flex items-center gap-2">
-            <span class="h-3 w-3 rounded-sm bg-blue-800"></span>
-            Mga Kahilingan sa Dokumento
-          </span>
-
-          <span class="flex items-center gap-2">
-            <span class="h-1 w-4 rounded bg-emerald-700"></span>
-            Mga Ulat ng Suliranin
-          </span>
+          <% if @activity_type != "concerns" %><span class="flex items-center gap-2"><span class="h-3 w-3 rounded-sm bg-blue-800"></span>Mga Kahilingan sa Dokumento</span><% end %>
+          <% if @activity_type != "documents" %><span class="flex items-center gap-2"><span class="h-1 w-4 rounded bg-emerald-700"></span>Mga Ulat ng Suliranin</span><% end %>
         </div>
       </div>
 
-      <!-- Hardcoded sample summary -->
+      <%= form_with url: admin_dashboard_path, method: :get, local: true, id: "activity-chart-filter", class: "mt-4 grid gap-3 rounded-xl bg-[#f4f7ff] p-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1.2fr_auto_auto] lg:items-end" do |f| %>
+        <div>
+          <%= f.label :activity_type, "Uri ng Aktibidad", class: "mb-1 block text-xs font-semibold text-slate-700" %>
+          <%= f.select :activity_type, [["Mga Kahilingan at Ulat", "all"], ["Mga Kahilingan sa Dokumento", "documents"], ["Mga Ulat ng Suliranin", "concerns"], ["Mga Tapos na Kahilingan at Ulat", "completed"]], { selected: @activity_type }, class: "w-full rounded-lg border-0 bg-white px-3 py-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-300" %>
+        </div>
+        <div>
+          <%= f.label :activity_period, "Panahon", class: "mb-1 block text-xs font-semibold text-slate-700" %>
+          <%= f.select :activity_period, [["Nakaraang 7 Araw", "7days"], ["Nakaraang 30 Araw", "month"], ["Nakaraang 1 Taon", "year"], ["Pumili ng Petsa", "custom"]], { selected: @activity_period }, class: "w-full rounded-lg border-0 bg-white px-3 py-2.5 text-sm text-slate-800 focus:ring-2 focus:ring-blue-300" %>
+        </div>
+        <div id="activity-custom-dates" class="<%= @activity_period == 'custom' ? '' : 'hidden' %> grid grid-cols-2 gap-2">
+          <div><%= f.label :date_from, "Simula", class: "mb-1 block text-xs font-semibold text-slate-700" %><%= f.date_field :date_from, value: @activity_date_from, class: "w-full rounded-lg border-0 bg-white px-2 py-2.5 text-sm focus:ring-2 focus:ring-blue-300" %></div>
+          <div><%= f.label :date_to, "Hanggang", class: "mb-1 block text-xs font-semibold text-slate-700" %><%= f.date_field :date_to, value: @activity_date_to, class: "w-full rounded-lg border-0 bg-white px-2 py-2.5 text-sm focus:ring-2 focus:ring-blue-300" %></div>
+        </div>
+        <%= link_to "I-clear", admin_dashboard_path, id: "activity-chart-clear", data: { turbo: false }, class: "rounded-lg bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50" %>
+      <% end %>
+
       <div class="mt-4 grid grid-cols-1 gap-3 rounded-xl border border-blue-50 bg-[#f4f7ff] p-4 text-center sm:grid-cols-3 sm:gap-6">
-        <div>
-          <p class="text-xs font-semibold uppercase text-slate-500">Kabuuang Kahilingan sa loob ng 7 Araw</p>
-          <p class="mt-1 text-lg font-bold text-blue-800">224</p>
-        </div>
-
-        <div>
-          <p class="text-xs font-semibold uppercase text-slate-500">Kabuuang Ulat sa loob ng 7 Araw</p>
-          <p class="mt-1 text-lg font-bold text-emerald-700">59</p>
-        </div>
-
-        <div>
-          <p class="text-xs font-semibold uppercase text-slate-500">Pinakaabalang Araw</p>
-          <p class="mt-1 font-semibold text-slate-900">Lunes</p>
-        </div>
+        <div><p class="text-xs font-semibold uppercase text-slate-500">Kabuuang Kahilingan</p><p class="mt-1 text-lg font-bold text-blue-800"><%= number_with_delimiter(@activity_document_total) %></p></div>
+        <div><p class="text-xs font-semibold uppercase text-slate-500">Kabuuang Ulat</p><p class="mt-1 text-lg font-bold text-emerald-700"><%= number_with_delimiter(@activity_concern_total) %></p></div>
+        <div><p class="text-xs font-semibold uppercase text-slate-500">Pinakaabalang Panahon</p><p class="mt-1 font-semibold text-slate-900"><%= @activity_busiest_bucket && (@activity_busiest_bucket[:documents] + @activity_busiest_bucket[:concerns]).positive? ? @activity_busiest_bucket[:label] : "Walang aktibidad" %></p></div>
       </div>
 
-      <!-- Hardcoded SVG chart -->
       <div class="mt-6 w-full overflow-x-auto">
-        <svg viewBox="0 0 760 230" class="min-w-[650px] w-full" role="img" aria-label="Sample activity chart for the past seven days">
-          <!-- Grid lines -->
+        <svg viewBox="0 0 760 230" class="min-w-[650px] w-full" role="img" aria-label="Aktuwal na bilang ng mga kahilingan at ulat sa napiling panahon">
           <g stroke="#e2e8f0" stroke-dasharray="3 4">
-            <line x1="50" y1="35" x2="735" y2="35" />
-            <line x1="50" y1="70" x2="735" y2="70" />
-            <line x1="50" y1="105" x2="735" y2="105" />
-            <line x1="50" y1="140" x2="735" y2="140" />
-            <line x1="50" y1="175" x2="735" y2="175" />
+            <% [1.0, 0.75, 0.5, 0.25, 0].each do |ratio| %><% y = chart_bottom - ratio * (chart_bottom - chart_top) %><line x1="50" y1="<%= y %>" x2="735" y2="<%= y %>" /><% end %>
           </g>
-
-          <!-- Y-axis labels -->
           <g fill="#64748b" font-size="12" text-anchor="end">
-            <text x="40" y="39">50</text>
-            <text x="40" y="74">40</text>
-            <text x="40" y="109">30</text>
-            <text x="40" y="144">20</text>
-            <text x="40" y="179">0</text>
+            <% [1.0, 0.75, 0.5, 0.25, 0].each do |ratio| %><% y = chart_bottom - ratio * (chart_bottom - chart_top) + 4 %><text x="40" y="<%= y %>"><%= (chart_axis_max * ratio).round %></text><% end %>
           </g>
-
-          <!-- Kahilingan bars -->
-          <g fill="#2445b8">
-            <rect x="75" y="105" width="28" height="70" rx="4" />
-            <rect x="165" y="133" width="28" height="42" rx="4" />
-            <rect x="255" y="147" width="28" height="28" rx="4" />
-            <rect x="345" y="42" width="28" height="133" rx="4" fill="#082f87" />
-            <rect x="435" y="63" width="28" height="112" rx="4" />
-            <rect x="525" y="77" width="28" height="98" rx="4" />
-            <rect x="615" y="70" width="28" height="105" rx="4" />
-          </g>
-
-          <!-- Kahilingan values -->
-          <g fill="#1d4ed8" font-size="11" font-weight="600" text-anchor="middle">
-            <text x="89" y="98">28</text>
-            <text x="179" y="126">16</text>
-            <text x="269" y="140">12</text>
-            <text x="359" y="35">48</text>
-            <text x="449" y="56">42</text>
-            <text x="539" y="70">38</text>
-            <text x="629" y="63">40</text>
-          </g>
-
-          <!-- Concern report line -->
-          <polyline
-            points="89,155 179,163 269,166 359,128 449,137 539,150 629,135"
-            fill="none"
-            stroke="#047857"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-
-          <g fill="#047857" stroke="white" stroke-width="2">
-            <circle cx="89" cy="155" r="4" />
-            <circle cx="179" cy="163" r="4" />
-            <circle cx="269" cy="166" r="4" />
-            <circle cx="359" cy="128" r="4" />
-            <circle cx="449" cy="137" r="4" />
-            <circle cx="539" cy="150" r="4" />
-            <circle cx="629" cy="135" r="4" />
-          </g>
-
-          <!-- X-axis labels -->
+          <% if @activity_type != "concerns" %>
+            <g fill="#2445b8">
+              <% @activity_chart_data.each_with_index do |bucket, index| %>
+                <% count = bucket[:documents]; x = chart_left + index * chart_step; bar_height = count.to_f / chart_axis_max * (chart_bottom - chart_top) %>
+                <rect x="<%= x - chart_bar_width / 2 %>" y="<%= chart_bottom - bar_height %>" width="<%= chart_bar_width %>" height="<%= bar_height %>" rx="4" />
+              <% end %>
+            </g>
+          <% end %>
+          <% if @activity_type != "documents" %>
+            <% concern_points = @activity_chart_data.each_with_index.map { |bucket, index| [chart_left + index * chart_step, chart_bottom - bucket[:concerns].to_f / chart_axis_max * (chart_bottom - chart_top)] } %>
+            <% if concern_points.size > 1 %><polyline points="<%= concern_points.map { |x, y| "#{x},#{y}" }.join(" ") %>" fill="none" stroke="#047857" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /><% end %>
+            <% concern_points.each_with_index do |(x, y), index| %>
+              <circle cx="<%= x %>" cy="<%= y %>" r="4" fill="#047857" stroke="white" stroke-width="2" />
+              <% count = @activity_chart_data[index][:concerns] %>
+              <% if chart_show_values && count.positive? %>
+                <% documents_count = @activity_chart_data[index][:documents] %>
+                <% documents_bar_top = chart_bottom - documents_count.to_f / chart_axis_max * (chart_bottom - chart_top) %>
+                <% documents_label_y = chart_bottom - documents_count.to_f / chart_axis_max * (chart_bottom - chart_top) - 7 %>
+                <% concerns_label_y = y - 9 %>
+                <% concern_point_over_bar = documents_count.positive? && y >= documents_bar_top - 3 && y <= chart_bottom %>
+                <% labels_overlap = documents_count.positive? && ((documents_label_y - concerns_label_y).abs < 16 || concern_point_over_bar) %>
+                <% place_below_point = labels_overlap && y < chart_bottom - 28 %>
+                <% place_beside_point = concern_point_over_bar || (labels_overlap && !place_below_point) %>
+                <% label_x = place_beside_point ? x + chart_bar_width / 2 + 4 : x %>
+                <% label_y = place_below_point ? y + 17 : concerns_label_y %>
+                <text x="<%= label_x %>" y="<%= label_y %>" fill="#047857" stroke="#fff" stroke-width="3" paint-order="stroke" font-size="11" font-weight="700" text-anchor="<%= place_beside_point ? 'start' : 'middle' %>"><%= count %></text>
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if @activity_type != "concerns" && chart_show_values %>
+            <% @activity_chart_data.each_with_index do |bucket, index| %>
+              <% count = bucket[:documents]; next unless count.positive? %>
+              <% x = chart_left + index * chart_step; bar_top = chart_bottom - count.to_f / chart_axis_max * (chart_bottom - chart_top) %>
+              <text x="<%= x %>" y="<%= bar_top - 7 %>" fill="#1d4ed8" stroke="#fff" stroke-width="3" paint-order="stroke" font-size="11" font-weight="700" text-anchor="middle"><%= count %></text>
+            <% end %>
+          <% end %>
           <g fill="#475569" font-size="11" text-anchor="middle">
-            <text x="89" y="197">Fri</text>
-            <text x="179" y="197">Sat</text>
-            <text x="269" y="197">Sun</text>
-            <text x="359" y="197">Mon</text>
-            <text x="449" y="197">Tue</text>
-            <text x="539" y="197">Wed</text>
-            <text x="629" y="197">Thu</text>
+            <% @activity_chart_data.each_with_index do |bucket, index| %>
+              <% next unless index % chart_label_stride == 0 || index == @activity_chart_data.size - 1 %>
+              <% x = chart_left + index * chart_step %><text x="<%= x %>" y="197"><%= bucket[:label] %></text>
+            <% end %>
           </g>
         </svg>
       </div>
@@ -285,3 +260,55 @@
 
   </main>
 </div>
+
+<script>
+  (() => {
+    const scrollStorageKey = "adminActivityChartScrollY"
+
+    const restoreActivityScroll = () => {
+      const savedPosition = sessionStorage.getItem(scrollStorageKey)
+      if (savedPosition === null) return
+
+      sessionStorage.removeItem(scrollStorageKey)
+      window.setTimeout(() => requestAnimationFrame(() => window.scrollTo(0, Number(savedPosition))), 100)
+    }
+
+    const initializeActivityFilters = () => {
+      const form = document.getElementById("activity-chart-filter")
+      const clearButton = document.getElementById("activity-chart-clear")
+      const preserveScroll = () => sessionStorage.setItem(scrollStorageKey, String(window.scrollY))
+
+      if (clearButton && clearButton.dataset.scrollInitialized !== "true") {
+        clearButton.dataset.scrollInitialized = "true"
+        clearButton.addEventListener("click", preserveScroll)
+      }
+      if (!form || form.dataset.initialized === "true") return
+      form.dataset.initialized = "true"
+
+      const submitFilters = () => {
+        preserveScroll()
+        form.requestSubmit()
+      }
+      const period = form.querySelector('[name="activity_period"]')
+      const type = form.querySelector('[name="activity_type"]')
+      const dateFields = document.getElementById("activity-custom-dates")
+      period?.addEventListener("change", () => {
+        dateFields?.classList.toggle("hidden", period.value !== "custom")
+        submitFilters()
+      })
+      type?.addEventListener("change", submitFilters)
+      dateFields?.querySelectorAll('input[type="date"]').forEach((field) => {
+        field.addEventListener("change", submitFilters)
+      })
+    }
+
+    document.addEventListener("turbo:load", () => {
+      restoreActivityScroll()
+      initializeActivityFilters()
+    })
+    document.addEventListener("DOMContentLoaded", () => {
+      restoreActivityScroll()
+      initializeActivityFilters()
+    })
+  })()
+</script>

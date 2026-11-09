@@ -6,6 +6,7 @@ class BarangayConcern < ApplicationRecord
 
   has_one_attached :evidence_image
   has_many :status_logs, as: :loggable, dependent: :destroy
+  has_many :resident_notifications, as: :notifiable, dependent: :destroy
 
   enum :category, { peace_and_order: 0, infrastructure: 1, waste_management: 2, health_and_sanitation: 3, others: 4 }
   enum :status, { pending: 0, ongoing: 1, resolved: 2, unactionable: 3 }, default: :pending
@@ -19,6 +20,7 @@ class BarangayConcern < ApplicationRecord
 
   before_validation :generate_tracking_number, on: :create
   after_save :log_status_change, if: :saved_change_to_status?
+  after_update :notify_resident_of_status_change, if: :saved_change_to_status?
   before_save :resolved_timestamp, if: -> { persisted? && :will_save_change_to_status? }
 
   private
@@ -30,6 +32,15 @@ class BarangayConcern < ApplicationRecord
       status_logs.create!(
         status: self.class.statuses[status],
         staff_remarks: staff_remarks
+      )
+    end
+
+    def notify_resident_of_status_change
+      resident.resident_notifications.create!(
+        notifiable: self,
+        subject: category,
+        status: status,
+        body: "Nagbago ang status ng inyong ulat sa suliranin."
       )
     end
 

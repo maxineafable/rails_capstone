@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-[#f5f4f7] font-sans text-slate-900">
   <%= render "shared/navbar", active: :profile %>
 
-  <div class="mx-auto max-w-[1000px] space-y-4 px-4 py-5 sm:px-6 sm:py-6 lg:space-y-6 lg:px-6 lg:py-8">
+  <div class="mx-auto max-w-[1000px] space-y-4 px-4 py-5 pb-24 sm:px-6 sm:py-6 sm:pb-24 md:pb-6 lg:space-y-6 lg:px-6 lg:py-8">
 
     <!-- Resident Identity -->
     <section class="flex min-h-[132px] items-center gap-4 rounded-xl bg-white px-5 py-5 shadow-sm sm:px-7 lg:min-h-[180px] lg:gap-6 lg:px-10 lg:py-7" aria-label="Resident identity">
@@ -69,6 +69,7 @@
           </div>
         </div>
 
+        <% if current_user.email.present? %>
         <!-- Email -->
         <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5 lg:gap-4 lg:px-4 lg:py-4">
           <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#dce7ff] text-[#07349e] lg:h-10 lg:w-10">
@@ -88,6 +89,7 @@
             </p>
           </div>
         </div>
+        <% end %>
 
         <!-- Phone -->
         <div class="flex items-center gap-2.5 rounded-md bg-[#eff3ff] px-2.5 py-2.5 lg:gap-4 lg:px-4 lg:py-4">
@@ -181,7 +183,7 @@
 
     <!-- Logout -->
     <div class="flex justify-end pb-2 pt-0.5">
-      <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "inline-flex items-center gap-1.5 rounded-md bg-red-700 px-4 py-2.5 text-[10px] font-semibold text-white no-underline hover:bg-red-800 lg:px-6 lg:py-3.5 lg:text-[13px]" do %>
+      <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-red-700 px-4 py-2.5 text-[10px] font-semibold text-white no-underline hover:bg-red-800 md:w-auto lg:px-6 lg:py-3.5 lg:text-[13px]" do %>
         <span aria-hidden="true">⇥</span>
         Mag-log out
       <% end %>

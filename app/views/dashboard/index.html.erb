@@ -97,19 +97,19 @@
         </div>
         <% active_filter = params[:filter] || "all" %>
         <div class="mb-4 flex flex-wrap gap-1 text-[9px] lg:mb-0 lg:gap-2 lg:text-[13px]">
-          <%= link_to dashboard_path(filter: "all", anchor: "recent-records"),
+          <%= link_to dashboard_path(filter: "all", page: 1, anchor: "recent-records"),
                 data: { turbo_frame: "recent_records" },
                 class: "rounded-full px-2.5 py-1.5 font-semibold no-underline transition lg:px-4 lg:py-2.5 #{active_filter == "all" ? 'bg-blue-100 text-[#07349e]' : 'bg-slate-50 text-slate-700 hover:bg-blue-50'}" do %>
             Lahat ng Talaan (<%= @document_requests.size + @barangay_concerns.size %>)
           <% end %>
 
-          <%= link_to dashboard_path(filter: "documents", anchor: "recent-records"),
+          <%= link_to dashboard_path(filter: "documents", page: 1, anchor: "recent-records"),
                 data: { turbo_frame: "recent_records" },
                 class: "rounded-full px-2.5 py-1.5 font-semibold no-underline transition lg:px-4 lg:py-2.5 #{active_filter == "documents" ? 'bg-blue-100 text-[#07349e]' : 'bg-slate-50 text-slate-700 hover:bg-blue-50'}" do %>
             Mga Dokumento (<%= @document_requests.size %>)
           <% end %>
 
-          <%= link_to dashboard_path(filter: "concerns", anchor: "recent-records"),
+          <%= link_to dashboard_path(filter: "concerns", page: 1, anchor: "recent-records"),
                 data: { turbo_frame: "recent_records" },
                 class: "rounded-full px-2.5 py-1.5 font-semibold no-underline transition lg:px-4 lg:py-2.5 #{active_filter == "concerns" ? 'bg-blue-100 text-[#07349e]' : 'bg-slate-50 text-slate-700 hover:bg-blue-50'}" do %>
             Mga Ulat (<%= @barangay_concerns.size %>)
@@ -118,7 +118,60 @@
       </div>
 
       <% if @recent_records.any? %>
-        <div class="max-h-[65vh] overflow-auto overscroll-contain rounded-lg ring-1 ring-slate-100 lg:max-h-[460px]">
+        <div class="lg:hidden">
+          <div class="grid grid-rows-[repeat(3,minmax(194px,auto))] gap-3">
+          <% @mobile_records.each do |record| %>
+            <% is_request = record.is_a?(DocumentRequest) %>
+            <% record_icon = if is_request
+              { "barangay_clearance" => "barangayclearance.svg", "certificate_of_residency" => "certificateofrecidency.svg", "certificate_of_indigency" => "certificateofindigency.svg" }.fetch(record.document_type, "documents.svg")
+            else
+              { "health_and_sanitation" => "drainage.svg", "infrastructure" => "roads.svg", "peace_and_order" => "streetlight.svg", "waste_management" => "garbage.svg", "others" => "others.svg" }.fetch(record.category, "others.svg")
+            end %>
+            <% tracking_token = is_request ? (record.tracking_number.presence || "REQ-#{record.id}") : (record.tracking_number.presence || "BRGY-#{record.id}") %>
+            <% detail_path = is_request ? document_request_path(record) : barangay_concern_path(record) %>
+            <article class="relative rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <%= link_to "", detail_path, data: { turbo_frame: "remote_modal" }, aria: { label: "Tingnan ang detalye ng #{tracking_token}" }, class: "absolute inset-0 z-20 block rounded-2xl" %>
+              <div class="pointer-events-none relative z-10">
+              <div class="flex items-start gap-2.5 border-b border-slate-100 pb-3">
+                <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-50 ring-1 ring-indigo-100"><%= image_tag record_icon, alt: "", class: "h-4 w-4 object-contain" %></span>
+                <div class="min-w-0 flex-1">
+                  <span class="block truncate text-[11px] font-bold text-indigo-900"><%= tracking_token %></span>
+                  <p class="mt-1 text-[9px] font-medium uppercase leading-snug text-slate-600"><%= tagalog_label(is_request ? record.document_type : record.category) %></p>
+                </div>
+                <span class="shrink-0 rounded-full px-2.5 py-1.5 text-[9px] font-bold leading-tight <%= tagalog_status_class(record.status) %>"><%= tagalog_status(record.status).upcase %></span>
+              </div>
+              <h3 class="mt-3 text-[15px] font-bold leading-snug tracking-tight text-slate-900"><%= is_request ? tagalog_label(record.document_type) : tagalog_label(record.category) %></h3>
+              <% if is_request %>
+                <p class="mt-1.5 text-[11px] leading-relaxed text-slate-700">Layunin: <%= truncate(record.purpose, length: 100) %></p>
+              <% else %>
+                <p class="mt-1.5 flex items-start gap-1.5 text-[11px] leading-relaxed text-slate-700"><span aria-hidden="true">⌖</span><span><%= truncate(record.location_description, length: 100) %></span></p>
+                <p class="mt-1 text-[11px] leading-relaxed text-slate-700"><%= truncate(record.reason, length: 100) %></p>
+              <% end %>
+              <div class="mt-2.5 border-t border-slate-100 pt-2.5 text-[10px] text-slate-600">
+                <p class="flex items-center gap-1.5"><span aria-hidden="true">◷</span><%= tagalog_date(record.created_at) %> <span class="text-slate-400">• <%= record.created_at.strftime("%I:%M %p") %></span></p>
+                <% if is_request %><p class="mt-1 pl-4 text-[9px] text-slate-500">Layunin ng kahilingan</p><% end %>
+              </div>
+              </div>
+            </article>
+          <% end %>
+          </div>
+
+          <% if @mobile_page_count > 1 %>
+            <nav class="flex min-h-11 flex-nowrap items-center justify-center gap-1.5 overflow-x-auto py-1" aria-label="Mga pahina ng talaan">
+              <% if @mobile_page > 1 %>
+                <%= link_to "<", dashboard_path(filter: active_filter, page: @mobile_page - 1), data: { turbo_frame: "recent_records" }, aria: { label: "Nakaraang pahina" }, class: "flex h-9 min-w-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-700 no-underline" %>
+              <% end %>
+              <% (1..@mobile_page_count).each do |page_number| %>
+                <%= link_to page_number, dashboard_path(filter: active_filter, page: page_number), data: { turbo_frame: "recent_records" }, aria: { current: (@mobile_page == page_number ? "page" : nil), label: "Pahina #{page_number}" }, class: "flex h-9 min-w-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border px-2 text-sm no-underline #{@mobile_page == page_number ? 'border-blue-600 bg-blue-600 font-semibold text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}" %>
+              <% end %>
+              <% if @mobile_page < @mobile_page_count %>
+                <%= link_to ">", dashboard_path(filter: active_filter, page: @mobile_page + 1), data: { turbo_frame: "recent_records" }, aria: { label: "Susunod na pahina" }, class: "flex h-9 min-w-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-700 no-underline" %>
+              <% end %>
+            </nav>
+          <% end %>
+        </div>
+
+        <div class="hidden max-h-[65vh] overflow-auto overscroll-contain rounded-lg ring-1 ring-slate-100 lg:block lg:max-h-[460px]">
           <table class="w-full min-w-[680px] border-collapse text-left lg:min-w-[900px]">
             <thead class="sticky top-0 z-10 bg-[#eff3ff]">
               <tr class="text-[8px] font-semibold uppercase tracking-wide text-slate-600 lg:text-[13px]">

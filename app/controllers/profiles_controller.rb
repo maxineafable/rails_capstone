@@ -26,6 +26,7 @@ class ProfilesController < ApplicationController
       @profile.assign_attributes(profile_params)
       @address.assign_attributes(address_params)
       current_user.assign_attributes(user_params)
+      current_user.email = current_user.email.presence
 
       @profile.save!
       @address.save!
@@ -56,7 +57,7 @@ class ProfilesController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:email)
+      params.fetch(:user, {}).permit(:email)
     end
 
     def address_params
