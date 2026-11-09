@@ -1,0 +1,176 @@
+<%
+  # ---- Map your data here (adjust to your models) -------------------------
+  name       = @good_moral_name.to_s
+  purok      = @good_moral_purok.to_s          # printed before "KALIKID SUR, CABANATUAN CITY, NUEVA ECIJA"
+  requester  = name                            # the PDF fills the request line with the requester's name
+  pronoun    = @good_moral_pronoun.presence || "she"
+  issued_on  = @good_moral_issued_on
+  day        = issued_on.respond_to?(:day) ? issued_on.day.ordinalize : ""
+  month      = issued_on.respond_to?(:strftime) ? issued_on.strftime("%B") : ""
+  year       = issued_on.respond_to?(:year) ? issued_on.year : 2026
+  # ------------------------------------------------------------------------
+
+  # Underlined fill-in: prints the value, or an empty line of the PDF's width.
+  blank = ->(value, width, bold = false) {
+    cls = bold ? "fill bold" : "fill"
+    value.present? ? %(<span class="#{cls}">#{ERB::Util.h(value)}</span>).html_safe :
+                     %(<span class="#{cls} empty" style="min-width:#{width}"></span>).html_safe
+  }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificate of Good Moral Character - <%= @good_moral_name %></title>
+  <style>
+    @page { size: 8.5in 13in; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { color: #000; background: #e9e9e9; font-family: "Times New Roman", Times, serif; }
+    .toolbar { padding: 16px; text-align: center; font-family: Arial, sans-serif; }
+    .toolbar button { border: 0; border-radius: 7px; background: #07349e; color: #fff; cursor: pointer; padding: 11px 18px; font-size: 14px; font-weight: 700; }
+
+    .page { position: relative; width: 8.5in; height: 13in; margin: 0 auto 24px; background: #fff; overflow: hidden; }
+
+    /* Outer black frame with an inner hairline */
+    .frame { position: absolute; top: .5in; left: .5in; width: 7.5in; height: 11.84in; border: 4px solid #000; padding: 2px; background: transparent; }
+    .inner { position: relative; width: 100%; height: 100%; border: 1px solid #000; display: flex; flex-direction: column; }
+    .sec { position: relative; flex: none; }
+
+    /* 1. Sanggunian header */
+    .council { height: 1.55in; border-bottom: 3px solid #000; text-align: center; }
+    .council .sb { position: absolute; top: .14in; left: 0; right: 0; font-size: 16pt; font-weight: 700; letter-spacing: .01em; }
+    .council .captain { position: absolute; top: .46in; left: 0; right: 0; line-height: 1.15; }
+    .council .captain b { display: block; color: #2f4f9a; font-size: 13pt; }
+    .council .captain span { font-size: 10.5pt; }
+    .council .off { position: absolute; top: 1.13in; transform: translateX(-50%); line-height: 1.0; }
+    .council .off b { display: block; font-size: 10.5pt; }
+    .council .off span { display: block; font-size: 9.5pt; }
+    .council .secretary { left: 2.2in; }
+    .council .treasurer { left: 5.65in; }
+
+    /* 2. Republic header */
+    .republic { height: 1.62in; border-bottom: 1px solid #000; text-align: center; }
+    .republic img { position: absolute; top: .3in; width: .98in; height: .98in; object-fit: contain; }
+    .republic img.left { left: .52in; }
+    .republic img.right { right: .5in; }
+    .republic .txt { position: absolute; top: .25in; left: 0; right: 0; font-weight: 700; line-height: 1.22; font-size: 10.5pt; }
+    .republic .txt .big { display: block; font-size: 13pt; margin-top: 3px; }
+
+    /* 3. Body */
+    .main { height: 6.42in; border-bottom: 3px solid #000; font-family: Arial, Helvetica, sans-serif; }
+    .main h1 { margin: 0; padding-top: .06in; text-align: center; font-size: 17pt; line-height: .295in; font-weight: 700; text-decoration: underline; }
+    .watermark { position: absolute; top: 2.75in; left: 50%; width: 6in; height: 5.6in; transform: translateX(-50%); object-fit: contain; opacity: .22; z-index: 0; }
+    .copy { position: absolute; top: 1.2in; left: .35in; right: .12in; z-index: 1; font-size: 11pt; line-height: .286in; text-align: justify; }
+    .copy p { margin: 0 0 .286in; }
+    .copy p.indent { text-indent: .58in; }
+    .copy p.lead { font-weight: 700; }
+    .fill { display: inline-block; border-bottom: 1px solid #000; line-height: 1.05; text-align: center; padding: 0 4px; text-indent: 0; }
+    .fill.bold { font-weight: 700; }
+    .fill.empty { height: 1em; }
+    .copy .addr { font-weight: 700; }
+
+    .sign { position: absolute; top: 4.93in; right: .33in; width: 2.78in; z-index: 1; }
+    .sign .by { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: .286in; margin-left: .3in; }
+    .sign .line { height: .41in; border-bottom: 1px solid #000; margin: 0 .2in 0 .1in; }
+    .sign .nm { display: block; margin-top: .02in; text-align: right; font-size: 13pt; font-weight: 700; line-height: 1.1; }
+    .sign .pos { display: block; margin-top: .06in; text-align: right; padding-right: .06in; font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1; }
+
+    /* 4. Committees */
+    .committees { flex: 1; font-size: 9pt; line-height: 1.15; }
+    .cm { position: absolute; transform: translateX(-50%); text-align: center; white-space: nowrap; }
+    .cm b { display: block; font-size: 10pt; text-decoration: underline; }
+    .cm.left-text span { display: block; text-align: left; }
+    .cm.wrap span { display: block; white-space: normal; }
+
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .page { margin: 0; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar"><button type="button" onclick="window.print()">I-print ang Good Moral Certificate</button></div>
+
+  <main class="page" aria-label="Certificate of Good Moral Character">
+    <div class="frame"><div class="inner">
+
+      <section class="sec council">
+        <div class="sb">THE SANGGUNIANG BARANGAY</div>
+        <div class="captain"><b>NORMAN V. TACBIANAN</b><span>Barangay Captain</span></div>
+        <div class="off secretary"><b>NOLIE S. ISIDRO</b><span>Barangay Secretary</span></div>
+        <div class="off treasurer"><b>NANCY B. BAUTISTA</b><span>Barangay Treasurer</span></div>
+      </section>
+
+      <section class="sec republic">
+        <%= image_tag "residency_certificate/barangay_emblem.png", alt: "Barangay Kalikid Sur seal", class: "left" %>
+        <%= image_tag "residency_certificate/cabanatuan_seal.png", alt: "City of Cabanatuan seal", class: "right" %>
+        <div class="txt">
+          Republic of the Philippines<br>
+          Province of Nueva Ecija<br>
+          CITY OF CABANATUAN<br>
+          BARANGAY&nbsp; KALIKID SUR
+          <span class="big">OFFICE OF THE BARANGAY CAPTAIN</span>
+        </div>
+      </section>
+
+      <section class="sec main">
+        <h1>CERTIFICATE OF<br>GOOD MORAL CHARACTER</h1>
+        <%= image_tag "residency_certificate/barangay_emblem.png", alt: "", class: "watermark" %>
+
+        <div class="copy">
+          <p class="lead">To whom it may concern:</p>
+
+          <p class="indent">
+            This is to certify that <%= blank.call(name, "2.6in") %><strong>,</strong> of legal, is a bonafide resident
+            of<strong> <%= purok %> KALIKID SUR, CABANATUAN CITY, NUEVA ECIJA</strong> is known to me to
+            be a good person and having a good moral character and a law-abiding citizen of this community.
+          </p>
+
+          <p class="indent">
+            Further, I certify that <%= pronoun %> has <strong>NO Derogatory Records</strong> now filed in this office.
+          </p>
+
+          <p class="indent">
+            This certification is issued upon the request of <%= blank.call(requester, "1.9in", true) %> for any legal
+            purposes it may serve<strong>.</strong>
+          </p>
+
+          <p class="indent">
+            Given this <%= blank.call(day, ".6in") %> day of <%= blank.call(month, "1.3in") %><strong>, <%= year %></strong> at the Office of the Punong Barangay,
+            Kalikid Sur, Cabanatuan City, Nueva Ecija.
+          </p>
+        </div>
+
+        <div class="sign">
+          <div class="by">Certified by:</div>
+          <div class="line"></div>
+          <span class="nm">Hon. NORMAN V. TACBIANAN</span>
+          <span class="pos">Barangay Captain</span>
+        </div>
+      </section>
+
+      <section class="sec committees">
+        <div class="cm" style="left:1.21in; top:.06in;"><b>Hon. HECTOR R. DIZON</b>Committee on AGRICULTURE</div>
+        <div class="cm" style="left:3.7in;  top:.06in;"><b>Hon. JONATHAN C. YALA</b>Committee on INFRASTRUCTURE</div>
+        <div class="cm wrap" style="left:6.1in; top:.06in;"><b>Hon. ROMMEL C. TACBIANAN</b><span>Committee on&nbsp; ENVIRONMETAL</span><span>PROTECTION</span></div>
+
+        <div class="cm left-text" style="left:1.23in; top:.7in;"><b style="text-align:center;">Hon. IMELDA R. TOLENTINO</b><span>Committee on APPROPRIATION,</span><span>COOPERATIVE/CALAMITY</span><span>&amp; DISASTER PREPAREDNESS</span></div>
+        <div class="cm" style="left:3.78in; top:.7in;"><b>Hon. FEBE D. PEREZ</b>Committee on PEACE &amp; ORDER</div>
+        <div class="cm" style="left:6.2in;  top:.7in;"><b>Hon. NANCY A. CAPINPIN</b>Committee on HEALTH &amp; EDUCATION</div>
+
+        <div class="cm" style="left:2.36in; top:1.64in;"><b>Hon. PAUL ADRIAN P. DELA CRUZ</b>Committee on SPORTS &amp;YOUTH DEVELOPMENT</div>
+        <div class="cm" style="left:5.54in; top:1.64in;"><b>Hon. ASHANTI BRILLIANT P. VALLE</b>SK Chairperson</div>
+      </section>
+
+    </div></div>
+  </main>
+
+  <script>
+    window.addEventListener("load", () => window.setTimeout(() => window.print(), 250));
+  </script>
+</body>
+</html>

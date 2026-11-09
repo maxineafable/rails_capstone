@@ -9,12 +9,12 @@
     </section>
 
     <section class="rounded-xl bg-white px-5 py-4 shadow-sm sm:px-7 lg:px-8" aria-label="Pag-usad ng kahilingan">
-      <div class="mx-auto flex max-w-[600px] items-center justify-center gap-3 sm:gap-5">
+      <div class="mx-auto flex w-full max-w-[600px] flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-center sm:gap-5">
         <div class="flex items-center gap-2">
           <span class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-700 text-sm font-bold text-white">✓</span>
           <span><strong class="block text-xs text-emerald-800 lg:text-[14px]">Hakbang 1: Mga Detalye</strong><small class="text-[10px] text-slate-600">Mga Detalye ng Kahilingan</small></span>
         </div>
-        <div class="h-1 flex-1 bg-[#07349e]"></div>
+        <div class="ml-[15px] h-5 w-1 flex-none bg-[#07349e] sm:ml-0 sm:h-1 sm:w-auto sm:flex-1"></div>
         <div class="flex items-center gap-2">
           <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#dce7ff] text-sm font-semibold text-slate-700">2</span>
           <span><strong class="block text-xs text-slate-800 lg:text-[14px]">Hakbang 2: Pagsusuri</strong><small class="text-[10px] text-slate-600">Pagsusuri at Pagpapatunay</small></span>
@@ -51,6 +51,8 @@
       <%= f.hidden_field :years_of_residency, value: @document_request.years_of_residency %>
       <%= f.hidden_field :monthly_income, value: @document_request.monthly_income %>
       <%= f.hidden_field :job, value: @document_request.job %>
+      <%= f.hidden_field :birth_place, value: @document_request.birth_place %>
+      <%= f.hidden_field :civil_status, value: @document_request.civil_status %>
       <% if @document_request.valid_id_image.attached? %>
         <%= f.hidden_field :valid_id_image, value: @document_request.valid_id_image.blob.signed_id %>
       <% end %>
@@ -69,6 +71,10 @@
               <p class="mt-2 text-[10px] font-semibold text-slate-600 lg:text-[12px]">Bisa: <%= document_details[3] %> <span class="mx-2 text-slate-300">•</span> Kodigo ng Pormularyo: <%= document_details[2] %></p>
               <% if @document_type == "certificate_of_residency" %><p class="mt-1 text-xs text-slate-600">Tagal ng paninirahan: <%= @document_request.years_of_residency %> taon</p><% end %>
               <% if @document_type == "certificate_of_income" %><p class="mt-1 text-xs text-slate-600">Job: <%= @document_request.job %> · Monthly income: ₱<%= @document_request.monthly_income %></p><% end %>
+              <% if @document_request.barangay_clearance? %>
+                <p class="mt-1 text-xs text-slate-600">Lugar ng kapanganakan: <%= @document_request.birth_place %></p>
+                <p class="mt-1 text-xs text-slate-600">Katayuang sibil: <%= @document_request.civil_status&.humanize %></p>
+              <% end %>
             </div>
           </div>
         </section>

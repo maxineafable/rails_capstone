@@ -1,0 +1,152 @@
+<%
+  # ---- Map your data here (adjust to your models) -------------------------
+  name       = @indigency_name.to_s
+  address    = @indigency_address_line.to_s   # purok, house number, and subdivision only
+  requester  = (@indigency_requester.presence || name).to_s                  # "This certification is being issued to ____"
+  purpose    = @document_request.respond_to?(:purpose) ? @document_request.purpose.to_s : ""
+  issued_on  = @indigency_issued_on
+  day        = issued_on.respond_to?(:day) ? issued_on.day.ordinalize : ""
+  month      = issued_on.respond_to?(:strftime) ? issued_on.strftime("%B") : ""
+  year       = issued_on.respond_to?(:year) ? issued_on.year : 2026
+  # ------------------------------------------------------------------------
+
+  # Underlined fill-in: prints the value, or an empty line of the PDF's width.
+  blank = ->(value, width) {
+    value.present? ? %(<span class="fill">#{ERB::Util.h(value)}</span>).html_safe :
+                     %(<span class="fill empty" style="min-width:#{width}"></span>).html_safe
+  }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificate of Indigency - <%= @indigency_name %></title>
+  <style>
+    @page { size: 8.5in 13in; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { color: #000; background: #e9e9e9; font-family: Cambria, "Times New Roman", serif; }
+    .toolbar { padding: 16px; text-align: center; font-family: Arial, sans-serif; }
+    .toolbar button { border: 0; border-radius: 7px; background: #07349e; color: #fff; cursor: pointer; padding: 11px 18px; font-size: 14px; font-weight: 700; }
+
+    .page { position: relative; width: 8.5in; height: 13in; margin: 0 auto 24px; background: #fff; overflow: hidden; }
+    .abs { position: absolute; }
+
+    /* thin light-blue line across the top */
+    .topline { position: absolute; top: .78in; left: 0; right: 0; border-top: 1px solid #5ba4d6; }
+
+    /* ---- Boxes ---- */
+    .box-head { position: absolute; left: .28in; top: .83in; width: 7.9in; height: 3.05in; border: 3px solid #000; }
+    .box-body, .box-foot { position: absolute; left: .28in; width: 7.9in; border: 4px solid #000; padding: 3px; }
+    .box-body { top: 3.89in; height: 7.16in; }
+    .box-foot { top: 11.08in; height: 1.75in; background: #9dc3e6; }
+    .box-body > i, .box-foot > i { display: block; width: 100%; height: 100%; border: 1px solid #000; }
+
+    /* ---- Head ---- */
+    .slab { font-family: Rockwell, "Rockwell Extra Bold", "Bookman Old Style", Georgia, serif; font-weight: 800; color: #12214f; }
+    .sb { top: .86in; left: 0; right: 0; text-align: center; font-size: 14pt; line-height: .26in; letter-spacing: .03em; }
+    .republic { top: 1.12in; left: 0; right: 0; text-align: center; font-size: 10.5pt; line-height: .185in; }
+    .republic .last { display: block; font-size: 12pt; line-height: .22in; }
+    .office { top: 2.0in; left: 0; right: 0; text-align: center; line-height: .33in; font-size: 24pt; font-style: italic;
+              font-family: Vivaldi, "Edwardian Script ITC", "Lucida Calligraphy", "Monotype Corsiva", "Brush Script MT", cursive; }
+    .captain { top: 2.36in; left: 0; right: 0; text-align: center; font-size: 18pt; line-height: .25in; letter-spacing: .04em; }
+    .seal { width: .97in; height: .97in; object-fit: contain; }
+
+    .scroll { width: 1.94in; height: .45in; background: url("<%= asset_path('residency_certificate/scroll_banner.png') %>") center / 100% 100% no-repeat; text-align: center; }
+    .scroll b { display: block; position: absolute; left: 0; right: 0; top: .08in; font-size: 11pt; line-height: .14in; }
+    .scroll span { display: block; position: absolute; left: 0; right: 0; top: .27in; font-size: 7.5pt; line-height: .1in; }
+
+    .titlebox { left: 1.54in; top: 2.97in; width: 5.44in; height: .48in; border: 1px solid #000; text-align: center;
+                font-size: 22pt; line-height: .46in; letter-spacing: .02em; color: #111;
+                text-shadow: 1px 1px 0 #9a9a9a, 2px 2px 0 #cfcfcf; }
+
+    /* ---- Body ---- */
+    .watermark { left: 1.05in; top: 4.17in; width: 6.4in; height: 6.4in; object-fit: contain; opacity: .28; }
+    .whom { left: .92in; top: 4.35in; font-family: Calibri, Carlito, "Segoe UI", sans-serif; font-size: 13pt; line-height: .3in; }
+    .copy { left: .92in; top: 4.94in; width: 6.74in; font-size: 14pt; line-height: .389in; text-align: justify; }
+    .copy p { margin: 0; text-indent: .47in; }
+    .fill { display: inline-block; border-bottom: 1px solid #000; line-height: 1.1; padding: 0 4px; text-indent: 0; text-align: center; font-weight: 700; }
+    .fill.empty { height: 1em; }
+
+    .prov { left: .5in; top: 9.58in; width: 1.2in; height: 1.2in; object-fit: contain; }
+    .sigline { left: 4.96in; top: 9.93in; width: 2.71in; border-top: 1px solid #000; }
+    .signame { right: .83in; top: 9.99in; font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: 700; line-height: .2in; white-space: nowrap; }
+    .sigpos { left: 5.31in; top: 10.27in; width: 2in; text-align: center; font-family: "Times New Roman", Times, serif; font-size: 12pt; font-weight: 700; font-style: italic; line-height: .2in; }
+
+    /* ---- Committees ---- */
+    .cm { position: absolute; transform: translateX(-50%); text-align: center; white-space: nowrap;
+          font-family: Arial, Helvetica, sans-serif; font-weight: 700; font-size: 7.5pt; line-height: .13in; }
+    .cm b { display: block; font-size: 10pt; line-height: .15in; text-decoration: underline; }
+    .cm span { display: block; }
+
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .page { margin: 0; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar"><button type="button" onclick="window.print()">I-print ang Certificate of Indigency</button></div>
+
+  <main class="page" aria-label="Certificate of Indigency">
+    <div class="topline"></div>
+
+    <!-- Header box -->
+    <div class="box-head"></div>
+    <div class="abs slab sb">THE SANGGUNIANG BARANGAY</div>
+    <div class="abs republic">
+      Republic of the Philippines<br>
+      Province of Nueva Ecija<br>
+      City of Cabanatuan
+      <span class="last">Barangay Kalikid Sur</span>
+    </div>
+    <%= image_tag "residency_certificate/barangay_emblem.png", alt: "Barangay Kalikid Sur seal", class: "abs seal", style: "left:.76in; top:1.26in;" %>
+    <%= image_tag "residency_certificate/cabanatuan_seal.png", alt: "City of Cabanatuan seal", class: "abs seal", style: "left:6.75in; top:1.22in; width:.93in; height:.93in;" %>
+    <div class="abs office">Office of the Punong Barangay</div>
+    <div class="abs slab captain">NORMAN V. TACBIANAN</div>
+
+    <div class="abs scroll slab" style="left:.45in; top:2.4in;"><b>NOLIE S. ISIDRO</b><span>Barangay Secretary</span></div>
+    <div class="abs scroll slab" style="left:6.17in; top:2.44in;"><b>NANCY B. BAUTISTA</b><span>Barangay Treasurer</span></div>
+
+    <div class="abs slab titlebox">CERTIFICATE OF INDIGENCY</div>
+
+    <!-- Body box -->
+    <div class="box-body"><i></i></div>
+    <%= image_tag "residency_certificate/barangay_emblem.png", alt: "", class: "abs watermark" %>
+
+    <div class="abs whom">TO WHOM IT MAY CONCERN:</div>
+
+    <div class="abs copy">
+      <p>This is to certify that <%= blank.call(name, "4.2in") %> is a bona fide resident of <%= blank.call(address, "1.8in") %>, Barangay Kalikid Sur, Cabanatuan City, Nueva Ecija. This certifies further that herein person/family is considered one of the indigent families in the area.</p>
+      <p>This certification is being issued to <%= blank.call(requester, "2.8in") %>, Purpose: <%= blank.call(purpose, "2.3in") %> and for whatever legal purpose/s it may serve.</p>
+      <p>The effectivity of this Certificate is valid only for six (6) months from the date of issuance and after its expiration is null and void (expired).</p>
+      <p>Given this <%= blank.call(day, ".65in") %> day of <%= blank.call(month, "1.5in") %>, <%= year %>.</p>
+    </div>
+
+    <%= image_tag "residency_certificate/nueva_ecija_seal.jpeg", alt: "Province of Nueva Ecija seal", class: "abs prov" %>
+    <div class="abs sigline"></div>
+    <div class="abs signame">Hon. NORMAN V. TACBIANAN</div>
+    <div class="abs sigpos">Punong Barangay</div>
+
+    <!-- Committees box -->
+    <div class="box-foot"><i></i></div>
+    <div class="cm" style="left:1.73in; top:11.22in;"><b>Hon. HECTOR R. DIZON</b><span>Committee on AGRICULTURE</span></div>
+    <div class="cm" style="left:4.13in; top:11.22in;"><b>Hon. JONATHAN C. YALA</b><span>Committee on INFRASTRUCTURE</span></div>
+    <div class="cm" style="left:6.75in; top:11.22in;"><b>Hon. ROMMEL C. TACBIANAN</b><span>Committee on ENVIRONMENTAL PROTECTION</span></div>
+
+    <div class="cm" style="left:1.75in; top:11.77in;"><b>Hon. IMELDA R. TOLENTINO</b><span>Committee on APPROPRIATION/COOPERATIVE</span><span>CALAMITY &amp; DISASTER PREPAREDNESS</span></div>
+    <div class="cm" style="left:4.14in; top:11.77in;"><b>Hon. FEBE D. PEREZ</b><span>Committee on PEACE &amp; ORDER</span></div>
+    <div class="cm" style="left:6.75in; top:11.77in;"><b>Hon. NANCY A. CAPINPIN</b><span>Committee on HEALTH &amp; EDUCATION</span></div>
+
+    <div class="cm" style="left:2.7in;  top:12.33in;"><b>Hon. PAUL ADRIAN P. DELA CRUZ</b><span>Committee on SPORTS &amp; YOUTH DEVELOPMENT</span></div>
+    <div class="cm" style="left:6.07in; top:12.33in;"><b>ASHANTI BRILLIANT P. VALLE</b><span>SK CHAIRPERSON</span></div>
+  </main>
+
+  <script>
+    window.addEventListener("load", () => window.setTimeout(() => window.print(), 250));
+  </script>
+</body>
+</html>

@@ -13,6 +13,7 @@ module ApplicationHelper
     translations = {
       "pending" => "Naghihintay",
       "processing" => "Pinoproseso",
+      "approved" => "Naaprubahan",
       "ready to pickup" => "Handa nang kunin",
       "ready_to_pickup" => "Handa nang kunin",
       "claimed" => "Nakuha na",
@@ -23,7 +24,6 @@ module ApplicationHelper
       "resolved" => "Nalutas",
       "completed" => "Natapos",
       "unactionable" => "Hindi maaaksyunan",
-      "approved" => "Naaprubahan",
       "cancelled" => "Kinansela",
       "canceled" => "Kinansela"
     }
@@ -34,7 +34,8 @@ module ApplicationHelper
   def tagalog_status_class(status)
     classes = {
       "pending" => "bg-amber-100 text-amber-900",
-      "processing" => "bg-blue-100 text-blue-900",
+        "processing" => "bg-blue-200 text-blue-950",
+        "approved" => "bg-emerald-200 text-emerald-900",
       "ongoing" => "bg-blue-100 text-blue-900",
       "in progress" => "bg-blue-100 text-blue-900",
       "ready to pickup" => "bg-emerald-200 text-emerald-900",

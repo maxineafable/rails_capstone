@@ -10,6 +10,7 @@ class User < ApplicationRecord
 
   has_many :document_requests, dependent: :destroy
   has_many :barangay_concerns, dependent: :destroy
+  has_many :resident_notifications, dependent: :destroy
 
   has_many :assigned_barangay_concerns,
            class_name: "BarangayConcern",

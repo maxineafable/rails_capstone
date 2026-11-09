@@ -29,6 +29,18 @@ export default class extends Controller {
     }
   }
 
+  navigate(event) {
+    const targetId = new URL(event.currentTarget.href).hash.slice(1)
+    const target = document.getElementById(targetId)
+
+    if (!target) return
+
+    event.preventDefault()
+    history.pushState(null, "", `#${targetId}`)
+    this.close()
+    target.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+
   open() {
     clearTimeout(this.hideMenuTimeout)
     this.menuTarget.hidden = false

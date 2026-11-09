@@ -70,8 +70,8 @@
             <%= f.select :sex, Profile.sexes.keys.map { |sex| [tagalog_label(sex), sex] }, { include_blank: "Pumili ng kasarian" }, { required: true, class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" } %>
           </div>
           <div>
-            <%= label_tag "user_email", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" do %>Email <span class="text-red-600">*</span><% end %>
-            <%= email_field_tag "user[email]", current_user.email, required: true, autocomplete: "email", class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
+            <%= label_tag "user_email", "Email (opsyonal)", class: "mb-1 block text-[10px] font-semibold text-slate-700 lg:text-[13px]" %>
+            <%= email_field_tag "user[email]", current_user.email, autocomplete: "email", placeholder: "Ilagay kung mayroon", class: "w-full rounded-md border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none transition focus:border-[#07349e] focus:ring-2 focus:ring-blue-100 lg:text-[15px]" %>
           </div>
         </div>
       </section>

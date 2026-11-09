@@ -1,0 +1,52 @@
+<details class="group relative z-40" data-controller="notification-menu" data-notification-menu-read-url-value="<%= read_notifications_path %>" data-action="toggle->notification-menu#markRead">
+  <summary class="relative flex cursor-pointer list-none items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 [&::-webkit-details-marker]:hidden <%= button_classes %>" aria-label="Buksan ang mga notification">
+    <%= image_tag "bell.svg", alt: "", class: "h-5 w-5 object-contain" %>
+    <% if has_unread %><span data-notification-menu-target="dot" class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" aria-label="May hindi pa nababasang notification"></span><% end %>
+  </summary>
+
+  <section class="fixed right-2 top-[60px] z-[1150] flex max-h-[calc(100dvh-5rem)] w-[calc(100vw-1rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl md:absolute md:right-0 md:top-full md:z-50 md:mt-2 md:max-h-[70vh] md:w-96 md:max-w-[calc(100vw-2rem)]" aria-label="Mga notification">
+    <header class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+      <div>
+        <h2 class="text-sm font-bold text-slate-900">Mga Update</h2>
+        <p class="text-[10px] text-slate-500">Status ng mga kahilingan at ulat</p>
+      </div>
+      <div class="flex shrink-0 items-center gap-2">
+        <span data-notification-menu-target="count" class="rounded-full bg-blue-50 px-2 py-1 text-[10px] font-semibold text-[#07349e]"><%= notifications.size %></span>
+        <% if notifications.any? %><button type="button" data-action="click->notification-menu#clearAll" data-url="<%= notifications_path %>" class="text-[10px] font-semibold text-slate-500 hover:text-red-700">I-clear lahat</button><% end %>
+      </div>
+    </header>
+
+    <div class="overflow-y-auto" data-notification-menu-target="list">
+      <% if notifications.any? %>
+        <% notifications.each do |notification| %>
+          <% destination = case notification.notifiable_type
+             when "DocumentRequest" then document_request_path(notification.notifiable_id)
+             when "BarangayConcern" then barangay_concern_path(notification.notifiable_id)
+             end %>
+          <% icon = notification.notifiable_type == "DocumentRequest" ? "documents.svg" : "action.svg" %>
+          <article data-notification-item class="border-b border-slate-100 last:border-0">
+            <div class="flex items-start gap-2.5 px-4 py-3 <%= notification.read_at ? 'bg-white' : 'bg-blue-50/60' %>">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white ring-1 ring-slate-200"><%= image_tag icon, alt: "", class: "h-4 w-4 object-contain" %></span>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between gap-2">
+                  <h3 class="text-xs font-semibold leading-snug text-slate-900"><%= tagalog_label(notification.subject) %></h3>
+                  <span class="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold <%= tagalog_status_class(notification.status) %>"><%= tagalog_status(notification.status) %></span>
+                </div>
+                <p class="mt-1 text-[10px] leading-relaxed text-slate-600"><%= notification.body %></p>
+                <p class="mt-1 text-[9px] text-slate-400"><%= tagalog_datetime(notification.created_at) %></p>
+                <% if destination %>
+                  <%= link_to "Tingnan ang detalye →", destination, data: { turbo_frame: "remote_modal", action: "click->notification-menu#close" }, class: "mt-2 inline-flex text-[10px] font-semibold text-[#07349e] no-underline hover:underline" %>
+                <% end %>
+              </div>
+              <button type="button" data-action="click->notification-menu#remove" data-url="<%= notification_path(notification) %>" aria-label="Burahin ang notification" class="shrink-0 rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-700">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3"/></svg>
+              </button>
+            </div>
+          </article>
+        <% end %>
+      <% else %>
+        <p data-notification-empty class="px-4 py-8 text-center text-xs text-slate-500">Wala pang mga update.</p>
+      <% end %>
+    </div>
+  </section>
+</details>

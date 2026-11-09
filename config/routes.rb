@@ -3,11 +3,19 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   resource :profile, only: [ :show, :create, :edit, :update ]
+  post "notifications/read", to: "notifications#mark_all_read", as: :read_notifications
+  delete "notifications", to: "notifications#destroy_all", as: :notifications
+  delete "notifications/:id", to: "notifications#destroy", as: :notification
 
   get "document_requests/new", to: "document_requests#select_type", as: :select_document_type
   resources :document_requests, only: [ :index, :create, :show, :update ] do
     get :submitted, on: :member
     get :residency_certificate, on: :member
+    get :barangay_clearance, on: :member
+    get :certificate_of_income, on: :member
+    get :good_moral_character, on: :member
+    get :certificate_of_indigency, on: :member
+    get :certificate_of_low_income, on: :member
     collection do
       get ":document_type/new", to: "document_requests#new", as: :new_type
       post :review

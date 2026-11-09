@@ -21,8 +21,8 @@
     </div>
 
     <nav id="landing-mobile-menu" data-mobile-menu-target="menu" hidden class="pointer-events-none absolute inset-x-0 top-full -translate-y-2 border-t border-slate-100 bg-white px-4 py-3 opacity-0 shadow-lg transition-[opacity,transform] duration-200 ease-out sm:hidden" aria-label="Nabigasyon sa mobile">
-      <a data-action="click->mobile-menu#close" class="block rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 no-underline hover:bg-blue-50 hover:text-[#07349e]" href="#services">Mga Serbisyo</a>
-      <a data-action="click->mobile-menu#close" class="block rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 no-underline hover:bg-blue-50 hover:text-[#07349e]" href="#how-it-works">Paano Ito Gumagana</a>
+      <a data-action="click->mobile-menu#navigate" class="block rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 no-underline hover:bg-blue-50 hover:text-[#07349e]" href="#services">Mga Serbisyo</a>
+      <a data-action="click->mobile-menu#navigate" class="block rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 no-underline hover:bg-blue-50 hover:text-[#07349e]" href="#how-it-works">Paano Ito Gumagana</a>
       <%= link_to "Mag-log in", new_user_session_path, data: { action: "click->mobile-menu#close" }, class: "block rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 no-underline hover:bg-blue-50 hover:text-[#07349e]" %>
     </nav>
   </header>
