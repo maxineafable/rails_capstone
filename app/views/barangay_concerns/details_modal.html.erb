@@ -43,12 +43,11 @@
           </div>
         </section>
 
-        <section class="rounded-xl border border-slate-100 p-4 sm:p-5" aria-label="Report resolution progress">
+        <section class="rounded-xl bg-[#edf3ff] p-4 sm:p-5" aria-label="Kasaysayan ng Kalagayan">
           <div class="mb-5">
-            <h3 class="text-sm font-bold text-slate-900">Pag-usad ng Paglutas</h3>
-            <p class="mt-1 text-xs leading-relaxed text-slate-500">Subaybayan ang mga hakbang sa pag-asikaso ng inyong ulat.</p>
+            <h3 class="flex items-center gap-2 text-sm font-bold text-slate-900"><%= image_tag "history.svg", alt: "", class: "h-5 w-5 object-contain" %> Kasaysayan ng Kalagayan <span class="font-normal text-slate-500">• Pagsubaybay sa mga Yugto</span></h3>
           </div>
-          <div class="space-y-4">
+          <div class="flex flex-col gap-4 md:flex-row md:gap-0">
             <% concern_steps = [
                  ["Isinumite", concern.created_at, "Naipasa na ang inyong ulat sa barangay.", "checkk.svg"],
                  ["Pagsusuri at Aksyon", in_progress_log&.created_at, concern.pending? ? "Naghihintay ng pagsusuri ng kawani ng barangay." : "Sinusuri at inaaksyunan ng kawani ng barangay ang ulat.", "pinoproseso.svg"],
@@ -58,16 +57,18 @@
               <% completed = index.zero? || (concern.resolved? && index < 3) %>
               <% current = (concern.pending? || concern.ongoing?) && index == 1 %>
               <% failed = concern.unactionable? && index == 1 %>
-              <div class="flex gap-3">
-                <div class="relative flex w-8 shrink-0 justify-center">
-                  <% unless index == concern_steps.length - 1 %><span class="absolute bottom-[-20px] top-8 w-px <%= completed || current ? 'bg-emerald-600' : failed ? 'bg-rose-300' : 'bg-slate-200' %>" aria-hidden="true"></span><% end %>
-                  <span class="relative z-[1] flex h-8 w-8 items-center justify-center rounded-full <%= failed ? 'bg-rose-700 text-white' : current ? 'bg-[#07349e] text-white ring-4 ring-blue-100' : completed ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-400 ring-1 ring-slate-200' %>"><%= image_tag icon, alt: "", class: "h-4 w-4 object-contain #{completed || current || failed ? 'brightness-0 invert' : 'opacity-70'}" %></span>
+              <% line_reached = concern.resolved? || (index.zero? && (concern.ongoing? || concern.unactionable?)) %>
+              <div class="relative flex gap-3 md:min-w-0 md:flex-1 md:flex-col md:gap-3">
+                <div class="relative flex w-8 shrink-0 justify-center md:w-full md:justify-center">
+                  <% unless index == concern_steps.length - 1 %>
+                    <span class="absolute bottom-[-20px] top-8 w-px md:hidden <%= failed ? 'bg-rose-300' : line_reached ? 'bg-emerald-700' : 'bg-slate-200' %>" aria-hidden="true"></span>
+                    <span class="absolute left-1/2 right-[-50%] top-4 hidden h-1 md:block <%= failed ? 'bg-rose-300' : line_reached ? 'bg-emerald-700' : 'bg-slate-200' %>" aria-hidden="true"></span>
+                  <% end %>
+                  <span class="relative z-[1] flex h-8 w-8 items-center justify-center rounded-full <%= failed ? 'bg-rose-700 text-white' : current ? 'bg-[#07349e] text-white ring-4 ring-blue-100' : completed ? 'bg-emerald-700 text-white' : 'bg-slate-200 text-slate-400' %>"><%= image_tag icon, alt: "", class: "h-4 w-4 object-contain #{completed || current || failed ? 'brightness-0 invert' : 'opacity-70'}" %></span>
                 </div>
-                <div class="min-w-0 flex-1 pb-2">
-                  <% if completed %><span class="inline-flex rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-emerald-800">Tapos na</span><% elsif current %><span class="inline-flex rounded-md bg-blue-100 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-blue-900">Kasalukuyang Sinusuri</span><% elsif failed %><span class="inline-flex rounded-md bg-rose-100 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-rose-800">Hindi Maaaksyunan</span><% else %><span class="text-[9px] font-bold uppercase tracking-wide text-slate-400">Parating</span><% end %>
-                  <p class="mt-1 text-sm font-semibold text-slate-900"><%= index + 1 %>. <%= label %></p>
+                <div class="min-w-0 flex-1 pb-2 md:pr-3 md:text-center">
+                  <p class="text-sm font-semibold <%= current ? 'text-[#07349e]' : failed ? 'text-rose-800' : completed ? 'text-slate-900' : 'text-slate-400' %>"><%= label %></p>
                   <% if step_time.present? %><time class="block text-xs text-slate-500"><%= tagalog_datetime(step_time) %></time><% end %>
-                  <p class="mt-1 text-xs leading-relaxed text-slate-500"><%= description %></p>
                 </div>
               </div>
             <% end %>
