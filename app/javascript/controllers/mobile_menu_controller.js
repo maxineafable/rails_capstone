@@ -8,7 +8,7 @@ export default class extends Controller {
       if (event.key === "Escape") this.close()
     }
     this.handleOutsideClick = (event) => {
-      if (!this.element.contains(event.target)) this.close()
+      if (!this.element.querySelector("header")?.contains(event.target)) this.close()
     }
 
     document.addEventListener("keydown", this.handleKeydown)

@@ -1,7 +1,7 @@
 <% content_for :title, "KaSurbisyo | Barangay Kalikid Sur" %>
 
-<div class="min-h-screen bg-[#f4f5f9] font-sans text-slate-800">
-  <header data-controller="mobile-menu" class="fixed inset-x-0 top-0 z-50 m-0 bg-white shadow-[0_3px_10px_rgba(15,23,42,0.12)]">
+<div data-controller="mobile-menu" class="min-h-screen bg-[#f4f5f9] font-sans text-slate-800">
+  <header class="fixed inset-x-0 top-0 z-50 m-0 bg-white shadow-[0_3px_10px_rgba(15,23,42,0.12)]">
     <div class="mx-auto flex h-[64px] max-w-[1280px] items-center justify-between gap-3 px-4 sm:h-[74px] sm:px-6 lg:h-[84px] lg:gap-6">
       <a href="#top" class="flex shrink-0 items-center gap-2.5 no-underline">
         <%= image_tag "logo.png", class: "h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16", alt: "" %>
@@ -36,7 +36,7 @@
         <p class="mx-auto mt-5 max-w-2xl text-[14px] leading-relaxed text-white/85 sm:text-base">Humiling ng mga dokumento, mag-ulat ng mga suliranin sa komunidad, at subaybayan ang bawat hakbang online—mabilis at madali.</p>
         <div class="mt-6 flex flex-wrap justify-center gap-3">
           <%= link_to "Gumawa ng account", new_user_registration_path, class: "rounded-full bg-[#244fc4] px-6 py-3 text-[13px] font-bold text-white no-underline shadow-lg transition hover:bg-blue-700" %>
-          <a href="#how-it-works" class="rounded-full bg-white px-6 py-3 text-[13px] font-bold text-slate-800 no-underline shadow-lg transition hover:bg-slate-100">Alamin kung paano ito gumagana</a>
+          <a href="#how-it-works" data-action="click->mobile-menu#navigate" class="rounded-full bg-white px-6 py-3 text-[13px] font-bold text-slate-800 no-underline shadow-lg transition hover:bg-slate-100">Alamin kung paano ito gumagana</a>
         </div>
       </div>
     </section>

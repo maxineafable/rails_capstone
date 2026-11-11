@@ -142,12 +142,7 @@
     <div class="t tnr b" style="left:4.88in;top:5.32in;font-size:11.4pt;letter-spacing:-0.0017pt;">PURPOSE</div>
     <div class="t tnr" style="left:5.622in;top:5.32in;font-size:11.4pt;">:</div>
     <div class="t tnr blank " style="left:5.714in;top:5.313in;width:2.167in;font-size:12pt;"><span class="v"><%= @document_request.purpose %></span></div>
-    <% if @clearance_profile.avatar.attached? %>
-      <div class="box dash" style="left:.694in;top:5.832in;width:1.9in;height:2in"></div>
-      <%= image_tag @clearance_profile.avatar, alt: "Larawan ni #{@clearance_name}", class: "img", style: "left:.694in;top:5.832in;width:1.9in;height:2in;object-fit:cover" %>
-    <% else %>
-      <div class="box dash" style="left:.694in;top:5.832in;width:1.9in;height:2in" aria-label="Photo area"></div>
-    <% end %>
+    <div class="box dash" style="left:.694in;top:5.832in;width:1.9in;height:2in" aria-label="Photo area"></div>
     <div class="box dash" style="left:2.831in;top:6.441in;width:1.067in;height:1.395in"></div>
     <div class="box dash" style="left:4.076in;top:6.441in;width:1.067in;height:1.395in"></div>
     <div class="t cal" style="left:3.262in;top:6.835in;font-size:9pt;letter-spacing:0.1212pt;color:#d9d9d9">Left</div>

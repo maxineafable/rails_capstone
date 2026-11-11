@@ -50,13 +50,13 @@
         <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100"><%= image_tag "Icon.svg", alt: "", class: "h-7 w-7 object-contain" %></span>
       </div>
 
-      <%= link_to admin_document_requests_path(status: "approved"), class: "flex min-h-40 items-center justify-between rounded-2xl border border-purple-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-6" do %>
+      <div class="flex min-h-40 items-center justify-between rounded-2xl border border-emerald-200 bg-white p-5 shadow-sm sm:p-6">
         <div>
-          <p class="text-[11px] font-bold uppercase tracking-wide text-purple-800">Naaprubahan</p>
-          <p class="mt-2 text-4xl font-bold text-purple-900"><%= @approved_docs %></p>
+          <p class="text-[11px] font-bold uppercase tracking-wide text-emerald-700">Naaprubahan</p>
+          <p class="mt-2 text-4xl font-bold text-emerald-700"><%= @approved_docs %></p>
         </div>
-        <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100"><%= image_tag "certificateofindigency.svg", alt: "", class: "h-7 w-7 object-contain", style: "filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(1779%) hue-rotate(242deg) brightness(91%) contrast(91%)" %></span>
-      <% end %>
+        <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100"><%= image_tag "certificateofindigency.svg", alt: "", class: "h-7 w-7 object-contain", style: "filter: brightness(0) saturate(100%) invert(28%) sepia(20%) saturate(1699%) hue-rotate(112deg) brightness(92%) contrast(102%)" %></span>
+      </div>
 
       <div class="flex min-h-40 items-center justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div>
